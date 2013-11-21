@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="6.4">
+<eagle version="6.1">
 <drawing>
 <settings>
 <setting alwaysvectorfont="yes"/>
@@ -5053,18 +5053,23 @@ wire to board 2.54 mm (0.100") pitch header</description>
 <part name="X9" library="con-maritex" deviceset="MICROMATCH-8" device="" value="eth (mb-&gt;rpi)"/>
 <part name="SUPPLY2" library="supply2" deviceset="+5V/1" device="" value="+5V_RPI"/>
 <part name="SUPPLY3" library="supply2" deviceset="+5V/1" device="" value="+5V_RPI"/>
-<part name="X15" library="con-molex" deviceset="C-GRID-03" device="-70543"/>
+<part name="PWR4" library="con-molex" deviceset="C-GRID-03" device="-70543"/>
 <part name="SUPPLY1" library="supply2" deviceset="+12V" device="" value="+12V_OUT"/>
 <part name="GND1" library="supply1" deviceset="GND" device=""/>
 <part name="T1" library="transistor" deviceset="BC337" device=""/>
 <part name="T2" library="transistor" deviceset="BC337" device=""/>
-<part name="I2C_1" library="con-molex" deviceset="C-GRID-03" device="-70553"/>
 <part name="I2C_2" library="con-molex" deviceset="C-GRID-03" device="-70553"/>
 <part name="I2C_3" library="con-molex" deviceset="C-GRID-03" device="-70553"/>
 <part name="I2C_4" library="con-molex" deviceset="C-GRID-03" device="-70553"/>
 <part name="PWR1" library="con-maritex" deviceset="TBMP5103RC-KF" device="V1"/>
 <part name="PWR2" library="con-maritex" deviceset="TBMP5103RC-KF" device="V1"/>
 <part name="PWR3" library="con-maritex" deviceset="TBMP5103RC-KF" device="V1"/>
+<part name="I2C_1" library="con-molex" deviceset="C-GRID-03" device="-70543">
+<attribute name="MF" value=""/>
+<attribute name="MPN" value=""/>
+<attribute name="OC_FARNELL" value="unknown"/>
+<attribute name="OC_NEWARK" value="unknown"/>
+</part>
 </parts>
 <sheets>
 <sheet>
@@ -5173,22 +5178,17 @@ wire to board 2.54 mm (0.100") pitch header</description>
 <instance part="SUPPLY3" gate="G$1" x="33.02" y="-48.26" smashed="yes">
 <attribute name="VALUE" x="27.813" y="-44.831" size="1.778" layer="96"/>
 </instance>
-<instance part="X15" gate="-1" x="48.26" y="-2.54" smashed="yes" rot="R180">
+<instance part="PWR4" gate="-1" x="48.26" y="-2.54" smashed="yes" rot="R180">
 <attribute name="NAME" x="45.72" y="-1.778" size="1.524" layer="95" rot="R180"/>
 </instance>
-<instance part="X15" gate="-2" x="48.26" y="-15.24" rot="R180"/>
-<instance part="X15" gate="-3" x="48.26" y="25.4" rot="R180"/>
+<instance part="PWR4" gate="-2" x="48.26" y="-15.24" rot="R180"/>
+<instance part="PWR4" gate="-3" x="48.26" y="25.4" rot="R180"/>
 <instance part="SUPPLY1" gate="+12V" x="-63.5" y="25.4" smashed="yes">
 <attribute name="VALUE" x="-68.58" y="28.575" size="1.778" layer="96"/>
 </instance>
 <instance part="GND1" gate="1" x="-157.48" y="-30.48"/>
 <instance part="T1" gate="G$1" x="-71.12" y="-12.7"/>
 <instance part="T2" gate="G$1" x="10.16" y="-15.24"/>
-<instance part="I2C_1" gate="-1" x="60.96" y="-55.88" smashed="yes">
-<attribute name="NAME" x="63.5" y="-56.642" size="1.524" layer="95"/>
-</instance>
-<instance part="I2C_1" gate="-2" x="60.96" y="-68.58"/>
-<instance part="I2C_1" gate="-3" x="60.96" y="-83.82"/>
 <instance part="I2C_2" gate="-1" x="60.96" y="-58.42" smashed="yes">
 <attribute name="NAME" x="63.5" y="-59.182" size="1.524" layer="95"/>
 </instance>
@@ -5213,6 +5213,11 @@ wire to board 2.54 mm (0.100") pitch header</description>
 <instance part="PWR3" gate="-1" x="60.96" y="0" rot="MR0"/>
 <instance part="PWR3" gate="-2" x="60.96" y="-22.86" rot="MR0"/>
 <instance part="PWR3" gate="-3" x="60.96" y="27.94" rot="MR0"/>
+<instance part="I2C_1" gate="-1" x="60.96" y="-55.88" smashed="yes">
+<attribute name="NAME" x="63.5" y="-56.642" size="1.524" layer="95"/>
+</instance>
+<instance part="I2C_1" gate="-2" x="60.96" y="-68.58"/>
+<instance part="I2C_1" gate="-3" x="60.96" y="-83.82"/>
 </instances>
 <busses>
 <bus name="SDA,SCL">
@@ -5254,10 +5259,10 @@ wire to board 2.54 mm (0.100") pitch header</description>
 <junction x="55.88" y="-71.12"/>
 <junction x="55.88" y="-73.66"/>
 <label x="49.53" y="-68.326" size="1.778" layer="95"/>
-<pinref part="I2C_1" gate="-2" pin="S"/>
 <pinref part="I2C_2" gate="-2" pin="S"/>
 <pinref part="I2C_3" gate="-2" pin="S"/>
 <pinref part="I2C_4" gate="-2" pin="S"/>
+<pinref part="I2C_1" gate="-2" pin="S"/>
 </segment>
 <segment>
 <pinref part="IC3" gate="G$1" pin="SCL"/>
@@ -5293,10 +5298,10 @@ wire to board 2.54 mm (0.100") pitch header</description>
 <junction x="55.88" y="-58.42"/>
 <junction x="55.88" y="-60.96"/>
 <label x="49.276" y="-55.626" size="1.778" layer="95"/>
-<pinref part="I2C_1" gate="-1" pin="S"/>
 <pinref part="I2C_2" gate="-1" pin="S"/>
 <pinref part="I2C_3" gate="-1" pin="S"/>
 <pinref part="I2C_4" gate="-1" pin="S"/>
+<pinref part="I2C_1" gate="-1" pin="S"/>
 </segment>
 <segment>
 <pinref part="IC3" gate="G$1" pin="SDA"/>
@@ -5434,7 +5439,7 @@ wire to board 2.54 mm (0.100") pitch header</description>
 <segment>
 <pinref part="SUPPLY7" gate="+5V" pin="+5V"/>
 <wire x1="53.34" y1="7.62" x2="53.34" y2="5.08" width="0.1524" layer="91"/>
-<pinref part="X15" gate="-1" pin="S"/>
+<pinref part="PWR4" gate="-1" pin="S"/>
 <wire x1="53.34" y1="5.08" x2="53.34" y2="2.54" width="0.1524" layer="91"/>
 <wire x1="53.34" y1="2.54" x2="53.34" y2="0" width="0.1524" layer="91"/>
 <wire x1="53.34" y1="0" x2="53.34" y2="-2.54" width="0.1524" layer="91"/>
@@ -5491,7 +5496,7 @@ wire to board 2.54 mm (0.100") pitch header</description>
 </segment>
 <segment>
 <pinref part="GND11" gate="1" pin="GND"/>
-<pinref part="X15" gate="-2" pin="S"/>
+<pinref part="PWR4" gate="-2" pin="S"/>
 <wire x1="50.8" y1="-15.24" x2="53.34" y2="-15.24" width="0.1524" layer="91"/>
 <wire x1="53.34" y1="-15.24" x2="53.34" y2="-17.78" width="0.1524" layer="91"/>
 <pinref part="PWR2" gate="-2" pin="P"/>
@@ -5520,10 +5525,10 @@ wire to board 2.54 mm (0.100") pitch header</description>
 <junction x="55.88" y="-86.36"/>
 <junction x="55.88" y="-88.9"/>
 <junction x="55.88" y="-91.44"/>
-<pinref part="I2C_1" gate="-3" pin="S"/>
 <pinref part="I2C_2" gate="-3" pin="S"/>
 <pinref part="I2C_3" gate="-3" pin="S"/>
 <pinref part="I2C_4" gate="-3" pin="S"/>
+<pinref part="I2C_1" gate="-3" pin="S"/>
 </segment>
 <segment>
 <pinref part="U$2" gate="G$1" pin="GND@25"/>
@@ -5683,7 +5688,7 @@ wire to board 2.54 mm (0.100") pitch header</description>
 <segment>
 <pinref part="SUPPLY6" gate="+12V" pin="+12V"/>
 <wire x1="53.34" y1="35.56" x2="53.34" y2="33.02" width="0.1524" layer="91"/>
-<pinref part="X15" gate="-3" pin="S"/>
+<pinref part="PWR4" gate="-3" pin="S"/>
 <wire x1="53.34" y1="33.02" x2="53.34" y2="30.48" width="0.1524" layer="91"/>
 <wire x1="53.34" y1="30.48" x2="53.34" y2="27.94" width="0.1524" layer="91"/>
 <wire x1="53.34" y1="27.94" x2="53.34" y2="25.4" width="0.1524" layer="91"/>
