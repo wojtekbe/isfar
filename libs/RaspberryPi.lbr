@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="6.4">
+<eagle version="6.5.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="0.05" unitdist="inch" unit="inch" style="lines" multiple="1" display="yes" altdistance="0.025" altunitdist="inch" altunit="inch"/>
+<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.01" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="yes" active="yes"/>
@@ -266,20 +266,15 @@
 <text x="-0.71" y="22.74" size="1.27" layer="51">RCA</text>
 <text x="-1.935" y="-25.335" size="1.27" layer="51">HDMI</text>
 </package>
-<package name="RASPBERRY-PI_REV1_HOLES">
+<package name="RASPBERRY-PI_HOLES">
 <wire x1="40.69" y1="26.865" x2="-44.31" y2="26.865" width="0.127" layer="51" style="shortdash"/>
-<wire x1="-44.31" y1="26.865" x2="-44.31" y2="15.365" width="0.127" layer="51" style="shortdash"/>
-<wire x1="-44.31" y1="-12.435" x2="-44.31" y2="-29.135" width="0.127" layer="51" style="shortdash"/>
+<wire x1="-44.31" y1="26.865" x2="-44.31" y2="-29.085" width="0.127" layer="51" style="shortdash"/>
 <wire x1="-44.31" y1="-29.135" x2="40.69" y2="-29.135" width="0.127" layer="51" style="shortdash"/>
 <wire x1="40.69" y1="-29.135" x2="40.69" y2="26.865" width="0.127" layer="51" style="shortdash"/>
 <wire x1="-42.835" y1="22.515" x2="-40.985" y2="22.515" width="0.127" layer="21"/>
 <wire x1="-40.985" y1="22.515" x2="-40.985" y2="20.665" width="0.127" layer="21" curve="1.965897"/>
 <wire x1="-40.985" y1="20.665" x2="-42.835" y2="20.665" width="0.127" layer="21"/>
 <wire x1="-42.835" y1="20.665" x2="-42.835" y2="22.515" width="0.127" layer="21"/>
-<wire x1="-44.31" y1="15.365" x2="-25.31" y2="15.365" width="0.127" layer="51" style="shortdash"/>
-<wire x1="-25.31" y1="15.365" x2="-25.31" y2="-12.435" width="0.127" layer="51" style="shortdash"/>
-<wire x1="-25.31" y1="-12.435" x2="-44.31" y2="-12.435" width="0.127" layer="51" style="shortdash"/>
-<wire x1="-44.31" y1="-12.435" x2="-44.31" y2="15.365" width="0.127" layer="51" style="shortdash"/>
 <wire x1="31.19" y1="8.065" x2="48.39" y2="8.065" width="0.127" layer="51" style="shortdash"/>
 <wire x1="48.39" y1="8.065" x2="48.39" y2="-5.185" width="0.127" layer="51" style="shortdash"/>
 <wire x1="48.39" y1="-5.185" x2="31.19" y2="-5.185" width="0.127" layer="51" style="shortdash"/>
@@ -296,10 +291,6 @@
 <wire x1="-10.11" y1="20.365" x2="-10.11" y2="25.365" width="0.127" layer="21"/>
 <wire x1="-10.11" y1="25.365" x2="-43.31" y2="25.365" width="0.127" layer="21"/>
 <wire x1="-43.31" y1="25.365" x2="-43.31" y2="20.365" width="0.127" layer="21"/>
-<wire x1="-44.31" y1="15.365" x2="-59.31" y2="15.365" width="0.05" layer="51" style="shortdash"/>
-<wire x1="-59.31" y1="15.365" x2="-59.31" y2="-12.435" width="0.05" layer="51" style="shortdash"/>
-<wire x1="-59.31" y1="-12.435" x2="-44.21" y2="-12.435" width="0.05" layer="51" style="shortdash"/>
-<wire x1="-44.21" y1="-12.435" x2="-44.21" y2="-12.535" width="0.05" layer="51"/>
 <wire x1="-3.3" y1="24.75" x2="-3.3" y2="33.05" width="0.127" layer="51" style="shortdash"/>
 <wire x1="-3.3" y1="33.05" x2="5.6" y2="32.95" width="0.127" layer="51" style="shortdash"/>
 <wire x1="5.6" y1="32.95" x2="5.6" y2="24.65" width="0.127" layer="51" style="shortdash"/>
@@ -345,19 +336,14 @@
 <pad name="24" x="-13.97" y="24.13" drill="1"/>
 <pad name="25" x="-11.43" y="21.59" drill="1"/>
 <pad name="26" x="-11.43" y="24.13" drill="1"/>
-<text x="-34.13" y="28.4" size="1.27" layer="25" ratio="10">&gt;NAME</text>
 <text x="-7.91" y="25.09" size="1.27" layer="21" ratio="10" rot="R180">26</text>
-<text x="-34.295" y="26.495" size="1.27" layer="27" ratio="10">&gt;VALUE</text>
-<text x="-34.1814" y="-2.8061" size="1.27" layer="51" rot="R90">SD Card </text>
 <text x="-42.4064" y="19.8939" size="0.4064" layer="51">3v3</text>
 <text x="-42.2814" y="25.5189" size="0.4064" layer="51">5v</text>
 <text x="-37.6314" y="25.4689" size="0.4064" layer="51">GND</text>
 <text x="45.78" y="-0.46" size="1.27" layer="51" rot="R90">USB</text>
 <text x="39.33" y="-20.56" size="1.27" layer="51" rot="R90">RJ45</text>
 <text x="-41.695" y="-24.835" size="1.27" layer="51" rot="R90">usb +5V</text>
-<text x="-29.41" y="-10.635" size="1.27" layer="51" rot="R90">SD card holder 5mm bottom sick</text>
 <text x="-7.91" y="22.09" size="1.27" layer="21" ratio="10" rot="R180">25</text>
-<text x="-7.51" y="-0.81" size="1.27" layer="51">Board 56x85mm H=16mm</text>
 <text x="18.44" y="24.065" size="1.27" layer="51">Audio</text>
 <text x="-0.71" y="22.74" size="1.27" layer="51">RCA</text>
 <text x="-1.935" y="-25.335" size="1.27" layer="51">HDMI</text>
@@ -390,107 +376,97 @@
 <pad name="P$1" x="-18.81" y="-11.135" drill="3.1"/>
 <pad name="P$2" x="35.69" y="14.365" drill="3.1"/>
 </package>
-<package name="RPI_REV1_HOLES">
-<wire x1="40.69" y1="26.865" x2="-44.31" y2="26.865" width="0.127" layer="51"/>
-<wire x1="-44.31" y1="26.865" x2="-44.31" y2="15.365" width="0.127" layer="51"/>
-<wire x1="-44.31" y1="-12.435" x2="-44.31" y2="-29.135" width="0.127" layer="51"/>
-<wire x1="-44.31" y1="-29.135" x2="40.69" y2="-29.135" width="0.127" layer="51"/>
-<wire x1="40.69" y1="-29.135" x2="40.69" y2="26.865" width="0.127" layer="51"/>
-<wire x1="-42.835" y1="22.515" x2="-40.985" y2="22.515" width="0.127" layer="21"/>
-<wire x1="-40.985" y1="22.515" x2="-40.985" y2="20.665" width="0.127" layer="21" curve="1.965897"/>
-<wire x1="-40.985" y1="20.665" x2="-42.835" y2="20.665" width="0.127" layer="21"/>
-<wire x1="-42.835" y1="20.665" x2="-42.835" y2="22.515" width="0.127" layer="21"/>
-<wire x1="-44.31" y1="15.365" x2="-25.31" y2="15.365" width="0.127" layer="51"/>
-<wire x1="-25.31" y1="15.365" x2="-25.31" y2="-12.435" width="0.127" layer="51"/>
-<wire x1="-25.31" y1="-12.435" x2="-44.31" y2="-12.435" width="0.127" layer="51"/>
-<wire x1="-44.31" y1="-12.435" x2="-44.31" y2="15.365" width="0.127" layer="51"/>
-<wire x1="31.19" y1="8.065" x2="48.39" y2="8.065" width="0.127" layer="51"/>
-<wire x1="48.39" y1="8.065" x2="48.39" y2="-5.185" width="0.127" layer="51"/>
-<wire x1="48.39" y1="-5.185" x2="31.19" y2="-5.185" width="0.127" layer="51"/>
-<wire x1="31.19" y1="-5.185" x2="31.19" y2="8.065" width="0.127" layer="51"/>
-<wire x1="19.89" y1="-27.135" x2="41.69" y2="-27.135" width="0.127" layer="51"/>
-<wire x1="41.69" y1="-27.135" x2="41.69" y2="-11.735" width="0.127" layer="51"/>
-<wire x1="41.69" y1="-11.735" x2="19.89" y2="-11.735" width="0.127" layer="51"/>
-<wire x1="19.89" y1="-11.735" x2="19.89" y2="-27.135" width="0.127" layer="51"/>
-<wire x1="-39.21" y1="-25.51" x2="-44.81" y2="-25.51" width="0.127" layer="51"/>
-<wire x1="-44.81" y1="-25.51" x2="-44.81" y2="-17.91" width="0.127" layer="51"/>
-<wire x1="-44.81" y1="-17.91" x2="-39.21" y2="-17.91" width="0.127" layer="51"/>
-<wire x1="-39.21" y1="-17.91" x2="-39.21" y2="-25.51" width="0.127" layer="51"/>
-<wire x1="-43.31" y1="20.365" x2="-10.11" y2="20.365" width="0.127" layer="21"/>
-<wire x1="-10.11" y1="20.365" x2="-10.11" y2="25.365" width="0.127" layer="21"/>
-<wire x1="-10.11" y1="25.365" x2="-43.31" y2="25.365" width="0.127" layer="21"/>
-<wire x1="-43.31" y1="25.365" x2="-43.31" y2="20.365" width="0.127" layer="21"/>
-<wire x1="-44.31" y1="15.365" x2="-59.31" y2="15.365" width="0.05" layer="51"/>
-<wire x1="-59.31" y1="15.365" x2="-59.31" y2="-12.435" width="0.05" layer="51"/>
-<wire x1="-59.31" y1="-12.435" x2="-44.21" y2="-12.435" width="0.05" layer="51"/>
-<wire x1="-44.21" y1="-12.435" x2="-44.21" y2="-12.535" width="0.05" layer="51"/>
-<wire x1="-3.3" y1="24.75" x2="-3.3" y2="33.05" width="0.127" layer="51"/>
-<wire x1="-3.3" y1="33.05" x2="5.6" y2="32.95" width="0.127" layer="51"/>
-<wire x1="5.6" y1="32.95" x2="5.6" y2="24.65" width="0.127" layer="51"/>
-<wire x1="5.6" y1="24.65" x2="-3.69" y2="24.75" width="0.127" layer="51"/>
-<wire x1="-3.74" y1="14.74" x2="6.06" y2="14.64" width="0.127" layer="51"/>
-<wire x1="6.06" y1="14.64" x2="6.06" y2="24.64" width="0.127" layer="51"/>
-<wire x1="6.06" y1="24.64" x2="-3.74" y2="24.74" width="0.127" layer="51"/>
-<wire x1="-3.74" y1="24.74" x2="-3.74" y2="14.74" width="0.127" layer="51"/>
-<wire x1="26.69" y1="26.89" x2="26.69" y2="15.49" width="0.127" layer="51"/>
-<wire x1="26.69" y1="15.49" x2="14.69" y2="15.49" width="0.127" layer="51"/>
-<wire x1="14.69" y1="15.49" x2="14.69" y2="26.89" width="0.127" layer="51"/>
-<wire x1="23.99" y1="26.89" x2="24.09" y2="26.89" width="0.127" layer="51"/>
-<wire x1="24.09" y1="26.89" x2="24.09" y2="30.49" width="0.127" layer="51"/>
-<wire x1="24.09" y1="30.49" x2="17.49" y2="30.49" width="0.127" layer="51"/>
-<wire x1="17.49" y1="30.49" x2="17.49" y2="26.89" width="0.127" layer="51"/>
-<wire x1="-6.81" y1="-30.31" x2="8.29" y2="-30.31" width="0.127" layer="51"/>
-<wire x1="8.29" y1="-30.31" x2="8.29" y2="-18.91" width="0.127" layer="51"/>
-<wire x1="8.29" y1="-18.91" x2="-6.81" y2="-18.91" width="0.127" layer="51"/>
-<wire x1="-6.81" y1="-18.91" x2="-6.81" y2="-30.31" width="0.127" layer="51"/>
-<pad name="P1_1" x="-41.91" y="21.59" drill="1" shape="square"/>
-<pad name="P1_2" x="-41.91" y="24.13" drill="1" diameter="1.6764"/>
-<pad name="P1_3" x="-39.37" y="21.59" drill="1"/>
-<pad name="P1_4" x="-39.37" y="24.13" drill="1"/>
-<pad name="P1_5" x="-36.83" y="21.59" drill="1"/>
-<pad name="P1_6" x="-36.83" y="24.13" drill="1" diameter="1.6764"/>
-<pad name="P1_7" x="-34.29" y="21.59" drill="1"/>
-<pad name="P1_8" x="-34.29" y="24.13" drill="1"/>
-<pad name="P1_9" x="-31.75" y="21.59" drill="1"/>
-<pad name="P1_10" x="-31.75" y="24.13" drill="1"/>
-<pad name="P1_11" x="-29.21" y="21.59" drill="1"/>
-<pad name="P1_12" x="-29.21" y="24.13" drill="1"/>
-<pad name="P1_13" x="-26.67" y="21.59" drill="1"/>
-<pad name="P1_14" x="-26.67" y="24.13" drill="1"/>
-<pad name="P1_15" x="-24.13" y="21.59" drill="1"/>
-<pad name="P1_16" x="-24.13" y="24.13" drill="1"/>
-<pad name="P1_17" x="-21.59" y="21.59" drill="1"/>
-<pad name="P1_18" x="-21.59" y="24.13" drill="1"/>
-<pad name="P1_19" x="-19.05" y="21.59" drill="1"/>
-<pad name="P1_20" x="-19.05" y="24.13" drill="1"/>
-<pad name="P1_21" x="-16.51" y="21.59" drill="1"/>
-<pad name="P1_22" x="-16.51" y="24.13" drill="1"/>
-<pad name="P1_23" x="-13.97" y="21.59" drill="1"/>
-<pad name="P1_24" x="-13.97" y="24.13" drill="1"/>
-<pad name="P1_25" x="-11.43" y="21.59" drill="1"/>
-<pad name="P1_26" x="-11.43" y="24.13" drill="1"/>
-<text x="-34.13" y="28.4" size="1.27" layer="25" ratio="10">&gt;NAME</text>
-<text x="-7.91" y="25.09" size="1.27" layer="21" ratio="10" rot="R180">26</text>
-<text x="-34.295" y="26.495" size="1.27" layer="27" ratio="10">&gt;VALUE</text>
-<text x="-34.1814" y="-2.8061" size="1.27" layer="51" rot="R90">SD Card </text>
-<text x="-42.4064" y="19.8939" size="0.4064" layer="51">3v3</text>
-<text x="-42.2814" y="25.5189" size="0.4064" layer="51">5v</text>
-<text x="-37.6314" y="25.4689" size="0.4064" layer="51">GND</text>
-<text x="45.78" y="-0.46" size="1.27" layer="51" rot="R90">USB</text>
-<text x="39.33" y="-20.56" size="1.27" layer="51" rot="R90">RJ45</text>
-<text x="-41.695" y="-24.835" size="1.27" layer="51" rot="R90">usb +5V</text>
-<text x="-29.41" y="-10.635" size="1.27" layer="51" rot="R90">SD card holder 5mm bottom sick</text>
-<text x="-7.91" y="22.09" size="1.27" layer="21" ratio="10" rot="R180">25</text>
-<text x="-7.51" y="-0.81" size="1.27" layer="51">Board 56x85mm H=16mm</text>
-<text x="18.44" y="24.065" size="1.27" layer="51">Audio</text>
-<text x="-0.71" y="22.74" size="1.27" layer="51">RCA</text>
-<text x="-1.935" y="-25.335" size="1.27" layer="51">HDMI</text>
-<rectangle x1="-42.164" y1="23.876" x2="-41.656" y2="24.384" layer="51"/>
+<package name="RASPBERRY-PI_HOLES_NOSD">
+<wire x1="43.23" y1="26.865" x2="-41.77" y2="26.865" width="0.127" layer="51" style="shortdash"/>
+<wire x1="-41.77" y1="26.865" x2="-41.77" y2="-29.085" width="0.127" layer="51" style="shortdash"/>
+<wire x1="-41.77" y1="-29.135" x2="43.23" y2="-29.135" width="0.127" layer="51" style="shortdash"/>
+<wire x1="43.23" y1="-29.135" x2="43.23" y2="26.865" width="0.127" layer="51" style="shortdash"/>
+<wire x1="-40.295" y1="22.515" x2="-38.445" y2="22.515" width="0.127" layer="21"/>
+<wire x1="-38.445" y1="22.515" x2="-38.445" y2="20.665" width="0.127" layer="21" curve="1.965897"/>
+<wire x1="-38.445" y1="20.665" x2="-40.295" y2="20.665" width="0.127" layer="21"/>
+<wire x1="-40.295" y1="20.665" x2="-40.295" y2="22.515" width="0.127" layer="21"/>
+<wire x1="33.73" y1="8.065" x2="50.93" y2="8.065" width="0.127" layer="51" style="shortdash"/>
+<wire x1="50.93" y1="8.065" x2="50.93" y2="-5.185" width="0.127" layer="51" style="shortdash"/>
+<wire x1="50.93" y1="-5.185" x2="33.73" y2="-5.185" width="0.127" layer="51" style="shortdash"/>
+<wire x1="33.73" y1="-5.185" x2="33.73" y2="8.065" width="0.127" layer="51" style="shortdash"/>
+<wire x1="22.43" y1="-27.135" x2="44.23" y2="-27.135" width="0.127" layer="51" style="shortdash"/>
+<wire x1="44.23" y1="-27.135" x2="44.23" y2="-11.735" width="0.127" layer="51" style="shortdash"/>
+<wire x1="44.23" y1="-11.735" x2="22.43" y2="-11.735" width="0.127" layer="51" style="shortdash"/>
+<wire x1="22.43" y1="-11.735" x2="22.43" y2="-27.135" width="0.127" layer="51" style="shortdash"/>
+<wire x1="-36.67" y1="-25.51" x2="-42.27" y2="-25.51" width="0.127" layer="51" style="shortdash"/>
+<wire x1="-42.27" y1="-25.51" x2="-42.27" y2="-17.91" width="0.127" layer="51" style="shortdash"/>
+<wire x1="-42.27" y1="-17.91" x2="-36.67" y2="-17.91" width="0.127" layer="51" style="shortdash"/>
+<wire x1="-36.67" y1="-17.91" x2="-36.67" y2="-25.51" width="0.127" layer="51" style="shortdash"/>
+<wire x1="-40.77" y1="20.365" x2="-7.57" y2="20.365" width="0.127" layer="21"/>
+<wire x1="-7.57" y1="20.365" x2="-7.57" y2="25.365" width="0.127" layer="21"/>
+<wire x1="-7.57" y1="25.365" x2="-40.77" y2="25.365" width="0.127" layer="21"/>
+<wire x1="-40.77" y1="25.365" x2="-40.77" y2="20.365" width="0.127" layer="21"/>
+<wire x1="-0.76" y1="24.75" x2="-0.76" y2="33.05" width="0.127" layer="51" style="shortdash"/>
+<wire x1="-0.76" y1="33.05" x2="8.14" y2="32.95" width="0.127" layer="51" style="shortdash"/>
+<wire x1="8.14" y1="32.95" x2="8.14" y2="24.65" width="0.127" layer="51" style="shortdash"/>
+<wire x1="8.14" y1="24.65" x2="-1.15" y2="24.75" width="0.127" layer="51" style="shortdash"/>
+<wire x1="-1.2" y1="14.74" x2="8.6" y2="14.64" width="0.127" layer="51" style="shortdash"/>
+<wire x1="8.6" y1="14.64" x2="8.6" y2="24.64" width="0.127" layer="51" style="shortdash"/>
+<wire x1="8.6" y1="24.64" x2="-1.2" y2="24.74" width="0.127" layer="51" style="shortdash"/>
+<wire x1="-1.2" y1="24.74" x2="-1.2" y2="14.74" width="0.127" layer="51" style="shortdash"/>
+<wire x1="29.23" y1="26.89" x2="29.23" y2="15.49" width="0.127" layer="51" style="shortdash"/>
+<wire x1="29.23" y1="15.49" x2="17.23" y2="15.49" width="0.127" layer="51" style="shortdash"/>
+<wire x1="17.23" y1="15.49" x2="17.23" y2="26.89" width="0.127" layer="51" style="shortdash"/>
+<wire x1="26.53" y1="26.89" x2="26.63" y2="26.89" width="0.127" layer="51"/>
+<wire x1="26.63" y1="26.89" x2="26.63" y2="30.49" width="0.127" layer="51" style="shortdash"/>
+<wire x1="26.63" y1="30.49" x2="20.03" y2="30.49" width="0.127" layer="51" style="shortdash"/>
+<wire x1="20.03" y1="30.49" x2="20.03" y2="26.89" width="0.127" layer="51" style="shortdash"/>
+<wire x1="-4.27" y1="-30.31" x2="10.83" y2="-30.31" width="0.127" layer="51" style="shortdash"/>
+<wire x1="10.83" y1="-30.31" x2="10.83" y2="-18.91" width="0.127" layer="51" style="shortdash"/>
+<wire x1="10.83" y1="-18.91" x2="-4.27" y2="-18.91" width="0.127" layer="51" style="shortdash"/>
+<wire x1="-4.27" y1="-18.91" x2="-4.27" y2="-30.31" width="0.127" layer="51" style="shortdash"/>
+<pad name="1" x="-39.37" y="21.59" drill="1" shape="square"/>
+<pad name="2" x="-39.37" y="24.13" drill="1" diameter="1.6764"/>
+<pad name="3" x="-36.83" y="21.59" drill="1"/>
+<pad name="4" x="-36.83" y="24.13" drill="1"/>
+<pad name="5" x="-34.29" y="21.59" drill="1"/>
+<pad name="6" x="-34.29" y="24.13" drill="1" diameter="1.6764"/>
+<pad name="7" x="-31.75" y="21.59" drill="1"/>
+<pad name="8" x="-31.75" y="24.13" drill="1"/>
+<pad name="9" x="-29.21" y="21.59" drill="1"/>
+<pad name="10" x="-29.21" y="24.13" drill="1"/>
+<pad name="11" x="-26.67" y="21.59" drill="1"/>
+<pad name="12" x="-26.67" y="24.13" drill="1"/>
+<pad name="13" x="-24.13" y="21.59" drill="1"/>
+<pad name="14" x="-24.13" y="24.13" drill="1"/>
+<pad name="15" x="-21.59" y="21.59" drill="1"/>
+<pad name="16" x="-21.59" y="24.13" drill="1"/>
+<pad name="17" x="-19.05" y="21.59" drill="1"/>
+<pad name="18" x="-19.05" y="24.13" drill="1"/>
+<pad name="19" x="-16.51" y="21.59" drill="1"/>
+<pad name="20" x="-16.51" y="24.13" drill="1"/>
+<pad name="21" x="-13.97" y="21.59" drill="1"/>
+<pad name="22" x="-13.97" y="24.13" drill="1"/>
+<pad name="23" x="-11.43" y="21.59" drill="1"/>
+<pad name="24" x="-11.43" y="24.13" drill="1"/>
+<pad name="25" x="-8.89" y="21.59" drill="1"/>
+<pad name="26" x="-8.89" y="24.13" drill="1"/>
+<text x="-31.59" y="28.4" size="1.27" layer="25" ratio="10">&gt;NAME</text>
+<text x="-5.37" y="25.09" size="1.27" layer="21" ratio="10" rot="R180">26</text>
+<text x="-31.755" y="26.495" size="1.27" layer="27" ratio="10">&gt;VALUE</text>
+<text x="-31.6414" y="-2.8061" size="1.27" layer="51" rot="R90">SD Card </text>
+<text x="-39.8664" y="19.8939" size="0.4064" layer="51">3v3</text>
+<text x="-39.7414" y="25.5189" size="0.4064" layer="51">5v</text>
+<text x="-35.0914" y="25.4689" size="0.4064" layer="51">GND</text>
+<text x="48.32" y="-0.46" size="1.27" layer="51" rot="R90">USB</text>
+<text x="41.87" y="-20.56" size="1.27" layer="51" rot="R90">RJ45</text>
+<text x="-39.155" y="-24.835" size="1.27" layer="51" rot="R90">usb +5V</text>
+<text x="-26.87" y="-10.635" size="1.27" layer="51" rot="R90">SD card holder 5mm bottom sick</text>
+<text x="-5.37" y="22.09" size="1.27" layer="21" ratio="10" rot="R180">25</text>
+<text x="-4.97" y="-0.81" size="1.27" layer="51">Board 56x85mm H=16mm</text>
+<text x="20.98" y="24.065" size="1.27" layer="51">Audio</text>
+<text x="1.83" y="22.74" size="1.27" layer="51">RCA</text>
+<text x="0.605" y="-25.335" size="1.27" layer="51">HDMI</text>
 <rectangle x1="-39.624" y1="23.876" x2="-39.116" y2="24.384" layer="51"/>
 <rectangle x1="-37.084" y1="23.876" x2="-36.576" y2="24.384" layer="51"/>
 <rectangle x1="-34.544" y1="23.876" x2="-34.036" y2="24.384" layer="51"/>
-<rectangle x1="-32.004" y1="23.876" x2="-31.496" y2="24.384" layer="51" rot="R90"/>
-<rectangle x1="-29.464" y1="23.876" x2="-28.956" y2="24.384" layer="51"/>
+<rectangle x1="-32.004" y1="23.876" x2="-31.496" y2="24.384" layer="51"/>
+<rectangle x1="-29.464" y1="23.876" x2="-28.956" y2="24.384" layer="51" rot="R90"/>
 <rectangle x1="-26.924" y1="23.876" x2="-26.416" y2="24.384" layer="51"/>
 <rectangle x1="-24.384" y1="23.876" x2="-23.876" y2="24.384" layer="51"/>
 <rectangle x1="-21.844" y1="23.876" x2="-21.336" y2="24.384" layer="51"/>
@@ -498,7 +474,7 @@
 <rectangle x1="-16.764" y1="23.876" x2="-16.256" y2="24.384" layer="51"/>
 <rectangle x1="-14.224" y1="23.876" x2="-13.716" y2="24.384" layer="51"/>
 <rectangle x1="-11.684" y1="23.876" x2="-11.176" y2="24.384" layer="51"/>
-<rectangle x1="-42.164" y1="21.336" x2="-41.656" y2="21.844" layer="51"/>
+<rectangle x1="-9.144" y1="23.876" x2="-8.636" y2="24.384" layer="51"/>
 <rectangle x1="-39.624" y1="21.336" x2="-39.116" y2="21.844" layer="51"/>
 <rectangle x1="-37.084" y1="21.336" x2="-36.576" y2="21.844" layer="51"/>
 <rectangle x1="-34.544" y1="21.336" x2="-34.036" y2="21.844" layer="51"/>
@@ -511,8 +487,9 @@
 <rectangle x1="-16.764" y1="21.336" x2="-16.256" y2="21.844" layer="51"/>
 <rectangle x1="-14.224" y1="21.336" x2="-13.716" y2="21.844" layer="51"/>
 <rectangle x1="-11.684" y1="21.336" x2="-11.176" y2="21.844" layer="51"/>
-<pad name="P$1" x="-18.81" y="-11.135" drill="3.1"/>
-<pad name="P$2" x="35.69" y="14.365" drill="3.1"/>
+<rectangle x1="-9.144" y1="21.336" x2="-8.636" y2="21.844" layer="51"/>
+<pad name="P$1" x="-16.27" y="-11.135" drill="3.1"/>
+<pad name="P$2" x="38.23" y="14.365" drill="3.1"/>
 </package>
 </packages>
 <symbols>
@@ -699,7 +676,7 @@ The GPIO Connector (P5):&lt;br&gt;
 <gate name="G$1" symbol="RASPBERRY-PI_REV2" x="0" y="0"/>
 </gates>
 <devices>
-<device name="" package="RASPBERRY-PI_REV1_HOLES">
+<device name="" package="RASPBERRY-PI_HOLES">
 <connects>
 <connect gate="G$1" pin="3V3@1" pad="1"/>
 <connect gate="G$1" pin="3V3@17" pad="17"/>
