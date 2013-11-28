@@ -7464,10 +7464,6 @@ wire to board 2.54 mm (0.100") pitch header</description>
 <wire x1="63.5" y1="-109.22" x2="93.98" y2="-109.22" width="0.1524" layer="97"/>
 <circle x="-157.48" y="-10.16" radius="2.54" width="1.4224" layer="94"/>
 <text x="-170.18" y="-10.16" size="2.54" layer="97">AKU+</text>
-<wire x1="96.52" y1="-109.22" x2="96.52" y2="-40.64" width="0.1524" layer="97"/>
-<wire x1="139.7" y1="-109.22" x2="139.7" y2="-40.64" width="0.1524" layer="97"/>
-<wire x1="96.52" y1="-109.22" x2="139.7" y2="-109.22" width="0.1524" layer="97"/>
-<wire x1="96.52" y1="-40.64" x2="139.7" y2="-40.64" width="0.1524" layer="97"/>
 </plain>
 <instances>
 <instance part="R28" gate="G$1" x="-81.28" y="-12.7"/>
