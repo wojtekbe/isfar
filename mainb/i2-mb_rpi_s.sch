@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="6.1">
+<eagle version="6.4">
 <drawing>
 <settings>
 <setting alwaysvectorfont="yes"/>
@@ -7520,6 +7520,7 @@ DDEController.pdf</description>
 <part name="SUPPLY8" library="supply2" deviceset="+5V/1" device="" value="+5V_RPI"/>
 <part name="I2C_1" library="con-amp-micromatch" deviceset="MICROMATCH-4" device=""/>
 <part name="SUPPLY5" library="supply2" deviceset="+5V" device="" value="+5V_OUT"/>
+<part name="GND1" library="supply1" deviceset="GND" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -7653,6 +7654,7 @@ DDEController.pdf</description>
 <instance part="SUPPLY5" gate="+5V" x="43.18" y="0" smashed="yes">
 <attribute name="VALUE" x="41.275" y="3.175" size="1.778" layer="96"/>
 </instance>
+<instance part="GND1" gate="1" x="40.64" y="-38.1"/>
 </instances>
 <busses>
 <bus name="SDA,SCL">
@@ -7663,7 +7665,7 @@ DDEController.pdf</description>
 <wire x1="-38.1" y1="-40.64" x2="12.7" y2="-40.64" width="0.762" layer="92"/>
 <wire x1="-38.1" y1="-40.64" x2="-38.1" y2="-106.68" width="0.762" layer="92"/>
 <wire x1="12.7" y1="5.08" x2="12.7" y2="-40.64" width="0.762" layer="92"/>
-<wire x1="-38.1" y1="-106.68" x2="-12.7" y2="-106.68" width="0.762" layer="92"/>
+<wire x1="-38.1" y1="-106.68" x2="-17.78" y2="-106.68" width="0.762" layer="92"/>
 </segment>
 </bus>
 </busses>
@@ -7678,21 +7680,21 @@ DDEController.pdf</description>
 <label x="-129.032" y="-81.026" size="1.778" layer="95"/>
 </segment>
 <segment>
+<pinref part="I2C_4" gate="-2" pin="S"/>
+<wire x1="-20.32" y1="-119.38" x2="-20.32" y2="-106.68" width="0.1524" layer="91"/>
+</segment>
+<segment>
 <wire x1="12.7" y1="-5.08" x2="15.24" y2="-7.62" width="0.1524" layer="91"/>
 <wire x1="15.24" y1="-7.62" x2="38.1" y2="-7.62" width="0.1524" layer="91"/>
 <wire x1="38.1" y1="-7.62" x2="45.72" y2="-7.62" width="0.1524" layer="91"/>
-<wire x1="-20.32" y1="-119.38" x2="-20.32" y2="-111.76" width="0.1524" layer="91"/>
-<wire x1="-20.32" y1="-111.76" x2="38.1" y2="-30.48" width="0.1524" layer="91"/>
 <wire x1="38.1" y1="-30.48" x2="38.1" y2="-20.32" width="0.1524" layer="91"/>
 <wire x1="38.1" y1="-20.32" x2="38.1" y2="-7.62" width="0.1524" layer="91"/>
 <wire x1="45.72" y1="-30.48" x2="38.1" y2="-30.48" width="0.1524" layer="91"/>
 <wire x1="45.72" y1="-20.32" x2="38.1" y2="-20.32" width="0.1524" layer="91"/>
 <junction x="38.1" y="-20.32"/>
-<junction x="38.1" y="-30.48"/>
 <label x="21.59" y="-7.366" size="1.778" layer="95"/>
 <pinref part="I2C_2" gate="-2" pin="S"/>
 <pinref part="I2C_3" gate="-2" pin="S"/>
-<pinref part="I2C_4" gate="-2" pin="S"/>
 <pinref part="I2C_1" gate="-2" pin="S"/>
 </segment>
 <segment>
@@ -7716,22 +7718,22 @@ DDEController.pdf</description>
 <label x="-129.032" y="-73.406" size="1.778" layer="95"/>
 </segment>
 <segment>
+<pinref part="I2C_4" gate="-1" pin="S"/>
+<wire x1="-17.78" y1="-119.38" x2="-17.78" y2="-106.68" width="0.1524" layer="91"/>
+</segment>
+<segment>
 <wire x1="12.7" y1="-2.54" x2="15.24" y2="-5.08" width="0.1524" layer="91"/>
 <wire x1="15.24" y1="-5.08" x2="35.56" y2="-5.08" width="0.1524" layer="91"/>
 <wire x1="35.56" y1="-5.08" x2="45.72" y2="-5.08" width="0.1524" layer="91"/>
-<wire x1="-17.78" y1="-119.38" x2="-17.78" y2="-109.22" width="0.1524" layer="91"/>
 <wire x1="45.72" y1="-27.94" x2="35.56" y2="-27.94" width="0.1524" layer="91"/>
-<wire x1="-17.78" y1="-109.22" x2="35.56" y2="-27.94" width="0.1524" layer="91"/>
 <wire x1="45.72" y1="-17.78" x2="35.56" y2="-17.78" width="0.1524" layer="91"/>
 <wire x1="35.56" y1="-27.94" x2="35.56" y2="-17.78" width="0.1524" layer="91"/>
 <wire x1="35.56" y1="-17.78" x2="35.56" y2="-5.08" width="0.1524" layer="91"/>
 <junction x="35.56" y="-5.08"/>
 <junction x="35.56" y="-17.78"/>
-<junction x="35.56" y="-27.94"/>
 <label x="21.336" y="-4.826" size="1.778" layer="95"/>
 <pinref part="I2C_2" gate="-1" pin="S"/>
 <pinref part="I2C_3" gate="-1" pin="S"/>
-<pinref part="I2C_4" gate="-1" pin="S"/>
 <pinref part="I2C_1" gate="-1" pin="S"/>
 </segment>
 <segment>
@@ -7944,22 +7946,10 @@ DDEController.pdf</description>
 <junction x="-27.94" y="55.88"/>
 </segment>
 <segment>
-<wire x1="45.72" y1="-33.02" x2="40.64" y2="-33.02" width="0.1524" layer="91"/>
-<wire x1="45.72" y1="-10.16" x2="40.64" y2="-10.16" width="0.1524" layer="91"/>
-<wire x1="40.64" y1="-10.16" x2="40.64" y2="-22.86" width="0.1524" layer="91"/>
-<wire x1="40.64" y1="-22.86" x2="40.64" y2="-33.02" width="0.1524" layer="91"/>
-<wire x1="-22.86" y1="-119.38" x2="-22.86" y2="-114.3" width="0.1524" layer="91"/>
-<wire x1="40.64" y1="-33.02" x2="-22.86" y2="-114.3" width="0.1524" layer="91"/>
 <pinref part="GND12" gate="1" pin="GND"/>
-<wire x1="-22.86" y1="-114.3" x2="-27.94" y2="-114.3" width="0.1524" layer="91"/>
-<wire x1="45.72" y1="-22.86" x2="40.64" y2="-22.86" width="0.1524" layer="91"/>
-<junction x="40.64" y="-22.86"/>
-<junction x="40.64" y="-33.02"/>
-<junction x="-22.86" y="-114.3"/>
-<pinref part="I2C_2" gate="-3" pin="S"/>
-<pinref part="I2C_3" gate="-3" pin="S"/>
 <pinref part="I2C_4" gate="-3" pin="S"/>
-<pinref part="I2C_1" gate="-3" pin="S"/>
+<wire x1="-22.86" y1="-119.38" x2="-22.86" y2="-114.3" width="0.1524" layer="91"/>
+<wire x1="-22.86" y1="-114.3" x2="-27.94" y2="-114.3" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="U$2" gate="G$1" pin="GND@25"/>
@@ -7995,6 +7985,20 @@ DDEController.pdf</description>
 <pinref part="U$2" gate="G$1" pin="GND@6"/>
 <wire x1="-60.96" y1="5.08" x2="-63.5" y2="5.08" width="0.1524" layer="91"/>
 <pinref part="GND14" gate="1" pin="GND"/>
+</segment>
+<segment>
+<wire x1="45.72" y1="-33.02" x2="40.64" y2="-33.02" width="0.1524" layer="91"/>
+<wire x1="45.72" y1="-10.16" x2="40.64" y2="-10.16" width="0.1524" layer="91"/>
+<wire x1="40.64" y1="-10.16" x2="40.64" y2="-22.86" width="0.1524" layer="91"/>
+<wire x1="40.64" y1="-22.86" x2="40.64" y2="-33.02" width="0.1524" layer="91"/>
+<wire x1="45.72" y1="-22.86" x2="40.64" y2="-22.86" width="0.1524" layer="91"/>
+<junction x="40.64" y="-22.86"/>
+<pinref part="I2C_2" gate="-3" pin="S"/>
+<pinref part="I2C_3" gate="-3" pin="S"/>
+<pinref part="I2C_1" gate="-3" pin="S"/>
+<pinref part="GND1" gate="1" pin="GND"/>
+<wire x1="40.64" y1="-33.02" x2="40.64" y2="-35.56" width="0.1524" layer="91"/>
+<junction x="40.64" y="-33.02"/>
 </segment>
 </net>
 <net name="N$1" class="0">

@@ -7623,7 +7623,7 @@ W = angled&lt;p&gt;
 <wire x1="256.54" y1="96.52" x2="256.54" y2="172.72" width="0.1524" layer="97"/>
 <wire x1="256.54" y1="175.26" x2="256.54" y2="208.28" width="0.1524" layer="97"/>
 <wire x1="256.54" y1="208.28" x2="226.06" y2="208.28" width="0.1524" layer="97"/>
-<text x="154.432" y="129.032" size="1.016" layer="96">(ADC12_IN7)</text>
+<text x="156.21" y="129.032" size="1.016" layer="96">(ADC12_IN7)</text>
 <text x="154.432" y="141.732" size="1.016" layer="96">(ADC123_IN2)</text>
 <text x="169.926" y="197.612" size="1.016" layer="96">(TIM3_CH3)</text>
 <text x="154.432" y="144.272" size="1.016" layer="96">(TIM2_CH2)</text>
@@ -7638,6 +7638,8 @@ W = angled&lt;p&gt;
 <wire x1="226.06" y1="175.26" x2="226.06" y2="208.28" width="0.1524" layer="97"/>
 <wire x1="223.52" y1="208.28" x2="223.52" y2="172.72" width="0.1524" layer="97"/>
 <wire x1="223.52" y1="172.72" x2="256.54" y2="172.72" width="0.1524" layer="97"/>
+<text x="156.21" y="123.952" size="1.016" layer="96">(USART1_TX)</text>
+<text x="156.21" y="121.412" size="1.016" layer="96">(USART1_RX)</text>
 </plain>
 <instances>
 <instance part="I2C" gate="-1" x="69.85" y="78.74" smashed="yes" rot="R180">
