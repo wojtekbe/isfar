@@ -7799,32 +7799,42 @@ DDEController.pdf</description>
 <segment>
 <label x="-200.66" y="55.88" size="1.778" layer="95"/>
 <pinref part="X_ETH" gate="G$1" pin="TX+"/>
-<wire x1="-187.96" y1="55.88" x2="-210.82" y2="55.88" width="0.1524" layer="91"/>
+<wire x1="-192.786" y1="55.88" x2="-193.04" y2="55.88" width="0.1524" layer="91"/>
 <pinref part="X9" gate="-1" pin="S"/>
+<wire x1="-193.04" y1="55.88" x2="-210.82" y2="55.88" width="0.1524" layer="91"/>
+<wire x1="-187.96" y1="55.88" x2="-192.786" y2="55.88" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="TX-" class="0">
 <segment>
 <label x="-200.66" y="53.34" size="1.778" layer="95"/>
 <pinref part="X_ETH" gate="G$1" pin="TX-"/>
-<wire x1="-187.96" y1="53.34" x2="-210.82" y2="53.34" width="0.1524" layer="91"/>
-<pinref part="X9" gate="-2" pin="S"/>
+<wire x1="-192.786" y1="53.34" x2="-193.04" y2="53.34" width="0.1524" layer="91"/>
+<pinref part="X9" gate="-3" pin="S"/>
+<wire x1="-193.04" y1="53.34" x2="-210.82" y2="53.34" width="0.1524" layer="91"/>
+<wire x1="-187.96" y1="50.8" x2="-190.5" y2="53.34" width="0.1524" layer="91"/>
+<wire x1="-190.5" y1="53.34" x2="-192.786" y2="53.34" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="RX+" class="0">
 <segment>
-<wire x1="-210.82" y1="50.8" x2="-187.96" y2="50.8" width="0.1524" layer="91"/>
+<wire x1="-210.82" y1="50.8" x2="-193.04" y2="50.8" width="0.1524" layer="91"/>
 <label x="-200.66" y="50.8" size="1.778" layer="95"/>
 <pinref part="X_ETH" gate="G$1" pin="RX+"/>
-<pinref part="X9" gate="-3" pin="S"/>
+<pinref part="X9" gate="-4" pin="S"/>
+<wire x1="-193.04" y1="50.8" x2="-192.786" y2="50.8" width="0.1524" layer="91"/>
+<wire x1="-192.786" y1="50.8" x2="-190.5" y2="50.8" width="0.1524" layer="91"/>
+<wire x1="-190.5" y1="50.8" x2="-187.96" y2="48.26" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="RX-" class="0">
 <segment>
 <label x="-200.66" y="43.18" size="1.778" layer="95"/>
 <pinref part="X_ETH" gate="G$1" pin="RX-"/>
-<wire x1="-187.96" y1="43.18" x2="-210.82" y2="43.18" width="0.1524" layer="91"/>
+<wire x1="-192.786" y1="43.18" x2="-193.04" y2="43.18" width="0.1524" layer="91"/>
 <pinref part="X9" gate="-6" pin="S"/>
+<wire x1="-193.04" y1="43.18" x2="-210.82" y2="43.18" width="0.1524" layer="91"/>
+<wire x1="-192.786" y1="43.18" x2="-187.96" y2="43.18" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="+12V_IN" class="0">
