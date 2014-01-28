@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="6.4">
+<eagle version="6.5.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="yes"/>
@@ -6041,19 +6041,19 @@ max: 2.048v</description>
 <pad name="COM" x="0" y="0" drill="1.5"/>
 <pad name="C+" x="2.5" y="5" drill="1.4"/>
 <pad name="C-" x="2.5" y="-5" drill="1.4"/>
-<pad name="NO" x="12.7" y="5" drill="1.4"/>
-<pad name="NC" x="12.7" y="-5" drill="1.4"/>
-<wire x1="0" y1="5" x2="0" y2="-5" width="0.127" layer="21"/>
-<wire x1="0" y1="-5" x2="15" y2="-5" width="0.127" layer="21"/>
-<wire x1="15" y1="-5" x2="15" y2="5" width="0.127" layer="21"/>
-<wire x1="15" y1="5" x2="0" y2="5" width="0.127" layer="21"/>
+<pad name="NC" x="12.7" y="5" drill="1.4"/>
+<pad name="NO" x="12.7" y="-5" drill="1.4"/>
+<wire x1="0" y1="6" x2="0" y2="-6" width="0.127" layer="21"/>
+<wire x1="0" y1="-6" x2="15" y2="-6" width="0.127" layer="21"/>
+<wire x1="15" y1="-6" x2="15" y2="6" width="0.127" layer="21"/>
+<wire x1="15" y1="6" x2="0" y2="6" width="0.127" layer="21"/>
 <wire x1="2.54" y1="1.905" x2="2.54" y2="0.635" width="0.127" layer="21" curve="-180"/>
 <wire x1="2.54" y1="0.635" x2="2.54" y2="-0.635" width="0.127" layer="21" curve="-180"/>
 <wire x1="2.54" y1="-0.635" x2="2.54" y2="-1.905" width="0.127" layer="21" curve="-180"/>
 <wire x1="2.54" y1="1.905" x2="2.54" y2="3.175" width="0.127" layer="21"/>
 <wire x1="2.54" y1="-1.905" x2="2.54" y2="-3.175" width="0.127" layer="21"/>
 <wire x1="6.35" y1="0" x2="10.16" y2="0" width="0.127" layer="21"/>
-<wire x1="10.16" y1="0" x2="12.7" y2="-2.54" width="0.127" layer="21"/>
+<wire x1="10.16" y1="0" x2="12.7" y2="2.54" width="0.127" layer="21"/>
 <wire x1="12.7" y1="-3.81" x2="12.7" y2="-3.175" width="0.127" layer="21"/>
 <wire x1="12.7" y1="3.81" x2="12.7" y2="3.175" width="0.127" layer="21"/>
 <circle x="12.7" y="3.175" radius="0.127" width="0.127" layer="21"/>
@@ -7521,6 +7521,7 @@ DDEController.pdf</description>
 <part name="I2C_1" library="con-amp-micromatch" deviceset="MICROMATCH-4" device=""/>
 <part name="SUPPLY5" library="supply2" deviceset="+5V" device="" value="+5V_OUT"/>
 <part name="GND1" library="supply1" deviceset="GND" device=""/>
+<part name="U$9" library="wb" deviceset="FBR51" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -7655,6 +7656,7 @@ DDEController.pdf</description>
 <attribute name="VALUE" x="41.275" y="3.175" size="1.778" layer="96"/>
 </instance>
 <instance part="GND1" gate="1" x="40.64" y="-38.1"/>
+<instance part="U$9" gate="G$1" x="-187.96" y="-144.78"/>
 </instances>
 <busses>
 <bus name="SDA,SCL">
