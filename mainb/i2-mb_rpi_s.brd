@@ -2170,6 +2170,12 @@ design rules under a new name.</description>
 <attribute name="VALUE" x="-35.21" y="-31.54" size="1.27" layer="28" rot="MR90"/>
 </element>
 <element name="U$1" library="isfar2-logo" package="I2-LOGO" value="" x="30" y="-33.4"/>
+<element name="UART" library="con-molex" package="70543-03" value="C-GRID-03-70543" x="-48" y="-59.8">
+<attribute name="OC_NEWARK" value="unknown" x="-48" y="-59.8" size="1.778" layer="27" display="off"/>
+<attribute name="MPN" value="" x="-48" y="-59.8" size="1.778" layer="27" display="off"/>
+<attribute name="MF" value="" x="-48" y="-59.8" size="1.778" layer="27" display="off"/>
+<attribute name="OC_FARNELL" value="unknown" x="-48" y="-59.8" size="1.778" layer="27" display="off"/>
+</element>
 </elements>
 <signals>
 <signal name="SCL" airwireshidden="yes">
@@ -2437,6 +2443,37 @@ design rules under a new name.</description>
 <contactref element="I2C_2" pad="3"/>
 <contactref element="I2C_3" pad="3"/>
 <contactref element="I2C_1" pad="3"/>
+<contactref element="UART" pad="1"/>
+<wire x1="-23" y1="-42" x2="-50.54" y2="-59.8" width="0" layer="19" extent="1-1"/>
+<wire x1="-30.13" y1="-29.635" x2="-23" y2="-42" width="0" layer="19" extent="1-1"/>
+<wire x1="-38.4" y1="-29" x2="-30.13" y2="-29.635" width="0" layer="19" extent="1-1"/>
+<wire x1="-43.7" y1="-20.09" x2="-38.4" y2="-29" width="0" layer="19" extent="1-1"/>
+<wire x1="-43.7" y1="-17.55" x2="-43.7" y2="-20.09" width="0" layer="19" extent="1-1"/>
+<wire x1="-5.64" y1="-27.8" x2="-23" y2="-42" width="0" layer="19" extent="1-1"/>
+<wire x1="-5.6" y1="-17.55" x2="-5.64" y2="-27.8" width="0" layer="19" extent="1-1"/>
+<wire x1="-5.6" y1="-15.01" x2="-5.6" y2="-17.55" width="0" layer="19" extent="1-1"/>
+<wire x1="7.2" y1="-9.4999" x2="-5.6" y2="-15.01" width="0" layer="19" extent="1-1"/>
+<wire x1="6.35" y1="-7.2" x2="7.2" y2="-9.4999" width="0" layer="19" extent="1-1"/>
+<wire x1="8.15" y1="-12.1001" x2="7.2" y2="-9.4999" width="0" layer="19" extent="1-1"/>
+<wire x1="11.1" y1="-11.9" x2="8.15" y2="-12.1001" width="0" layer="19" extent="1-1"/>
+<wire x1="8.69" y1="-18.72" x2="8.15" y2="-12.1001" width="0" layer="19" extent="1-1"/>
+<wire x1="11.29" y1="-24.78" x2="8.69" y2="-18.72" width="0" layer="19" extent="1-1"/>
+<wire x1="16.31" y1="-21.26" x2="11.29" y2="-24.78" width="0" layer="19" extent="1-1"/>
+<wire x1="18.2" y1="-10.13" x2="11.1" y2="-11.9" width="0" layer="19" extent="1-1"/>
+<wire x1="23" y1="-10.13" x2="18.2" y2="-10.13" width="0" layer="19" extent="1-1"/>
+<wire x1="23.93" y1="-21.26" x2="16.31" y2="-21.26" width="0" layer="19" extent="1-1"/>
+<wire x1="29.01" y1="-18.72" x2="23.93" y2="-21.26" width="0" layer="19" extent="1-1"/>
+<wire x1="34.09" y1="-21.26" x2="29.01" y2="-18.72" width="0" layer="19" extent="1-1"/>
+<wire x1="43.8" y1="-15.25" x2="34.09" y2="-21.26" width="0" layer="19" extent="1-1"/>
+<wire x1="45.87" y1="-7.155" x2="43.8" y2="-15.25" width="0" layer="19" extent="1-1"/>
+<wire x1="0" y1="9.5" x2="6.35" y2="-7.2" width="0" layer="19" extent="1-1"/>
+<wire x1="26.89" y1="9.09" x2="23" y2="-10.13" width="0" layer="19" extent="1-1"/>
+<wire x1="15.8108875" y1="22.249703125" x2="26.89" y2="9.09" width="0" layer="19" extent="1-1"/>
+<wire x1="-18.3508875" y1="17.85029375" x2="0" y2="9.5" width="0" layer="19" extent="1-1"/>
+<wire x1="-26.89" y1="9.09" x2="-18.3508875" y2="17.85029375" width="0" layer="19" extent="1-1"/>
+<wire x1="23" y1="-42" x2="23.93" y2="-21.26" width="0" layer="19" extent="1-1"/>
+<wire x1="23" y1="42" x2="15.8108875" y2="22.249703125" width="0" layer="19" extent="1-1"/>
+<wire x1="-23" y1="42" x2="-18.3508875" y2="17.85029375" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="N$1">
 <contactref element="R3" pad="2"/>
@@ -2640,6 +2677,16 @@ design rules under a new name.</description>
 <contactref element="U$2" pad="1"/>
 <wire x1="43.8" y1="-17.75" x2="45.15" y2="-17.75" width="0" layer="19" extent="1-1"/>
 <wire x1="39.17" y1="-18.72" x2="43.8" y2="-17.75" width="0" layer="19" extent="1-1"/>
+</signal>
+<signal name="TX">
+<contactref element="UART" pad="3"/>
+<contactref element="U$2" pad="8"/>
+<wire x1="31.55" y1="-21.26" x2="-45.46" y2="-59.8" width="0" layer="19" extent="1-1"/>
+</signal>
+<signal name="RX">
+<contactref element="UART" pad="2"/>
+<contactref element="U$2" pad="10"/>
+<wire x1="29.01" y1="-21.26" x2="-48" y2="-59.8" width="0" layer="19" extent="1-1"/>
 </signal>
 </signals>
 </board>
