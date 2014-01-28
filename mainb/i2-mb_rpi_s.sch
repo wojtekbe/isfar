@@ -7032,8 +7032,8 @@ PCF8583: Clock/calendar with 240 x 8-bit RAM&lt;/b&gt;
 <wire x1="-0.6" y1="10.245" x2="0.6" y2="10.245" width="0.2032" layer="21"/>
 <wire x1="0" y1="10.845" x2="0" y2="9.645" width="0.2032" layer="21"/>
 <circle x="0" y="0" radius="11.3" width="0.2032" layer="21"/>
-<pad name="+" x="0" y="13.9" drill="0.65" shape="long" rot="R90"/>
-<pad name="-" x="0" y="-6.1" drill="0.65" shape="long" rot="R90"/>
+<pad name="+" x="0" y="13.9" drill="1" shape="long" rot="R90"/>
+<pad name="-" x="0" y="-6.1" drill="1" shape="long" rot="R90"/>
 <text x="-3.175" y="16.51" size="1.27" layer="25">&gt;NAME</text>
 <text x="-3.175" y="0.635" size="1.27" layer="27">&gt;VALUE</text>
 </package>
@@ -7521,7 +7521,6 @@ DDEController.pdf</description>
 <part name="I2C_1" library="con-amp-micromatch" deviceset="MICROMATCH-4" device=""/>
 <part name="SUPPLY5" library="supply2" deviceset="+5V" device="" value="+5V_OUT"/>
 <part name="GND1" library="supply1" deviceset="GND" device=""/>
-<part name="U$9" library="wb" deviceset="FBR51" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -7656,7 +7655,6 @@ DDEController.pdf</description>
 <attribute name="VALUE" x="41.275" y="3.175" size="1.778" layer="96"/>
 </instance>
 <instance part="GND1" gate="1" x="40.64" y="-38.1"/>
-<instance part="U$9" gate="G$1" x="-187.96" y="-144.78"/>
 </instances>
 <busses>
 <bus name="SDA,SCL">
