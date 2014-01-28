@@ -6452,18 +6452,18 @@ DDEController.pdf</description>
 <library name="pololu">
 <packages>
 <package name="POLOLU-2111">
-<wire x1="20.955" y1="-2.54" x2="21.59" y2="-3.175" width="0.1524" layer="21"/>
-<wire x1="21.59" y1="-3.175" x2="21.59" y2="-4.445" width="0.1524" layer="21"/>
-<wire x1="21.59" y1="-4.445" x2="20.955" y2="-5.08" width="0.1524" layer="21"/>
-<wire x1="20.955" y1="0" x2="21.59" y2="-0.635" width="0.1524" layer="21"/>
-<wire x1="20.955" y1="2.54" x2="21.59" y2="1.905" width="0.1524" layer="21"/>
-<wire x1="21.59" y1="1.905" x2="21.59" y2="0.635" width="0.1524" layer="21"/>
-<wire x1="21.59" y1="0.635" x2="20.955" y2="0" width="0.1524" layer="21"/>
-<wire x1="20.955" y1="-2.54" x2="21.59" y2="-1.905" width="0.1524" layer="21"/>
-<wire x1="21.59" y1="-0.635" x2="21.59" y2="-1.905" width="0.1524" layer="21"/>
-<wire x1="20.955" y1="5.08" x2="21.59" y2="4.445" width="0.1524" layer="21"/>
-<wire x1="21.59" y1="4.445" x2="21.59" y2="3.175" width="0.1524" layer="21"/>
-<wire x1="21.59" y1="3.175" x2="20.955" y2="2.54" width="0.1524" layer="21"/>
+<wire x1="20.955" y1="-3.81" x2="21.59" y2="-4.445" width="0.1524" layer="21"/>
+<wire x1="21.59" y1="-4.445" x2="21.59" y2="-5.715" width="0.1524" layer="21"/>
+<wire x1="21.59" y1="-5.715" x2="20.955" y2="-6.35" width="0.1524" layer="21"/>
+<wire x1="20.955" y1="-1.27" x2="21.59" y2="-1.905" width="0.1524" layer="21"/>
+<wire x1="20.955" y1="1.27" x2="21.59" y2="0.635" width="0.1524" layer="21"/>
+<wire x1="21.59" y1="0.635" x2="21.59" y2="-0.635" width="0.1524" layer="21"/>
+<wire x1="21.59" y1="-0.635" x2="20.955" y2="-1.27" width="0.1524" layer="21"/>
+<wire x1="20.955" y1="-3.81" x2="21.59" y2="-3.175" width="0.1524" layer="21"/>
+<wire x1="21.59" y1="-1.905" x2="21.59" y2="-3.175" width="0.1524" layer="21"/>
+<wire x1="20.955" y1="3.81" x2="21.59" y2="3.175" width="0.1524" layer="21"/>
+<wire x1="21.59" y1="3.175" x2="21.59" y2="1.905" width="0.1524" layer="21"/>
+<wire x1="21.59" y1="1.905" x2="20.955" y2="1.27" width="0.1524" layer="21"/>
 <wire x1="-19.05" y1="-1.905" x2="-18.415" y2="-1.27" width="0.1524" layer="21"/>
 <wire x1="-19.05" y1="-3.175" x2="-19.05" y2="-1.905" width="0.1524" layer="21"/>
 <wire x1="-18.415" y1="-3.81" x2="-19.05" y2="-3.175" width="0.1524" layer="21"/>
@@ -6476,18 +6476,18 @@ DDEController.pdf</description>
 <wire x1="-18.415" y1="3.81" x2="-19.05" y2="4.445" width="0.1524" layer="21"/>
 <wire x1="-19.05" y1="4.445" x2="-19.05" y2="5.715" width="0.1524" layer="21"/>
 <wire x1="-19.05" y1="5.715" x2="-18.415" y2="6.35" width="0.1524" layer="21"/>
-<pad name="8" x="20.32" y="-3.81" drill="1.1" shape="octagon" rot="R90"/>
-<pad name="7" x="20.32" y="-1.27" drill="1.1" shape="octagon" rot="R90"/>
-<pad name="6" x="20.32" y="1.27" drill="1.1" shape="octagon" rot="R90"/>
-<pad name="5" x="20.32" y="3.81" drill="1.1" shape="octagon" rot="R90"/>
+<pad name="8" x="20.32" y="-5.08" drill="1.1" shape="octagon" rot="R90"/>
+<pad name="7" x="20.32" y="-2.54" drill="1.1" shape="octagon" rot="R90"/>
+<pad name="6" x="20.32" y="0" drill="1.1" shape="octagon" rot="R90"/>
+<pad name="5" x="20.32" y="2.54" drill="1.1" shape="octagon" rot="R90"/>
 <pad name="4" x="-17.78" y="-2.54" drill="1.1" shape="octagon" rot="R90"/>
 <pad name="3" x="-17.78" y="0" drill="1.1" shape="octagon" rot="R90"/>
 <pad name="2" x="-17.78" y="2.54" drill="1.1" shape="octagon" rot="R90"/>
 <pad name="1" x="-17.78" y="5.08" drill="1.1" shape="octagon" rot="R90"/>
-<rectangle x1="20.066" y1="-4.064" x2="20.574" y2="-3.556" layer="51" rot="R90"/>
-<rectangle x1="20.066" y1="1.016" x2="20.574" y2="1.524" layer="51" rot="R90"/>
-<rectangle x1="20.066" y1="-1.524" x2="20.574" y2="-1.016" layer="51" rot="R90"/>
-<rectangle x1="20.066" y1="3.556" x2="20.574" y2="4.064" layer="51" rot="R90"/>
+<rectangle x1="20.066" y1="-5.334" x2="20.574" y2="-4.826" layer="51" rot="R90"/>
+<rectangle x1="20.066" y1="-0.254" x2="20.574" y2="0.254" layer="51" rot="R90"/>
+<rectangle x1="20.066" y1="-2.794" x2="20.574" y2="-2.286" layer="51" rot="R90"/>
+<rectangle x1="20.066" y1="2.286" x2="20.574" y2="2.794" layer="51" rot="R90"/>
 <rectangle x1="-18.034" y1="-2.794" x2="-17.526" y2="-2.286" layer="51" rot="R90"/>
 <rectangle x1="-18.034" y1="-0.254" x2="-17.526" y2="0.254" layer="51" rot="R90"/>
 <rectangle x1="-18.034" y1="2.286" x2="-17.526" y2="2.794" layer="51" rot="R90"/>
@@ -6504,30 +6504,30 @@ DDEController.pdf</description>
 <wire x1="-17.145" y1="6.35" x2="-16.51" y2="5.715" width="0.1524" layer="21"/>
 <wire x1="-16.51" y1="5.715" x2="-16.51" y2="4.445" width="0.1524" layer="21"/>
 <wire x1="-16.51" y1="4.445" x2="-17.145" y2="3.81" width="0.1524" layer="21"/>
-<wire x1="19.685" y1="2.54" x2="19.05" y2="3.175" width="0.1524" layer="21"/>
-<wire x1="19.05" y1="3.175" x2="19.05" y2="4.445" width="0.1524" layer="21"/>
-<wire x1="19.05" y1="4.445" x2="19.685" y2="5.08" width="0.1524" layer="21"/>
-<wire x1="19.685" y1="0" x2="19.05" y2="0.635" width="0.1524" layer="21"/>
-<wire x1="19.05" y1="0.635" x2="19.05" y2="1.905" width="0.1524" layer="21"/>
-<wire x1="19.05" y1="1.905" x2="19.685" y2="2.54" width="0.1524" layer="21"/>
-<wire x1="19.05" y1="-0.635" x2="19.685" y2="0" width="0.1524" layer="21"/>
-<wire x1="19.05" y1="-1.905" x2="19.05" y2="-0.635" width="0.1524" layer="21"/>
-<wire x1="19.685" y1="-2.54" x2="19.05" y2="-1.905" width="0.1524" layer="21"/>
-<wire x1="19.685" y1="-5.08" x2="19.05" y2="-4.445" width="0.1524" layer="21"/>
-<wire x1="19.685" y1="-2.54" x2="19.05" y2="-3.175" width="0.1524" layer="21"/>
-<wire x1="19.05" y1="-4.445" x2="19.05" y2="-3.175" width="0.1524" layer="21"/>
+<wire x1="19.685" y1="1.27" x2="19.05" y2="1.905" width="0.1524" layer="21"/>
+<wire x1="19.05" y1="1.905" x2="19.05" y2="3.175" width="0.1524" layer="21"/>
+<wire x1="19.05" y1="3.175" x2="19.685" y2="3.81" width="0.1524" layer="21"/>
+<wire x1="19.685" y1="-1.27" x2="19.05" y2="-0.635" width="0.1524" layer="21"/>
+<wire x1="19.05" y1="-0.635" x2="19.05" y2="0.635" width="0.1524" layer="21"/>
+<wire x1="19.05" y1="0.635" x2="19.685" y2="1.27" width="0.1524" layer="21"/>
+<wire x1="19.05" y1="-1.905" x2="19.685" y2="-1.27" width="0.1524" layer="21"/>
+<wire x1="19.05" y1="-3.175" x2="19.05" y2="-1.905" width="0.1524" layer="21"/>
+<wire x1="19.685" y1="-3.81" x2="19.05" y2="-3.175" width="0.1524" layer="21"/>
+<wire x1="19.685" y1="-6.35" x2="19.05" y2="-5.715" width="0.1524" layer="21"/>
+<wire x1="19.685" y1="-3.81" x2="19.05" y2="-4.445" width="0.1524" layer="21"/>
+<wire x1="19.05" y1="-5.715" x2="19.05" y2="-4.445" width="0.1524" layer="21"/>
 <wire x1="-18.415" y1="6.35" x2="-17.145" y2="6.35" width="0.1524" layer="21"/>
-<wire x1="19.685" y1="-5.08" x2="20.955" y2="-5.08" width="0.1524" layer="21"/>
+<wire x1="19.685" y1="-6.35" x2="20.955" y2="-6.35" width="0.1524" layer="21"/>
 <wire x1="-22.86" y1="-7.62" x2="25.4" y2="-7.62" width="0.127" layer="21" style="shortdash"/>
 <wire x1="25.4" y1="-7.62" x2="25.4" y2="7.62" width="0.127" layer="21" style="shortdash"/>
 <wire x1="25.4" y1="7.62" x2="-22.86" y2="7.62" width="0.127" layer="21" style="shortdash"/>
 <wire x1="-22.86" y1="7.62" x2="-22.86" y2="-7.62" width="0.127" layer="21" style="shortdash"/>
 <text x="-13.97" y="-2.54" size="1.27" layer="21" rot="R90">VIN</text>
-<text x="17.78" y="-5.08" size="1.27" layer="21" rot="R90">VOUT</text>
+<text x="17.78" y="-6.35" size="1.27" layer="21" rot="R90">VOUT</text>
 <wire x1="-18.415" y1="-3.81" x2="-17.145" y2="-3.81" width="0.1524" layer="21"/>
-<wire x1="19.685" y1="5.08" x2="20.955" y2="5.08" width="0.1524" layer="21"/>
+<wire x1="19.685" y1="3.81" x2="20.955" y2="3.81" width="0.1524" layer="21"/>
 <text x="-13.97" y="1.905" size="1.27" layer="21" rot="R90">GND</text>
-<text x="17.78" y="1.27" size="1.27" layer="21" rot="R90">GND</text>
+<text x="17.78" y="0" size="1.27" layer="21" rot="R90">GND</text>
 </package>
 </packages>
 <symbols>
