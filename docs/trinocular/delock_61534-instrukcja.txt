@@ -1,2 +1,0 @@
-modprobe em28xx card=19
-mplayer tv:// -tv driver=v4l2:device=/dev/video1:input=1:norm=PAL
