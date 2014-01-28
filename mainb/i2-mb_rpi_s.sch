@@ -7523,6 +7523,10 @@ DDEController.pdf</description>
 <part name="GND1" library="supply1" deviceset="GND" device=""/>
 <part name="UART" library="con-molex" deviceset="C-GRID-03" device="-70543"/>
 <part name="GND5" library="supply1" deviceset="GND" device=""/>
+<part name="LED4" library="wb" deviceset="LED0603" device="" value=""/>
+<part name="R8" library="rcl" deviceset="R-EU_" device="R0603" value="500"/>
+<part name="LED5" library="wb" deviceset="LED0603" device="" value=""/>
+<part name="R9" library="rcl" deviceset="R-EU_" device="R0603" value="500"/>
 </parts>
 <sheets>
 <sheet>
@@ -7663,6 +7667,14 @@ DDEController.pdf</description>
 <instance part="UART" gate="-2" x="-81.28" y="48.26" rot="R180"/>
 <instance part="UART" gate="-3" x="-81.28" y="50.8" rot="R180"/>
 <instance part="GND5" gate="1" x="-73.66" y="40.64"/>
+<instance part="LED4" gate="G$1" x="-106.68" y="86.36" smashed="yes">
+<attribute name="VALUE" x="-104.14" y="84.0486" size="1.778" layer="96"/>
+</instance>
+<instance part="R8" gate="G$1" x="-111.76" y="93.98" rot="R90"/>
+<instance part="LED5" gate="G$1" x="-101.6" y="25.4" smashed="yes">
+<attribute name="VALUE" x="-99.06" y="23.0886" size="1.778" layer="96"/>
+</instance>
+<instance part="R9" gate="G$1" x="-101.6" y="35.56" rot="R90"/>
 </instances>
 <busses>
 <bus name="SDA,SCL">

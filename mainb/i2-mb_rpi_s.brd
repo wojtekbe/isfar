@@ -2176,6 +2176,10 @@ design rules under a new name.</description>
 <attribute name="MF" value="" x="-48" y="-59.8" size="1.778" layer="27" display="off"/>
 <attribute name="OC_FARNELL" value="unknown" x="-48" y="-59.8" size="1.778" layer="27" display="off"/>
 </element>
+<element name="LED4" library="wb" package="D0603" value="" x="-53.6" y="-66.2"/>
+<element name="R8" library="rcl" package="R0603" value="500" x="-53.6" y="-69.6"/>
+<element name="LED5" library="wb" package="D0603" value="" x="-53.6" y="-74.4"/>
+<element name="R9" library="rcl" package="R0603" value="500" x="-53.6" y="-77.8"/>
 </elements>
 <signals>
 <signal name="SCL" airwireshidden="yes">
