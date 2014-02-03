@@ -8,7 +8,7 @@ CC=arm-none-eabi-gcc
 OBJCOPY=arm-none-eabi-objcopy
 
 CFLAGS=-g -O2 -mlittle-endian -mthumb
-CFLAGS+=-mcpu=cortex-m4 -mhard-float -mfpu=vfp
+CFLAGS+=-mcpu=cortex-m4
 CFLAGS+=-ffreestanding 
 CFLAGS+=-nostdlib
 
@@ -29,13 +29,12 @@ $(PROJ).bin: $(PROJ).elf
 
 
 $(PROJ).elf: main.c system_stm32f4xx.c startup_stm32f4xx.s
-	$(CC) $(CFLAGS) $(LDFLAGS) $^ -o $@  
+	$(CC) $(CFLAGS) $^ -o $@  -L$(LIB)/build -lSTM32F4xx_StdPeriph_Driver
 	
 r: $(PROJ).bin
 	st-flash --reset write $(PROJ).bin 0x08000000
 
 clean:
-	rm -rf *.o
-	rm -rf $(PROJ).elf $(PROJ).bin
+	rm -rf *.o *.elf *.bin
 
 .PHONY: all clean
