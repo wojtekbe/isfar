@@ -1,0 +1,12 @@
+Motor1
+M1-PWM -> PA1 -> TIM2_CH2
+
+Tank
+M2-PWM -> 
+
+
+Ledd
+SRV1
+SRV2
+LED-PWM
+

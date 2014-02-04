@@ -1,40 +1,80 @@
-PROJ=sidedriver
-
-# http://www.farrellf.com/projects/hardware/2012-06-09_First_Steps_with_the_STM32F4_in_Linux_%28Part_2%29/
-#uses git://github.com/karlp/kkstm32_base
-LIB=/home/wojtekbe/lib/STM32F4xx_StdPeriph_Driver
+BIN=main.bin
+ELF=main.elf
 
 CC=arm-none-eabi-gcc
-OBJCOPY=arm-none-eabi-objcopy
+LD=arm-none-eabi-gcc
+AR=arm-none-eabi-ar
+AS=arm-none-eabi-as
+CP=arm-none-eabi-objcopy
+OD=arm-none-eabi-objdump
 
-CFLAGS=-g -O2 -mlittle-endian -mthumb
-CFLAGS+=-mcpu=cortex-m4
-CFLAGS+=-ffreestanding 
-CFLAGS+=-nostdlib
+LIB=/home/wojtekbe/lib
 
-# to run from FLASH
-CFLAGS+=-Wl,-T,stm32_flash.ld
+DEFS = -DUSE_STDPERIPH_DRIVER -DSTM32F4XX -DHSE_VALUE=8000000
+STARTUP = $(LIB)/CMSIS/Device/ST/STM32F4xx/Source/Templates/gcc_ride7/startup_stm32f40xx.s
 
-# stm32f4xx_stdperiph_driver
-CFLAGS+=-I$(LIB)/inc
-CFLAGS+=-I$(LIB)/inc/device_support
-CFLAGS+=-I$(LIB)/inc/core_support
+MCU = cortex-m4
+MCFLAGS = -mcpu=$(MCU) -mthumb -mlittle-endian -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb-interwork -std=c99
+STM32_INCLUDES = -I$(LIB)/CMSIS/Device/ST/STM32F4xx/Include/ \
+	-I$(LIB)/CMSIS/Include/ \
+	-I$(LIB)/STM32F4xx_StdPeriph_Driver/inc/
 
-LDFLAGS+= 
+OPTIMIZE       = -Os
 
-all: $(PROJ).bin
+CFLAGS	= $(MCFLAGS)  $(OPTIMIZE)  $(DEFS) -I. -I./ $(STM32_INCLUDES)  -Wl,-T,stm32_flash.ld -ggdb
+AFLAGS	= $(MCFLAGS) 
+#-mapcs-float use float regs. small increase in code size
 
-$(PROJ).bin: $(PROJ).elf
-	$(OBJCOPY) -O binary $^ $@
+SRC = main.c \
+	stm32f4xx_it.c \
+	system_stm32f4xx.c \
+	$(LIB)/STM32F4xx_StdPeriph_Driver/src/misc.c \
+	$(LIB)/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_adc.c \
+	$(LIB)/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_can.c \
+	$(LIB)/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_crc.c \
+	$(LIB)/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_cryp_aes.c \
+	$(LIB)/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_cryp.c \
+	$(LIB)/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_cryp_des.c \
+	$(LIB)/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_cryp_tdes.c \
+	$(LIB)/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_dac.c \
+	$(LIB)/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_dbgmcu.c \
+	$(LIB)/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_dcmi.c \
+	$(LIB)/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_dma.c \
+	$(LIB)/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_exti.c \
+	$(LIB)/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_flash.c \
+	$(LIB)/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_fsmc.c \
+	$(LIB)/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_gpio.c \
+	$(LIB)/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_hash.c \
+	$(LIB)/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_hash_md5.c \
+	$(LIB)/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_hash_sha1.c \
+	$(LIB)/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_i2c.c \
+	$(LIB)/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_iwdg.c \
+	$(LIB)/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_pwr.c \
+	$(LIB)/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_rcc.c \
+	$(LIB)/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_rng.c \
+	$(LIB)/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_rtc.c \
+	$(LIB)/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_sdio.c \
+	$(LIB)/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_spi.c \
+	$(LIB)/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_syscfg.c \
+	$(LIB)/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_tim.c \
+	$(LIB)/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_usart.c \
+	$(LIB)/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_wwdg.c
 
+OBJDIR = .
+OBJ = $(SRC:%.c=$(OBJDIR)/%.o) 
+OBJ += Startup.o
 
-$(PROJ).elf: main.c system_stm32f4xx.c startup_stm32f4xx.s
-	$(CC) $(CFLAGS) $^ -o $@  -L$(LIB)/build -lSTM32F4xx_StdPeriph_Driver
+all: $(BIN)
+
+$(ELF): $(SRC) $(STARTUP)
+	$(CC) $(CFLAGS) $^ -lm -lc -lnosys -o $@
+
+$(BIN): $(ELF)
+	$(CP) -O binary $^ $@
+
+r: $(BIN)
+	st-flash --reset write $^ 0x8000000
 	
-r: $(PROJ).bin
-	st-flash --reset write $(PROJ).bin 0x08000000
 
 clean:
-	rm -rf *.o *.elf *.bin
-
-.PHONY: all clean
+	rm -rf $(BIN) $(ELF)
