@@ -40,12 +40,12 @@ static void clock_setup(void)
 
 static void usart_setup(void)
 {
-	//usart_set_baudrate(USART2, 115200);
-	USART2_BRR = 0x8B;
-	//usart_set_mode(USART2, USART_MODE_TX);
-	USART2_CR1 |= USART_CR1_TE;
-	//usart_enable(USART2);
-	USART2_CR1 |= USART_CR1_UE;
+	usart_set_baudrate(USART2, 115200);
+	//USART2_BRR = 0x8B;
+	usart_set_mode(USART2, USART_MODE_TX);
+	//USART2_CR1 |= USART_CR1_TE;
+	usart_enable(USART2);
+	//USART2_CR1 |= USART_CR1_UE;
 }
 
 static void gpio_setup(void)
@@ -73,11 +73,11 @@ int main(void)
 
 	while (1) {
 		gpio_toggle(GPIOD, GPIO12);	/* LED on/off */
-		usart_send_uint32(USART2_BRR);
-		usart_send_blocking(USART2, 0xff);
-		usart_send_uint32(rcc_ppre2_frequency);
-		usart_send_blocking(USART2, 0xff);
-		for (i = 0; i < 3000000; i++)	/* Wait a bit. */
+		//usart_send_uint32(USART2_BRR);
+		usart_send_blocking(USART2, 0x12);
+		//usart_send_uint32(rcc_ppre2_frequency);
+		//usart_send_blocking(USART2, 0xff);
+		for (i = 0; i < 300000; i++)	/* Wait a bit. */
 			__asm__("NOP");
 	}
 	return 0;
