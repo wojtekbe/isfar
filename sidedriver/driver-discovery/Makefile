@@ -12,12 +12,14 @@ LIB=/home/wojtekbe/lib
 
 STARTUP = $(LIB)/CMSIS/Device/ST/STM32F4xx/Source/Templates/gcc_ride7/startup_stm32f40xx.s
 
-CFLAGS = -mcpu=cortex-m4 -mthumb -mlittle-endian -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb-interwork -std=c99 \
-		 -I$(LIB)/CMSIS/Device/ST/STM32F4xx/Include/ \
+CFLAGS = -mcpu=cortex-m4 -mthumb -mlittle-endian -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb-interwork -std=c99
+CFLAGS += -I$(LIB)/CMSIS/Device/ST/STM32F4xx/Include/ \
 		 -I$(LIB)/CMSIS/Include/ -I$(LIB)/STM32F4xx_StdPeriph_Driver/inc/ \
-		 -I. \
-		 -DUSE_STDPERIPH_DRIVER -DSTM32F4XX -DHSE_VALUE=8000000 \
-		 -Wall -Wl,-T,stm32_flash.ld -g -Os
+		 -I.
+CFLAGS += -DUSE_STDPERIPH_DRIVER -DSTM32F4XX -DHSE_VALUE=8000000 
+CFLAGS += -Wall -Wl,-T,stm32_flash.ld -g -Os \
+		  -Wextra -Wimplicit-function-declaration -Wredundant-decls -Wmissing-prototypes \
+		  -Wstrict-prototypes -Wundef -Wshadow
 
 AFLAGS	= -mcpu=cortex-m4 -mthumb -mlittle-endian -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb-interwork 
 #-mapcs-float use float regs. small increase in code size

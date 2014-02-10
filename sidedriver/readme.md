@@ -1,7 +1,7 @@
 GPIO Conf.
 ==========
 
-`1) Thruster
+1) Thruster
 M1-PWM -> PA1 -> TIM2_CH2
 M1-CS  -> PA2 -> ADC123_IN2
 M1-ENA -> PC3 -> out
@@ -20,6 +20,6 @@ M2-INB -> PA5 -> out
 TRANS  -> PC8 -> ?
 
 3) Ledd
-SRV1 -> PA8
-SRV2 -> PA11
-LED-PWM -> PC9 -> TIM3_CH4`
+SRV1    -> PA8  -> ?
+SRV2    -> PA11 -> ?
+LED-PWM -> PC9  -> TIM3_CH4
