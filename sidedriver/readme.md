@@ -2,8 +2,8 @@
 
 ### Thruster
 
-Name | Pin | Func.
---- | --- | --- 
+Name   | Pin | Func.
+-------|-----|-----------
 M1-PWM | PA1 | TIM2_CH2 
 M1-CS  | PA2 | ADC123_IN2
 M1-ENA | PC3 | out       
@@ -15,19 +15,19 @@ ENC2   | PC7 | TIM8_CH2
 
 ### Tank
 
-MName | Pin | Func.
---- | --- | --- 
-2-PWM -> PB0 -> TIM1_CH2N
-M2-ENA -> PB1 -> out
-M2-ENB -> PA6 -> out 
-M2-INA -> PB2 -> out
-M2-INB -> PA5 -> out
-TRANS  -> PC8 -> ?
+Name   | Pin | Func.
+-------|-----|----------
+M2-PWM | PB0 | TIM1_CH2N
+M2-ENA | PB1 | out
+M2-ENB | PA6 | out 
+M2-INA | PB2 | out
+M2-INB | PA5 | out
+TRANS  | PC8 | ?
 
 ### Ledd
 
-SName | Pin | Func.
---- | --- | --- 
-RV1    | PA8  | ?
+Name    | Pin  | Func.
+--------|------|---------
+SRV1    | PA8  | ?
 SRV2    | PA11 | ?
 LED-PWM | PC9  | TIM3_CH4
