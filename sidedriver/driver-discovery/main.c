@@ -4,6 +4,10 @@
 #include <stdio.h>
 #include <unistd.h>
 
+#define GREEN 12
+#define ORANGE 13
+#define RED 14
+#define BLUE 15
 #define LED(n,s) if(s) GPIOD->BSRRL |= (1 << n); else GPIOD->BSRRH |= (1 << n);
 #define LEDT(n) GPIOD->ODR ^= (1<<n);
 
@@ -105,33 +109,58 @@ void init_i2c(void)
 {
 	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOBEN;
 	RCC->APB1ENR |= RCC_APB1ENR_I2C1EN;
-	GPIOB->OTYPER |= (1 << 7) | (1 << 8); // Open drain PB7 and PB8
+	GPIOB->OTYPER |= (1 << 7) | (1 << 8); // Open drain PB7,8
+	GPIOB->PUPDR |= GPIO_PUPDR_PUPDR7_0 | GPIO_PUPDR_PUPDR8_0; // Enable Pull-Ups for PB7,8
 	GPIOB->MODER |= GPIO_MODER_MODER7_1 | GPIO_MODER_MODER8_1;
 	GPIOB->AFR[0] |= (4 << 28); // AF4 for PB7
 	GPIOB->AFR[1] |= (4 << 0);  // AF4 for PB8
 	I2C1->OAR1 = (0x09 << 1) | (1 << 14);
 	NVIC_EnableIRQ(I2C1_EV_IRQn); // Enable I2C1 EV IRQ
 	NVIC_EnableIRQ(I2C1_ER_IRQn); // Enable I2C1 ER IRQ
+	I2C1->CR2 |= I2C_CR2_ITERREN | I2C_CR2_ITEVTEN | I2C_CR2_ITBUFEN; 
 	I2C1->CR1 |= I2C_CR1_ACK | I2C_CR1_PE;
 }
 
 
 void I2C1_EV_IRQHandler() 
 {
-	int stat1, stat2;
-	LEDT(14);
-	stat1 = I2C1->SR1;
-	stat2 = I2C1->SR2;
-	printf("EV_IRQ_Handler: SR1= 0x%04x SR2 = 0x%04x DR=0x%04x\r ", I2C1->SR1, I2C1->SR2, I2C1->DR);
+	int stat1, stat2, data;
+
+	if(I2C1->SR1 & I2C_SR1_ADDR) // ADDR matched
+	{
+		stat1 = I2C1->SR1;
+		stat2 = I2C1->SR2;
+	}
+/*	else if(I2C1->SR1 & I2C_SR1_RXNE) // Recv. reg. not empty
+	{		
+		LEDT(GREEN);
+	}
+*/	else if(I2C1->SR1 & I2C_SR1_TXE) // Transm. reg. empty
+	{	
+		LEDT(BLUE);
+		I2C1->DR = 10;
+	}	
+/*	else if(I2C1->SR1 & I2C_SR1_BTF) // Byte Transfer Finished
+	{		
+		LEDT(ORANGE);
+	}
+*/	else if(I2C1->SR1 & I2C_SR1_STOPF) // STOP received
+	{
+		stat1 = I2C1->SR1;
+		I2C1->CR1 |= I2C_CR1_STOP;
+	}
+	else if(I2C1->SR1 != 0)
+		printf("EV_IRQ_Handler: SR1= 0x%08x SR2 = 0x%08x DR=0x%08x\n ", I2C1->SR1, I2C1->SR2, I2C1->DR);
 }
 
 void I2C1_ER_IRQHandler() 
 {
 	int stat1, stat2;
-	LEDT(12);
-	stat1 = I2C1->SR1;
-	stat2 = I2C1->SR2;
-	printf("ER_IRQ_Handler: SR1= 0x%04x SR2 = 0x%04x DR=0x%04x\r ", I2C1->SR1, I2C1->SR2, I2C1->DR);
+	LEDT(RED);
+	if(I2C1->SR1 & I2C_SR1_AF) // ACK failure (NACK)
+		I2C1->SR1 &= ~I2C_SR1_AF;
+	else
+		printf("ER_IRQ_Handler: SR1= 0x%04x SR2 = 0x%04x DR=0x%04x\n ", I2C1->SR1, I2C1->SR2, I2C1->DR);
 }
 
 void wait(uint32_t nCount)
@@ -154,7 +183,7 @@ int main(void)
 		//wait(600000);
 		//printf("CCR1=0x%08x\n", TIM3->CCR1);
 		//LED(12, 0);
-		printf("SR1=0x%04x, SR2=0x%04x\n", I2C1->SR1, I2C1->SR2);
+		//printf("SR1=0x%04x, SR2=0x%04x\n", I2C1->SR1, I2C1->SR2);
 		wait(6000000);
 	}
 }
