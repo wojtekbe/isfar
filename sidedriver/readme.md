@@ -1,6 +1,6 @@
 ## GPIO Conf.
 
-### Thruster
+### M. Thruster
 
 Name   | Pin | Func.
 -------|-----|-----------
@@ -13,7 +13,7 @@ M1-INB | PA4 | out
 ENC1   | PC6 | TIM8_CH1   
 ENC2   | PC7 | TIM8_CH2   
 
-### Tank
+### Piston Tank
 
 Name   | Pin | Func.
 -------|-----|----------
@@ -24,10 +24,17 @@ M2-INA | PB2 | out
 M2-INB | PA5 | out
 TRANS  | PC8 | ?
 
-### Ledd
+### LED Driver
 
 Name    | Pin  | Func.
 --------|------|---------
 SRV1    | PA8  | ?
 SRV2    | PA11 | ?
 LED-PWM | PC9  | TIM3_CH4
+
+### USART Port
+
+Name  | Pin  | Func.
+------|------|----------
+TX    | PA9  | USART1_TX
+RX    | PA10 | USART1_RX
