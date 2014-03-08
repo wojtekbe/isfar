@@ -25,8 +25,8 @@ AFLAGS	= -mcpu=cortex-m4 -mthumb -mlittle-endian -mfpu=fpv4-sp-d16 -mfloat-abi=h
 #-mapcs-float use float regs. small increase in code size
 
 SRC = main.c \
-	stm32f4xx_it.c \
 	system_stm32f4xx.c \
+	stm32f4xx_it.c \
 	$(LIB)/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_usart.c \
 	$(LIB)/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_rcc.c
 	#$(LIB)/STM32F4xx_StdPeriph_Driver/src/misc.c \

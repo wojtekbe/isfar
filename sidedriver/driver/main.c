@@ -57,7 +57,7 @@ void usart_send(uint8_t d)
 	USART1->DR = d;
 }
 
-void init_timer2(void) // PA1 -> M1-PWM
+void init_timer2(void) // PA1 -> M1-PWM (TIM2_CH2)
 {
 	//RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN;
 	GPIOA->MODER |= GPIO_MODER_MODER1_1;
@@ -66,41 +66,34 @@ void init_timer2(void) // PA1 -> M1-PWM
 	TIM2->PSC =   5;
 	TIM2->ARR =   100;
 	TIM2->CCR2 =  10;
-	TIM2->CCMR1 = TIM_CCMR1_OC2M_1 | TIM_CCMR1_OC2M_2; // Output Compare 2 Mode = 110 (PWM 1 Mode)
+	TIM2->CCMR1 = TIM_CCMR1_OC2M_2 | TIM_CCMR1_OC2M_1; // Output Compare 2 Mode = 110 (PWM 1 Mode)
 	TIM2->CCER = TIM_CCER_CC2E; // Capture/Compare 2 output enable
 	TIM2->CR1 |= TIM_CR1_CEN; // Counter Enable
 }
 
-void init_timer3(void) // PC9 -> LED-PWM (TIM3_CH4)
+void init_ledd(void)
 {
+	// PC9 -> LED-PWM (TIM3_CH4)
 	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOCEN;
-	RCC->APB1ENR |= RCC_APB1ENR_TIM3EN; 
 	GPIOC->MODER |= GPIO_MODER_MODER9_1;
 	GPIOC->AFR[1] |= (2 << 4); // AF2
-	TIM2->PSC =   5;
-	TIM2->ARR =   100;
-	TIM2->CCR4 =  10;
-	TIM2->CCMR2 = TIM_CCMR2_OC4M_2 | TIM_CCMR2_OC4M_1; // Output Compare 4 Mode = 110 (PWM 1 Mode)
-	TIM2->CCER = TIM_CCER_CC4E; // Capture/Compare 4 output enable
-	TIM2->CR1 |= TIM_CR1_CEN; // Counter Enable
+	RCC->APB1ENR |= RCC_APB1ENR_TIM3EN; 
+	TIM3->PSC =   0;
+	TIM3->ARR =   9;
+	TIM3->CCR4 =  2;
+	TIM3->CCMR2 = TIM_CCMR2_OC4M_2 | TIM_CCMR2_OC4M_1; // Output Compare 4 Mode = 110 (PWM 1 Mode)
+	TIM3->CCER = TIM_CCER_CC4E; // Capture/Compare 4 output enable
+	TIM3->CR1 |= TIM_CR1_CEN; // Counter Enable
+	// SRV1 -> PA8 (TIM1_CH1)
+	// SRV2 -> PA11 (TIM1_CH1)
 }
-
-void init_led(void)
-{
-	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOCEN;
-	GPIOC->MODER |= GPIO_MODER_MODER9_0;
-	GPIOC->ODR |= (1 << 9);
-}
-
 
 int main(void)
 {
 	init_usart();
-	init_led();
-	//init_timer2();
-	//printf("Hello\n");
+	init_timer2();
+	init_ledd();
+	printf("Hello\n");
 	while(1){
-		usart_send('a');
-		_wait(0xFFFFF);
 	}
 }
