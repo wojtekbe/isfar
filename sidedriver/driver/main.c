@@ -4,7 +4,11 @@
 #include <stdio.h>
 #include <unistd.h>
 
+void init_usart(void);
 int _write(int, char*, int);
+void usart_send(uint8_t);
+void init_motord(void);
+void init_ledd(void);
 
 void _wait(uint32_t nCount)
 {
@@ -17,7 +21,6 @@ void _wait(uint32_t nCount)
 int _write(int file, char *ptr, int len)
 {
 	int i;
-
 	if (file == STDOUT_FILENO || file == STDERR_FILENO) {
 		for (i = 0; i < len; i++) {
 			if (ptr[i] == '\n') {
@@ -32,6 +35,11 @@ int _write(int file, char *ptr, int len)
 
 void init_usart(void)
 {	
+	/*
+	 * TX 	PA9 	USART1_TX
+	 * RX 	PA10 	USART1_RX
+	 */
+
 	USART_InitTypeDef USART_InitStructure;
 
 	RCC->APB2ENR |= RCC_APB2ENR_USART1EN;
@@ -57,42 +65,122 @@ void usart_send(uint8_t d)
 	USART1->DR = d;
 }
 
-void init_timer2(void) // PA1 -> M1-PWM (TIM2_CH2)
+void init_motord(void)
 {
-	//RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN;
+	/*
+	 * M1-PWM 	PA1 	TIM2_CH2
+	 * M1-CS 	PA2 	ADC123_IN2
+	 * M1-ENA 	PC3 	out
+	 * M1-ENB 	PA3 	out
+	 * M1-INA 	PC3 	out
+	 * M1-INB 	PA4 	out
+	 * ENC1 	PC6 	TIM8_CH1
+	 * ENC2 	PC7 	TIM8_CH2
+	 */
+	
+	// PWM: TIM2_CH2 (PA1/AF1)
+	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN;
 	GPIOA->MODER |= GPIO_MODER_MODER1_1;
 	GPIOA->AFR[0] |= (1 << 4);
 	RCC->APB1ENR |= RCC_APB1ENR_TIM2EN; 
-	TIM2->PSC =   5;
-	TIM2->ARR =   100;
+	TIM2->PSC =   83;
+	TIM2->ARR =   99;
 	TIM2->CCR2 =  10;
-	TIM2->CCMR1 = TIM_CCMR1_OC2M_2 | TIM_CCMR1_OC2M_1; // Output Compare 2 Mode = 110 (PWM 1 Mode)
-	TIM2->CCER = TIM_CCER_CC2E; // Capture/Compare 2 output enable
-	TIM2->CR1 |= TIM_CR1_CEN; // Counter Enable
+	TIM2->CCMR1 = TIM_CCMR1_OC2M_2 | TIM_CCMR1_OC2M_1;
+	TIM2->CCER = TIM_CCER_CC2E;
+	TIM2->CR1 |= TIM_CR1_CEN;
+
+	/*
+	// Encoder: TIM8_CH1/2 (PC6/7 AF3)
+	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOCEN;
+	GPIOC->MODER |= GPIO_MODER_MODER6_1; // PC6 -> AF
+	GPIOC->AFR[0] |= (3 << 24); // PC6 -> AF3
+	GPIOC->MODER |= GPIO_MODER_MODER7_1; // PC7 -> AF
+	GPIOC->AFR[0] |= (3 << 28); // PC7 -> AF3
+	TIM8->PSC = 0;
+	TIM8->ARR = 0xFFFF;
+	TIM8->CCMR1 |= TIM_CCMR1_CC1S_0 | TIM_CCMR1_CC2S_0; // CC1S = 01, CC2S = 02 (inputs)
+	TIM8->SMCR |= TIM_SMCR_SMS_1 | TIM_SMCR_SMS_0; // Slave Mode, SMS = 011, Encoder Mode 3 p. 615
+	TIM8->CCER |= TIM_CCER_CC1P | TIM_CCER_CC2P; // CC1P = 1, CC2P = 1
+	TIM8->CR1 |= TIM_CR1_CEN;
+	*/
+}
+
+void init_tankd()
+{
+	/*
+	 * M2-PWM 	PB0 	TIM1_CH2N
+	 * M2-ENA 	PB1 	out
+	 * M2-INA 	PB2 	out
+	 * MIN		PB10	in
+	 * MAX		PB11	in
+	 * M2-ENB 	PA6 	out
+	 * M2-INB 	PA5 	out
+	 * TRANS 	PC8 	? TODO
+	 */
+	
+	// PWM: TIM1_CH2N (PB0/AF1)
+	// TODO: temp. changed to TIM3_CH3
+	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOBEN;
+	GPIOB->MODER |= GPIO_MODER_MODER0_1;
+	GPIOB->AFR[0] |= (2 << 0);
+	RCC->APB1ENR |= RCC_APB1ENR_TIM3EN; 
+	TIM3->PSC =   9;
+	TIM3->ARR =   99;
+	TIM3->CCR3 =  25;
+	TIM3->CCMR2 = TIM_CCMR2_OC3M_2 | TIM_CCMR2_OC3M_1; // PWM
+	TIM3->CCER = TIM_CCER_CC3E;
+	TIM3->CR1 |= TIM_CR1_CEN;
+
+	// GPIOs
+	GPIOB->MODER |= GPIO_MODER_MODER1_0; // M2-ENA
+	GPIOB->MODER |= GPIO_MODER_MODER2_0; // M2-INA
+	GPIOB->MODER |= GPIO_MODER_MODER10_0; // MIN
+	GPIOB->MODER |= GPIO_MODER_MODER11_0; // MAX
+	
+	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN; 
+	GPIOA->MODER |= GPIO_MODER_MODER6_0; // M2-ENB
+	GPIOA->MODER |= GPIO_MODER_MODER5_0; // M2-INB
+	
+	// TRANS ? 
+	//RCC->AHB1ENR |= RCC_AHB1ENR_GPIOCEN;
+	//GPIOC->MODER |= GPIO_MODER_MODER8_1;
+	
+	// ster.
+	GPIOB->ODR |= (1 << 1); // M2-ENA
+	GPIOA->ODR |= (1 << 6); // M2-ENB
+	GPIOB->ODR &= ~(1 << 2); // M2-INA
+	GPIOA->ODR |= (1 << 5); // M2-INB
+
 }
 
 void init_ledd(void)
 {
-	// PC9 -> LED-PWM (TIM3_CH4)
+	/*
+	 * SRV1 	PA8 	? TODO
+	 * SRV2 	PA11 	? TODO
+	 * LED-PWM 	PC9 	TIM3_CH4
+	 */
+
+	// PWM TIM3_CH4 PC9/AF2
 	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOCEN;
 	GPIOC->MODER |= GPIO_MODER_MODER9_1;
-	GPIOC->AFR[1] |= (2 << 4); // AF2
+	GPIOC->AFR[1] |= (2 << 4);
 	RCC->APB1ENR |= RCC_APB1ENR_TIM3EN; 
-	TIM3->PSC =   0;
-	TIM3->ARR =   9;
-	TIM3->CCR4 =  2;
+	TIM3->PSC =   5;
+	TIM3->ARR =   100;
+	TIM3->CCR4 =  10;
 	TIM3->CCMR2 = TIM_CCMR2_OC4M_2 | TIM_CCMR2_OC4M_1; // Output Compare 4 Mode = 110 (PWM 1 Mode)
 	TIM3->CCER = TIM_CCER_CC4E; // Capture/Compare 4 output enable
 	TIM3->CR1 |= TIM_CR1_CEN; // Counter Enable
-	// SRV1 -> PA8 (TIM1_CH1)
-	// SRV2 -> PA11 (TIM1_CH1)
 }
 
 int main(void)
 {
 	init_usart();
-	init_timer2();
-	init_ledd();
+	init_motord();
+	init_tankd();
+	//init_ledd();
 	printf("Hello\n");
 	while(1){
 	}
