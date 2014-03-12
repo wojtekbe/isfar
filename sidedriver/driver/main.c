@@ -4,11 +4,26 @@
 #include <stdio.h>
 #include <unistd.h>
 
+void _wait(uint32_t);
 void init_usart(void);
 int _write(int, char*, int);
 void usart_send(uint8_t);
 void init_motord(void);
 void init_ledd(void);
+
+void tankd_init(void);
+void tankd_enable(void);
+void tankd_disable(void);
+void tankd_dir(int);
+void tankd_sp(int);
+
+struct tankd_state
+{
+	int init;
+	int enabled;
+	int dir;
+	int piston_pos;	
+};
 
 void _wait(uint32_t nCount)
 {
@@ -106,7 +121,7 @@ void init_motord(void)
 	*/
 }
 
-void init_tankd()
+void tankd_init()
 {
 	/*
 	 * M2-PWM 	PB0 	TIM1_CH2N
@@ -118,21 +133,9 @@ void init_tankd()
 	 * M2-INB 	PA5 	out
 	 * TRANS 	PC8 	? TODO
 	 */
-	
-	// PWM: TIM1_CH2N (PB0/AF1)
-	// TODO: temp. changed to TIM3_CH3
-	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOBEN;
-	GPIOB->MODER |= GPIO_MODER_MODER0_1;
-	GPIOB->AFR[0] |= (2 << 0);
-	RCC->APB1ENR |= RCC_APB1ENR_TIM3EN; 
-	TIM3->PSC =   9;
-	TIM3->ARR =   99;
-	TIM3->CCR3 =  25;
-	TIM3->CCMR2 = TIM_CCMR2_OC3M_2 | TIM_CCMR2_OC3M_1; // PWM
-	TIM3->CCER = TIM_CCER_CC3E;
-	TIM3->CR1 |= TIM_CR1_CEN;
 
-	// GPIOs
+	// IOs
+	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOBEN;
 	GPIOB->MODER |= GPIO_MODER_MODER1_0; // M2-ENA
 	GPIOB->MODER |= GPIO_MODER_MODER2_0; // M2-INA
 	GPIOB->MODER |= GPIO_MODER_MODER10_0; // MIN
@@ -141,18 +144,67 @@ void init_tankd()
 	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN; 
 	GPIOA->MODER |= GPIO_MODER_MODER6_0; // M2-ENB
 	GPIOA->MODER |= GPIO_MODER_MODER5_0; // M2-INB
+
+	// PWM: TIM1_CH2N (PB0/AF1)
+	// TODO: temp. changed to TIM3_CH3
+	GPIOB->MODER |= GPIO_MODER_MODER0_1;
+	GPIOB->AFR[0] |= (2 << 0);
+	RCC->APB1ENR |= RCC_APB1ENR_TIM3EN; 
+	TIM3->PSC =   9;
+	TIM3->ARR =   99;
+	//TIM3->CCR3 =  25;
+	TIM3->CCMR2 = TIM_CCMR2_OC3M_2 | TIM_CCMR2_OC3M_1; // PWM mode
+	TIM3->CCER = TIM_CCER_CC3E;
+	//TIM3->CR1 |= TIM_CR1_CEN;
 	
 	// TRANS ? 
 	//RCC->AHB1ENR |= RCC_AHB1ENR_GPIOCEN;
 	//GPIOC->MODER |= GPIO_MODER_MODER8_1;
-	
-	// ster.
-	GPIOB->ODR |= (1 << 1); // M2-ENA
-	GPIOA->ODR |= (1 << 6); // M2-ENB
-	GPIOB->ODR &= ~(1 << 2); // M2-INA
-	GPIOA->ODR |= (1 << 5); // M2-INB
-
 }
+
+void tankd_sp(int sp)
+{
+	TIM3->CCR3 = sp;
+	
+	if(sp == 0)
+		TIM3->CR1 &= ~TIM_CR1_CEN;
+	else
+		TIM3->CR1 |= TIM_CR1_CEN;		
+}
+
+void tankd_enable()
+{
+	GPIOB->ODR |= (1 << 1); // M2-ENA = 1
+	GPIOA->ODR |= (1 << 6); // M2-ENB = 1
+}
+
+void tankd_disable()
+{
+	GPIOB->ODR &= ~(1 << 1); // M2-ENA = 0
+	GPIOA->ODR &= ~(1 << 6); // M2-ENB = 0
+}
+
+void tankd_dir(int d)
+{
+	printf("td: dir=%d\n", d);
+	
+	if(d == 0) // stop
+	{
+		GPIOB->ODR &= ~(1 << 2); // M2-INA = 0
+		GPIOA->ODR &= ~(1 << 5); // M2-INB = 0
+	}
+	else if(d < 0) // water out
+	{
+		GPIOB->ODR |=  (1 << 2); // M2-INA = 1
+		GPIOA->ODR &= ~(1 << 5); // M2-INB = 0
+	}
+	else // water in
+	{
+		GPIOB->ODR &= ~(1 << 2); // M2-INA = 0
+		GPIOA->ODR |=  (1 << 5); // M2-INB = 1
+	}
+}
+
 
 void init_ledd(void)
 {
@@ -176,10 +228,13 @@ void init_ledd(void)
 }
 
 int main(void)
-{
+{	
 	init_usart();
-	init_motord();
-	init_tankd();
+	//init_motord();
+	tankd_init();
+	tankd_enable();
+	tankd_sp(10);
+	tankd_dir(-1);
 	//init_ledd();
 	printf("Hello\n");
 	while(1){
