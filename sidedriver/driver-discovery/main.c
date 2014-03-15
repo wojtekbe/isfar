@@ -20,11 +20,14 @@ void init_timer3(void);
 void init_i2c(void);
 void wait(uint32_t);
 
+uint8_t i2c_regs[4];
+int i2c_bytes_received;
+int i2c_reg_idx;
 
 int _write(int file, char *ptr, int len)
 {
 	int i;
-
+	
 	if (file == STDOUT_FILENO || file == STDERR_FILENO) {
 		for (i = 0; i < len; i++) {
 			if (ptr[i] == '\n') {
@@ -119,56 +122,83 @@ void init_i2c(void)
 	NVIC_EnableIRQ(I2C1_ER_IRQn); // Enable I2C1 ER IRQ
 	I2C1->CR2 |= I2C_CR2_ITERREN | I2C_CR2_ITEVTEN | I2C_CR2_ITBUFEN; 
 	I2C1->CR1 |= I2C_CR1_ACK | I2C_CR1_PE;
+
+	i2c_regs = {0, 0, 0, 0};
+	i2c_reg_idx = 0;
+	i2c_bytes_received = 0;
 }
 
 
 void I2C1_EV_IRQHandler() 
 {
-	int stat1, stat2, data;
+	uint16_t temp;
+	uint16_t stat1 = 0;
+	uint16_t stat2 = 0;
+	uint32_t data;
 
-	if(I2C1->SR1 & I2C_SR1_ADDR) // ADDR matched, EV1
+	stat1 = I2C1->SR1;
+	stat2 = I2C1->SR2;
+
+	if(stat1 & I2C_SR1_ADDR) // ADDR matched, EV1
 	{
-		stat1 = I2C1->SR1;
-		stat2 = I2C1->SR2;
+		temp = I2C1->SR1;
+		temp = I2C1->SR2;
+		i2c_bytes_received = 0;
 	}
-	if(I2C1->SR1 & I2C_SR1_RXNE) // Recv. reg. not empty
+	
+	if(stat1 & I2C_SR1_RXNE) // Recv. reg. not empty EV2
 	{		
 		data = I2C1->DR;
-		printf("got data %d\n", data);
+		i2c_bytes_received++;
+		if(i2c_bytes_received == 1)
+			i2c_reg_idx = data;
+		else
+			i2c_regs[i2c_reg_idx] = data;
 	}
-	if(I2C1->SR1 & I2C_SR1_TXE) // Transm. reg. empty
+	
+	if(stat1 & I2C_SR1_TXE) // Transm. reg. empty
 	{	
-		I2C1->DR = 10;
+		I2C1->DR = i2c_regs[i2c_reg_idx];
 	}	
-	else if(I2C1->SR1 & I2C_SR1_BTF) // Byte Transfer Finished
+	
+	if(stat1 & I2C_SR1_BTF) // Byte Transfer Finished
 	{
-		//LED(GREEN, 1);
+		LED(ORANGE, 1);
 	}
-	if(I2C1->SR1 & I2C_SR1_STOPF) // STOP received, EV4
+	
+	if(stat1 & I2C_SR1_STOPF) // STOP received, EV4
 	{
-		stat1 = I2C1->SR1;
+		// clear this flag
+		temp = I2C1->SR1;
 		I2C1->CR1 |= I2C_CR1_PE;
 	}
 }
 
 void I2C1_ER_IRQHandler() 
 {
+	uint16_t temp;
+	uint16_t stat1 = 0;
+	uint16_t stat2 = 0;
+
+	stat1 = I2C1->SR1;
+	stat2 = I2C1->SR2;
+
 	LED(RED, 1);
-	if(I2C1->SR1 & I2C_SR1_AF) // ACK failure (NACK)
+	
+	if(stat1 & I2C_SR1_AF) // ACK failure (NACK)
 	{
 		I2C1->SR1 &= ~I2C_SR1_AF;
 		LED(RED, 0);
 	}
-		
-	if(I2C1->SR1 & I2C_SR1_OVR)
+	
+	
+	if(stat1 & I2C_SR1_OVR) // Overflow
 	{
 		//printf("OVR\n");
 		LED(GREEN, 1);
 		LED(RED, 0);
 	}
 	
-	//else
-	//	printf("EV_IRQ_Handler: SR1=0x%08x SR2=0x%08x DR=0x%08x\n ", I2C1->SR1, I2C1->SR2, I2C1->DR);
 }
 
 void wait(uint32_t nCount)
@@ -181,18 +211,23 @@ void wait(uint32_t nCount)
 
 int main(void)
 {
+	int i;
+
 	init_leds();
 	init_usart();
 	//init_timer3();
 	init_i2c();
-	printf("\nHello\n");
+	printf("Hello\n");
 	while(1)
-	{		
-		//LED(12, 1);
-		//wait(600000);
-		//printf("CCR1=0x%08x\n", TIM3->CCR1);
-		//LED(12, 0);
-		//printf("SR1=0x%04x, SR2=0x%04x\n", I2C1->SR1, I2C1->SR2);
+	{	
+		printf("regs = [");
+		for(i = 0; i <= 4; i++)
+		{
+			if(i2c_reg_idx == i)
+				printf("*");
+			printf("%d ", i2c_regs[i] );
+		}
+		printf("]\n");
 		wait(6000000);
 	}
 }
