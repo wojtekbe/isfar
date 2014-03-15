@@ -20,7 +20,7 @@ void init_timer3(void);
 void init_i2c(void);
 void wait(uint32_t);
 
-uint8_t i2c_regs[4];
+uint16_t i2c_regs[4] = {0, 0, 0, 0};
 int i2c_bytes_received;
 int i2c_reg_idx;
 
@@ -62,7 +62,6 @@ void init_usart(void)
 	GPIOA->MODER |= GPIO_MODER_MODER2_1;
 	//GPIOA->PUPDR |= GPIO_PUPDR_PUPDR2_0;
 	GPIOA->AFR[0] |= 0x0000700;
-
 
 	USART_InitStructure.USART_BaudRate = 115200;	
 	USART_InitStructure.USART_WordLength = USART_WordLength_8b;
@@ -123,7 +122,6 @@ void init_i2c(void)
 	I2C1->CR2 |= I2C_CR2_ITERREN | I2C_CR2_ITEVTEN | I2C_CR2_ITBUFEN; 
 	I2C1->CR1 |= I2C_CR1_ACK | I2C_CR1_PE;
 
-	i2c_regs = {0, 0, 0, 0};
 	i2c_reg_idx = 0;
 	i2c_bytes_received = 0;
 }
@@ -133,11 +131,11 @@ void I2C1_EV_IRQHandler()
 {
 	uint16_t temp;
 	uint16_t stat1 = 0;
-	uint16_t stat2 = 0;
+	//uint16_t stat2 = 0;
 	uint32_t data;
 
 	stat1 = I2C1->SR1;
-	stat2 = I2C1->SR2;
+	//stat2 = I2C1->SR2;
 
 	if(stat1 & I2C_SR1_ADDR) // ADDR matched, EV1
 	{
@@ -176,12 +174,11 @@ void I2C1_EV_IRQHandler()
 
 void I2C1_ER_IRQHandler() 
 {
-	uint16_t temp;
 	uint16_t stat1 = 0;
-	uint16_t stat2 = 0;
+	//uint16_t stat2 = 0;
 
 	stat1 = I2C1->SR1;
-	stat2 = I2C1->SR2;
+	//stat2 = I2C1->SR2;
 
 	LED(RED, 1);
 	
@@ -191,14 +188,11 @@ void I2C1_ER_IRQHandler()
 		LED(RED, 0);
 	}
 	
-	
 	if(stat1 & I2C_SR1_OVR) // Overflow
 	{
-		//printf("OVR\n");
-		LED(GREEN, 1);
+		I2C1->SR1 &= ~I2C_SR1_OVR;
 		LED(RED, 0);
 	}
-	
 }
 
 void wait(uint32_t nCount)
@@ -220,7 +214,7 @@ int main(void)
 	printf("Hello\n");
 	while(1)
 	{	
-		printf("regs = [");
+		printf("[");
 		for(i = 0; i <= 4; i++)
 		{
 			if(i2c_reg_idx == i)
