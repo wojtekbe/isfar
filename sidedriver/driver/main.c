@@ -1,10 +1,9 @@
 #include "stm32f4xx.h"
-#include "stm32f4xx_usart.h"
 #include "core_cm4.h"
 #include <stdio.h>
 #include <unistd.h>
 
-#define DEBUG
+//#define DEBUG
 
 #ifdef DEBUG
 #define debug(...) printf(__VA_ARGS__);
@@ -71,24 +70,14 @@ void init_usart(void)
 	 * TX 	PA9 	USART1_TX
 	 * RX 	PA10 	USART1_RX
 	 */
-
-	USART_InitTypeDef USART_InitStructure;
-
 	RCC->APB2ENR |= RCC_APB2ENR_USART1EN;
 	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN;
-	
 	GPIOA->MODER |= GPIO_MODER_MODER9_1;
 	GPIOA->PUPDR |= GPIO_PUPDR_PUPDR9_0;
 	GPIOA->AFR[1] |= (7 << 4);
-
-	USART_InitStructure.USART_BaudRate = 115200;	
-	USART_InitStructure.USART_WordLength = USART_WordLength_8b;
-	USART_InitStructure.USART_StopBits = USART_StopBits_1;
-	USART_InitStructure.USART_Parity = USART_Parity_No;
-	USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
-	USART_InitStructure.USART_Mode = USART_Mode_Tx;
-	USART_Init(USART1, &USART_InitStructure);
-	USART_Cmd(USART1, ENABLE); // enable USART1
+	USART1->BRR = 0x2D9; // 115200
+	USART1->CR3 |= USART_CR3_ONEBIT; // Why?
+	USART1->CR1 |= USART_CR1_TE | USART_CR1_UE;
 }
 
 void usart_send(uint8_t d)
@@ -298,10 +287,11 @@ void tankd_init()
 	GPIOB->MODER |= GPIO_MODER_MODER2_0; // M2-INA
 
 	// TODO MIN MAX
-	SYSCFG->EXTICR[2] |= (1 << 8);  // PB10
-	SYSCFG->EXTICR[2] |= (1 << 12); // PB11
-	EXTI->IMR |= (1 << 10) | (1 << 11); // Interrupt Mask Reg.
-	EXTI->FTSR |= (1 << 10) | (1 << 11); // Falling Trigger
+	RCC->APB2ENR |= RCC_APB2ENR_SYSCFGEN;
+	SYSCFG->EXTICR[2] |= (1 << 12);  // MAX
+	//SYSCFG->EXTICR[2] |= (1 << 8); // PB10
+	EXTI->IMR |= (1 << 11); // Interrupt Mask Reg.
+	EXTI->FTSR |= (1 << 11); // MAX Falling Trigger
 	NVIC_EnableIRQ(EXTI15_10_IRQn);
 
 	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN; 
@@ -323,8 +313,9 @@ void tankd_init()
 	//GPIOC->MODER |= GPIO_MODER_MODER8_1;
 }
 
-void EXTI15_10_IRQHandler()
+void EXTI15_10_IRQHandler()  // MIN or MAX tankd interrupt
 {
+	EXTI->PR = EXTI_PR_PR11;
 	printf("EXTI\n");
 }
 
