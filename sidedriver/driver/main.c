@@ -1,9 +1,10 @@
+/* wojtekbe@gmaill.com */
 #include "stm32f4xx.h"
 #include "core_cm4.h"
 #include <stdio.h>
 #include <unistd.h>
 
-//#define DEBUG
+#define DEBUG
 
 #ifdef DEBUG
 #define debug(...) printf(__VA_ARGS__);
@@ -13,35 +14,42 @@
 
 // prototypes
 void _wait(uint32_t);
-void init_usart(void);
+
+void usart_init(void);
 int _write(int, char*, int);
 void usart_send(uint8_t);
+
 void init_ledd(void);
 
+void i2c_init(void); 
+void I2C1_EV_IRQHandler(void);
+void I2C1_ER_IRQHandler(void);
+#define I2C_ADDR 0x09
+#define NUM_REGS 5
+#define STATE 0x00
+#define M1_DIR 0x01
+#define M1_PWM 0x02
+#define M2_DIR 0x03
+#define M2_PWM 0x04
+int16_t i2c_regs[NUM_REGS];
+int i2c_bytes_received;
+int i2c_reg_idx;
 
 void motord_init(void);
 void motord_enable(void);
 void motord_disable(void);
 void motord_dir(uint8_t);
 void motord_pwm(uint32_t);
+void TIM4_IRQHandler(void);
 
 void tankd_init(void);
 void tankd_enable(void);
 void tankd_disable(void);
-void tankd_dir(int);
-void tankd_sp(int);
+void tankd_dir(uint8_t);
+void tankd_pwm(int);
+void EXTI15_10_IRQHandler(void);
 
-#define I2C_ADDR 0x09
-#define NUM_REGS 4
-
-#define STATE 0x00
-#define M1_DIR 0x01
-#define M1_PWM 0x02
-#define M2_PWM 0x03
-
-int16_t i2c_regs[NUM_REGS];
-int i2c_bytes_received;
-int i2c_reg_idx;
+int update_conf(void);
 
 void _wait(uint32_t nCount)
 {
@@ -64,7 +72,7 @@ int _write(int file, char *ptr, int len)
 	return -1;
 }
 
-void init_usart(void)
+void usart_init(void)
 {	
 	/*
 	 * TX 	PA9 	USART1_TX
@@ -76,7 +84,7 @@ void init_usart(void)
 	GPIOA->PUPDR |= GPIO_PUPDR_PUPDR9_0;
 	GPIOA->AFR[1] |= (7 << 4);
 	USART1->BRR = 0x2D9; // 115200
-	USART1->CR3 |= USART_CR3_ONEBIT; // Why?
+	USART1->CR3 |= USART_CR3_ONEBIT; // Doesn't work without that...
 	USART1->CR1 |= USART_CR1_TE | USART_CR1_UE;
 }
 
@@ -107,8 +115,9 @@ void i2c_init(void)
 
 	i2c_reg_idx = 0;
 	i2c_bytes_received = 0;
-}
 
+	debug("i2c_init()\n");
+}
 
 void I2C1_EV_IRQHandler() 
 {
@@ -126,7 +135,6 @@ void I2C1_EV_IRQHandler()
 		temp = I2C1->SR2;
 		i2c_bytes_received = 0;
 	}
-	
 	if(stat1 & I2C_SR1_RXNE) // Recv. reg. not empty EV2
 	{		
 		data = I2C1->DR;
@@ -136,20 +144,16 @@ void I2C1_EV_IRQHandler()
 		else
 			i2c_regs[i2c_reg_idx] = data;
 	}
-	
 	if(stat1 & I2C_SR1_TXE) // Transm. reg. empty
 	{	
 		I2C1->DR = i2c_regs[i2c_reg_idx];
 	}	
-	
 	if(stat1 & I2C_SR1_BTF) // Byte Transfer Finished
 	{
 		// nothing? really?
 	}
-	
 	if(stat1 & I2C_SR1_STOPF) // STOP received, EV4
 	{
-		// clear this flag
 		temp = I2C1->SR1;
 		I2C1->CR1 |= I2C_CR1_PE;
 	}
@@ -167,7 +171,6 @@ void I2C1_ER_IRQHandler()
 	{
 		I2C1->SR1 &= ~I2C_SR1_AF;
 	}
-	
 	if(stat1 & I2C_SR1_OVR) // Overflow
 	{
 		I2C1->SR1 &= ~I2C_SR1_OVR;
@@ -186,8 +189,7 @@ void motord_init(void)
 	 * ENC1 	PC6 	TIM8_CH1
 	 * ENC2 	PC7 	TIM8_CH2
 	 */
-
-	debug("motord_init()\n");
+	//debug("motord_init()\n");
 
 	// IOs	
 	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN;
@@ -202,11 +204,11 @@ void motord_init(void)
 	GPIOA->AFR[0] |= (1 << 4); // AF1
 	RCC->APB1ENR |= RCC_APB1ENR_TIM2EN;
 	TIM2->PSC =   83;
-	TIM2->ARR =   99;
+	TIM2->ARR =   99; // 10 kHz
 	TIM2->CCMR1 = TIM_CCMR1_OC2M_2 | TIM_CCMR1_OC2M_1;
 	TIM2->CCER = TIM_CCER_CC2E;
 
-	// Encoder: TIM8_CH1/2 (PC6/7 AF3)
+	// Encoder: counting tics: TIM8_CH1/2 (PC6/7 AF3)
 	GPIOC->MODER |= GPIO_MODER_MODER6_1; // PC6 -> AF
 	GPIOC->AFR[0] |= (3 << 24); // PC6 -> AF3
 	GPIOC->MODER |= GPIO_MODER_MODER7_1; // PC7 -> AF
@@ -215,16 +217,36 @@ void motord_init(void)
 	TIM8->PSC = 2 - 1; // (Prescaler - 1)
 	TIM8->ARR = 0xFFFF;
 	TIM8->CCMR1 |= TIM_CCMR1_CC1S_0 | TIM_CCMR1_CC2S_0; // CC1S = 01, CC2S = 02 (inputs)
-	TIM8->CCER |= TIM_CCER_CC1P | TIM_CCER_CC2P; // CC1P = 1, CC2P = 1
+	TIM8->CCER |= TIM_CCER_CC1P | TIM_CCER_CC2P; // CC1P = 1, CC2P = 1 input polarity
 	TIM8->SMCR |= TIM_SMCR_SMS_1 | TIM_SMCR_SMS_0; // Slave Mode, SMS = 011, Encoder Mode 3 p. 615
 	TIM8->CR1 |= TIM_CR1_CEN;
+	
+	// TODO Calculate speed using TIM4 interrupt
+	RCC->APB1ENR |= RCC_APB1ENR_TIM4EN;
+	TIM4->PSC = 10000 - 1;
+	TIM4->ARR = 10000 - 1;
+	TIM4->DIER = TIM_DIER_UIE;
+	NVIC_EnableIRQ(TIM4_IRQn);
+	TIM4->CR1 |= TIM_CR1_CEN;
 
 	// TODO Current measure: M1-CS
+	GPIOA->MODER |= GPIO_MODER_MODER2_0 | GPIO_MODER_MODER2_1;
+	RCC->APB2ENR |= RCC_APB2ENR_ADC1EN;
+	//ADC->CR1 |=  
+	//ADC->CR2 |= ADC_CR2_ADON;
+	
+}
+
+void TIM4_IRQHandler(void)  // motord: Calculate rotating speed
+{
+	if(TIM4->SR & TIM_SR_UIF)
+		printf("TIM4 update event\n");
+	TIM4->SR &= ~TIM_SR_UIF;
 }
 
 void motord_dir(uint8_t dir)
 {
-	debug("motord_dir(%d)\n", dir);
+	//debug("motord_dir(%d)\n", dir);
 
 	if(dir < 0x80)
 	{
@@ -238,16 +260,18 @@ void motord_dir(uint8_t dir)
 	}
 }
 
-void motord_pwm(uint32_t PWM)
+void motord_pwm(uint32_t w)
 {
-	debug("motord_pwm(%d)\n", PWM);
-
-	if(PWM == 0)
-		TIM2->CR1 &= ~TIM_CR1_CEN;
-	else
-	{
-		TIM2->CR1 |= TIM_CR1_CEN;
-		TIM2->CCR2 = PWM;
+	//debug("motord_pwm(%d)\n", PWM);
+	
+	if(w != TIM2->CCR2)
+	{	
+		if(w == 0)
+			TIM2->CR1 &= ~TIM_CR1_CEN;
+		else
+			TIM2->CR1 |= TIM_CR1_CEN;
+		
+		TIM2->CCR2 = w;
 	}
 }
 
@@ -292,7 +316,7 @@ void tankd_init()
 	//SYSCFG->EXTICR[2] |= (1 << 8); // PB10
 	EXTI->IMR |= (1 << 11); // Interrupt Mask Reg.
 	EXTI->FTSR |= (1 << 11); // MAX Falling Trigger
-	NVIC_EnableIRQ(EXTI15_10_IRQn);
+	//NVIC_EnableIRQ(EXTI15_10_IRQn);
 
 	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN; 
 	GPIOA->MODER |= GPIO_MODER_MODER6_0; // M2-ENB
@@ -313,44 +337,49 @@ void tankd_init()
 	//GPIOC->MODER |= GPIO_MODER_MODER8_1;
 }
 
-void EXTI15_10_IRQHandler()  // MIN or MAX tankd interrupt
+void EXTI15_10_IRQHandler()  // tankd: MIN or MAX interrupt
 {
 	EXTI->PR = EXTI_PR_PR11;
 	printf("EXTI\n");
 }
 
-void tankd_sp(int sp)
+void tankd_pwm(int width)
 {
-	if(sp == 0)
-		TIM3->CR1 &= ~TIM_CR1_CEN;
-	else
-		TIM3->CR1 |= TIM_CR1_CEN;		
+	if(width != TIM3->CCR3)
+	{
+		if(width == 0)
+			TIM3->CR1 &= ~TIM_CR1_CEN;
+		else
+			TIM3->CR1 |= TIM_CR1_CEN;		
 
-	TIM3->CCR3 = sp;
+		TIM3->CCR3 = width;		
+	}
 }
 
 void tankd_enable()
 {
+	debug("tankd_enable()\n");
 	GPIOB->ODR |= (1 << 1); // M2-ENA = 1
 	GPIOA->ODR |= (1 << 6); // M2-ENB = 1
 }
 
 void tankd_disable()
 {
+	debug("tankd_disable()\n");
 	GPIOB->ODR &= ~(1 << 1); // M2-ENA = 0
 	GPIOA->ODR &= ~(1 << 6); // M2-ENB = 0
 }
 
-void tankd_dir(int d)
+void tankd_dir(uint8_t d)
 {
-	debug("td: dir=%d\n", d);
+	//debug("tankd_dir(%d)\n", d);
 	
 	if(d == 0) // stop
 	{
 		GPIOB->ODR &= ~(1 << 2); // M2-INA = 0
 		GPIOA->ODR &= ~(1 << 5); // M2-INB = 0
 	}
-	else if(d < 0) // water out
+	else if(d < 0x80) // water out
 	{
 		GPIOB->ODR |=  (1 << 2); // M2-INA = 1
 		GPIOA->ODR &= ~(1 << 5); // M2-INB = 0
@@ -383,28 +412,38 @@ void init_ledd(void)
 	TIM3->CR1 |= TIM_CR1_CEN; // Counter Enable
 }
 
-int update_conf()
+int update_conf(void)
 {
 	int r = 0;
+
+	//debug("i2c_regs = [");
 	while(r<NUM_REGS)
 	{
-		// chech if {motor, tank, led}d enabled!!
+		// check if {motor, tank, led}d enabled!!
 		if( r == M1_DIR )
 			motord_dir(i2c_regs[M1_DIR]);
 		else if( r == M1_PWM)
 			motord_pwm(i2c_regs[M1_PWM]);
+		else if( r == M2_DIR )
+			tankd_dir(i2c_regs[M2_DIR]);
+		else if( r == M2_PWM)
+			tankd_pwm(i2c_regs[M2_PWM]);
+
+		//debug(" 0x%x", i2c_regs[r]);
 		r++;
 	}
+	//debug(" ]\n");
+	return 0;
 }
 
 int main(void)
 {	
-	init_usart();
+	usart_init();
 	i2c_init();
 	//motord_init();
 	//motord_enable();
 	tankd_init();
-	//tankd_enable();
+	tankd_enable();
 	//init_ledd();
 	printf("Hello\n");
 	while(1)
@@ -412,6 +451,6 @@ int main(void)
 		//printf("TIM8_CNT = 0x%x\n", TIM8->CNT);
 		//printf("PB10 = %x, PB11 = 0x%x\n", GPIOB->IDR & (1 << 10), GPIOB->IDR & (1 << 11));
 		update_conf();
-		_wait(60000);
+		_wait(600000);
 	}
 }
