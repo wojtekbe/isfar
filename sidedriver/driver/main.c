@@ -3,6 +3,7 @@
 #include "core_cm4.h"
 #include <stdio.h>
 #include <unistd.h>
+#include <math.h>
 
 #define DEBUG
 
@@ -25,28 +26,43 @@ void i2c_init(void);
 void I2C1_EV_IRQHandler(void);
 void I2C1_ER_IRQHandler(void);
 #define I2C_ADDR 0x09
-#define NUM_REGS 5
+#define NUM_REGS 6
 #define STATE 0x00
 #define M1_DIR 0x01
 #define M1_PWM 0x02
-#define M2_DIR 0x03
-#define M2_PWM 0x04
+#define M1_SPEED 0x03
+#define M2_DIR 0x04
+#define M2_PWM 0x05
 int16_t i2c_regs[NUM_REGS];
 int i2c_bytes_received;
 int i2c_reg_idx;
 
-void motord_init(void);
-void motord_enable(void);
-void motord_disable(void);
-void motord_dir(uint8_t);
-void motord_pwm(uint32_t);
+#define md_enc_irq_handler TIM4_IRQHandler
+#define md_pid_irq_handler TIM5_IRQHandler
+void md_init(void);
+void md_enable(void);
+void md_disable(void);
+void md_dir(uint8_t);
+void md_pwm(uint32_t);
+void md_set_speed(int32_t);
 void TIM4_IRQHandler(void);
+uint16_t md_cpos = 0;
+uint16_t md_lpos = 0;
+int16_t md_w = 0;
+int16_t md_w_ref;
+int32_t md_enc_upd_ms;
+int32_t md_pid_Tp;
+const int32_t md_pid_kp = 1;
+const int32_t md_pid_Ti = 1;
+const int32_t md_pid_Td = 1;
+int32_t md_pid_sum_of_e;
+int32_t md_pid_last_e;
 
-void tankd_init(void);
-void tankd_enable(void);
-void tankd_disable(void);
-void tankd_dir(uint8_t);
-void tankd_pwm(int);
+void td_init(void);
+void td_enable(void);
+void td_disable(void);
+void td_dir(uint8_t);
+void td_pwm(int);
 void EXTI15_10_IRQHandler(void);
 
 int update_conf(void);
@@ -116,7 +132,7 @@ void i2c_init(void)
 	i2c_reg_idx = 0;
 	i2c_bytes_received = 0;
 
-	debug("i2c_init()\n");
+	//debug("i2c_init()\n");
 }
 
 void I2C1_EV_IRQHandler() 
@@ -177,7 +193,7 @@ void I2C1_ER_IRQHandler()
 	}
 }
 
-void motord_init(void)
+void md_init(void)
 {
 	/*
 	 * M1-PWM 	PA1 	TIM2_CH2
@@ -189,7 +205,7 @@ void motord_init(void)
 	 * ENC1 	PC6 	TIM8_CH1
 	 * ENC2 	PC7 	TIM8_CH2
 	 */
-	//debug("motord_init()\n");
+	//debug("md_init()\n");
 
 	// IOs	
 	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN;
@@ -223,11 +239,12 @@ void motord_init(void)
 	
 	// TODO Calculate speed using TIM4 interrupt
 	RCC->APB1ENR |= RCC_APB1ENR_TIM4EN;
-	TIM4->PSC = 10000 - 1;
-	TIM4->ARR = 10000 - 1;
+	TIM4->PSC = 8400 - 1;
+	TIM4->ARR = 200 - 1;
 	TIM4->DIER = TIM_DIER_UIE;
 	NVIC_EnableIRQ(TIM4_IRQn);
 	TIM4->CR1 |= TIM_CR1_CEN;
+	md_enc_upd_ms = ( ((TIM4->PSC+1)*(TIM4->ARR+1)) / 84000 );
 
 	// TODO Current measure: M1-CS
 	GPIOA->MODER |= GPIO_MODER_MODER2_0 | GPIO_MODER_MODER2_1;
@@ -235,18 +252,53 @@ void motord_init(void)
 	//ADC->CR1 |=  
 	//ADC->CR2 |= ADC_CR2_ADON;
 	
+	// TODO: PID controller on TIM5
+	RCC->APB1ENR |= RCC_APB1ENR_TIM5EN;
+	TIM5->PSC = 8400 - 1;
+	TIM5->ARR = 2000 - 1;
+	TIM5->DIER = TIM_DIER_UIE;
+	NVIC_EnableIRQ(TIM5_IRQn);
+	//TIM5->CR1 |= TIM_CR1_CEN; // PID start
+	md_pid_Tp = ( ((TIM5->PSC+1)*(TIM5->ARR+1)) / 84000 ); // ms
+	md_pid_last_e = 0;
+	md_pid_sum_of_e = 0;
+
+	debug("md_init OK\n");
 }
 
-void TIM4_IRQHandler(void)  // motord: Calculate rotating speed
+void TIM4_IRQHandler(void)  // md: Calculate rotating speed
 {
 	if(TIM4->SR & TIM_SR_UIF)
-		printf("TIM4 update event\n");
+	{
+		md_cpos = TIM8->CNT;
+		md_w = ((int16_t)md_cpos - (int16_t)md_lpos) * 30 / 2; // [RPM]
+		md_lpos = md_cpos;
+		i2c_regs[M1_SPEED] = md_w;
+		printf("cpos = %d, speed = %d RPM\n", md_cpos, md_w);
+	}
 	TIM4->SR &= ~TIM_SR_UIF;
 }
 
-void motord_dir(uint8_t dir)
+void TIM5_IRQHandler(void) // PID IRQ
 {
-	//debug("motord_dir(%d)\n", dir);
+	int32_t u;
+	int32_t e;
+		
+	if(TIM5->SR & TIM_SR_UIF)
+	{
+		e = md_w_ref - md_w;
+		md_pid_sum_of_e += e;
+		u = md_pid_kp * ( e + (md_pid_Tp * md_pid_sum_of_e / md_pid_Ti) + ( md_pid_Td * (e - md_pid_last_e) / md_pid_Tp) );
+		md_pid_last_e = e;
+		printf("u=%d\n", u);
+	}
+	TIM5->SR &= ~TIM_SR_UIF;
+	
+}
+
+void md_dir(uint8_t dir)
+{
+	//debug("md_dir(%d)\n", dir);
 
 	if(dir < 0x80)
 	{
@@ -260,38 +312,64 @@ void motord_dir(uint8_t dir)
 	}
 }
 
-void motord_pwm(uint32_t w)
+void md_pwm(uint32_t width)
 {
-	//debug("motord_pwm(%d)\n", PWM);
+	//debug("md_pwm(%d)\n", PWM);
 	
-	if(w != TIM2->CCR2)
+	if(width != TIM2->CCR2)
 	{	
-		if(w == 0)
+		if(width == 0)
 			TIM2->CR1 &= ~TIM_CR1_CEN;
 		else
 			TIM2->CR1 |= TIM_CR1_CEN;
 		
-		TIM2->CCR2 = w;
+		TIM2->CCR2 = width;
 	}
 }
 
-void motord_enable()
+void md_set_speed(int32_t w)
 {
-	debug("motord_enable()\n");
+	uint16_t pwm;
+
+	if(w == 0)		
+	{
+		TIM2->CR1 &= ~TIM_CR1_CEN; // pwm stop
+	}
+	else if(w > 0)
+	{
+		TIM2->CR1 |= TIM_CR1_CEN; // pwm start
+		GPIOC->ODR |=  (1 << 2); // M1-INA = 1
+		GPIOA->ODR &= ~(1 << 4); // M1-INB = 0
+	}
+	else
+	{
+		TIM2->CR1 |= TIM_CR1_CEN; // pwm start
+		GPIOC->ODR &= ~(1 << 2); // M1-INA = 0
+		GPIOA->ODR |=  (1 << 4); // M1-INB = 1
+	}
+	
+	pwm = ( abs(w) * (TIM2->ARR + 1) / 3100 );
+	TIM2->CCR2 = pwm;
+			
+}
+
+void md_enable()
+{
+	debug("md_enable()\n");
 
 	GPIOC->ODR |= (1 << 3); // M1-ENA = 1
 	GPIOA->ODR |= (1 << 3); // M1-ENB = 1
 }
 
-void motord_disable()
+void md_disable()
 {
-	debug("motord_disable()\n");
+	debug("md_disable()\n");
 
 	GPIOC->ODR &= ~(1 << 3); // M1-ENA = 0
 	GPIOA->ODR &= ~(1 << 3); // M1-ENB = 0
 }
 
-void tankd_init()
+void td_init()
 {
 	/*
 	 * M2-PWM 	PB0 	TIM1_CH2N
@@ -301,10 +379,11 @@ void tankd_init()
 	 * MAX		PB11	in
 	 * M2-ENB 	PA6 	out
 	 * M2-INB 	PA5 	out
-	 * TRANS 	PC8 	? TODO
+	 * TRANS 	PC8 	TIM3_CH3
 	 */
 
-	debug("tankd_init()\n");
+	//debug("td_init()\n");
+	
 	// IOs
 	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOBEN;
 	GPIOB->MODER |= GPIO_MODER_MODER1_0; // M2-ENA
@@ -322,64 +401,60 @@ void tankd_init()
 	GPIOA->MODER |= GPIO_MODER_MODER6_0; // M2-ENB
 	GPIOA->MODER |= GPIO_MODER_MODER5_0; // M2-INB
 
+	
 	// PWM: TIM1_CH2N (PB0/AF1)
-	// TODO: temp. changed to TIM3_CH3
-	GPIOB->MODER |= GPIO_MODER_MODER0_1;
-	GPIOB->AFR[0] |= (2 << 0);
-	RCC->APB1ENR |= RCC_APB1ENR_TIM3EN; 
-	TIM3->PSC =   9;
-	TIM3->ARR =   99;
-	TIM3->CCMR2 = TIM_CCMR2_OC3M_2 | TIM_CCMR2_OC3M_1; // PWM mode
-	TIM3->CCER = TIM_CCER_CC3E;
+	GPIOB->MODER |= GPIO_MODER_MODER0_1; // AF
+	GPIOB->AFR[0] |= (1 << 0); // AF1
+	RCC->APB2ENR |= RCC_APB2ENR_TIM1EN;
+	TIM1->PSC =   10 - 1;
+	TIM1->ARR =   100 - 1;
+	TIM1->BDTR |= TIM_BDTR_MOE;
+	TIM1->CCMR1 = TIM_CCMR1_OC2M_2 | TIM_CCMR1_OC2M_1; // PWM mode for CH2
+	TIM1->CCER = TIM_CCER_CC2NE;
 	
 	// TRANS ? 
 	//RCC->AHB1ENR |= RCC_AHB1ENR_GPIOCEN;
 	//GPIOC->MODER |= GPIO_MODER_MODER8_1;
 }
 
-void EXTI15_10_IRQHandler()  // tankd: MIN or MAX interrupt
+void EXTI15_10_IRQHandler()  // td: MIN or MAX interrupt
 {
 	EXTI->PR = EXTI_PR_PR11;
 	printf("EXTI\n");
 }
 
-void tankd_pwm(int width)
+void td_pwm(int width)
 {
-	if(width != TIM3->CCR3)
+	if(width != TIM1->CCR2)
 	{
 		if(width == 0)
-			TIM3->CR1 &= ~TIM_CR1_CEN;
+			TIM1->CR1 &= ~TIM_CR1_CEN;
 		else
-			TIM3->CR1 |= TIM_CR1_CEN;		
+			TIM1->CR1 |= TIM_CR1_CEN;		
 
-		TIM3->CCR3 = width;		
+		TIM1->CCR2 = width;	
 	}
 }
 
-void tankd_enable()
+void td_enable()
 {
-	debug("tankd_enable()\n");
+	//debug("td_enable()\n");
 	GPIOB->ODR |= (1 << 1); // M2-ENA = 1
 	GPIOA->ODR |= (1 << 6); // M2-ENB = 1
 }
 
-void tankd_disable()
+void td_disable()
 {
-	debug("tankd_disable()\n");
+	//debug("td_disable()\n");
 	GPIOB->ODR &= ~(1 << 1); // M2-ENA = 0
 	GPIOA->ODR &= ~(1 << 6); // M2-ENB = 0
 }
 
-void tankd_dir(uint8_t d)
+void td_dir(uint8_t d)
 {
-	//debug("tankd_dir(%d)\n", d);
+	//debug("td_dir(%d)\n", d);
 	
-	if(d == 0) // stop
-	{
-		GPIOB->ODR &= ~(1 << 2); // M2-INA = 0
-		GPIOA->ODR &= ~(1 << 5); // M2-INB = 0
-	}
-	else if(d < 0x80) // water out
+	if(d < 0x80) // water out
 	{
 		GPIOB->ODR |=  (1 << 2); // M2-INA = 1
 		GPIOA->ODR &= ~(1 << 5); // M2-INB = 0
@@ -421,15 +496,14 @@ int update_conf(void)
 	{
 		// check if {motor, tank, led}d enabled!!
 		if( r == M1_DIR )
-			motord_dir(i2c_regs[M1_DIR]);
+			md_dir(i2c_regs[M1_DIR]);
 		else if( r == M1_PWM)
-			motord_pwm(i2c_regs[M1_PWM]);
+			md_pwm(i2c_regs[M1_PWM]);
 		else if( r == M2_DIR )
-			tankd_dir(i2c_regs[M2_DIR]);
+			td_dir(i2c_regs[M2_DIR]);
 		else if( r == M2_PWM)
-			tankd_pwm(i2c_regs[M2_PWM]);
+			td_pwm(i2c_regs[M2_PWM]);
 
-		//debug(" 0x%x", i2c_regs[r]);
 		r++;
 	}
 	//debug(" ]\n");
@@ -440,17 +514,17 @@ int main(void)
 {	
 	usart_init();
 	i2c_init();
-	//motord_init();
-	//motord_enable();
-	tankd_init();
-	tankd_enable();
+	md_init();
+	md_enable();
+	//td_init();
+	//td_enable();
 	//init_ledd();
 	printf("Hello\n");
 	while(1)
 	{
-		//printf("TIM8_CNT = 0x%x\n", TIM8->CNT);
-		//printf("PB10 = %x, PB11 = 0x%x\n", GPIOB->IDR & (1 << 10), GPIOB->IDR & (1 << 11));
 		update_conf();
+		md_w_ref = 4;
+		md_set_speed(-400);
 		_wait(600000);
 	}
 }
