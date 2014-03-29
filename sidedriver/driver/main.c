@@ -26,13 +26,12 @@ void i2c_init(void);
 void I2C1_EV_IRQHandler(void);
 void I2C1_ER_IRQHandler(void);
 #define I2C_ADDR 0x09
-#define NUM_REGS 6
+#define NUM_REGS 4
 #define STATE 0x00
-#define M1_DIR 0x01
-#define M1_PWM 0x02
-#define M1_SPEED 0x03
-#define M2_DIR 0x04
-#define M2_PWM 0x05
+#define M1_SET_SPEED_L 0x01
+#define M1_SET_SPEED_H 0x02
+#define M1_SPEED_L 0x03
+#define M1_SPEED_H 0x04
 int16_t i2c_regs[NUM_REGS];
 int i2c_bytes_received;
 int i2c_reg_idx;
@@ -44,7 +43,7 @@ void md_enable(void);
 void md_disable(void);
 void md_dir(uint8_t);
 void md_pwm(uint32_t);
-void md_set_speed(int32_t);
+void md_set_speed(int16_t);
 void TIM4_IRQHandler(void);
 uint16_t md_cpos = 0;
 uint16_t md_lpos = 0;
@@ -135,12 +134,21 @@ void i2c_init(void)
 	//debug("i2c_init()\n");
 }
 
+void i2c_print_regs(void)
+{
+	int i;
+	printf("[ ");
+	for(i=0; i<=NUM_REGS; i++)
+		printf("0x%02x ", i2c_regs[i]);
+	printf("]\n");
+}
+
 void I2C1_EV_IRQHandler() 
 {
 	uint16_t temp;
 	uint16_t stat1 = 0;
 	//uint16_t stat2 = 0;
-	uint32_t data;
+	uint8_t data;
 
 	stat1 = I2C1->SR1;
 	//stat2 = I2C1->SR2;
@@ -158,11 +166,15 @@ void I2C1_EV_IRQHandler()
 		if(i2c_bytes_received == 1)
 			i2c_reg_idx = data;
 		else
+		{
 			i2c_regs[i2c_reg_idx] = data;
+			i2c_reg_idx++;
+		}
 	}
 	if(stat1 & I2C_SR1_TXE) // Transm. reg. empty
 	{	
 		I2C1->DR = i2c_regs[i2c_reg_idx];
+		i2c_reg_idx++;
 	}	
 	if(stat1 & I2C_SR1_BTF) // Byte Transfer Finished
 	{
@@ -273,8 +285,8 @@ void TIM4_IRQHandler(void)  // md: Calculate rotating speed
 		md_cpos = TIM8->CNT;
 		md_w = ((int16_t)md_cpos - (int16_t)md_lpos) * 30 / 2; // [RPM]
 		md_lpos = md_cpos;
-		i2c_regs[M1_SPEED] = md_w;
-		printf("cpos = %d, speed = %d RPM\n", md_cpos, md_w);
+		i2c_regs[M1_SPEED_H] = (md_w >> 8) & 0x0FF;
+		i2c_regs[M1_SPEED_L] = md_w & 0x0FF;
 	}
 	TIM4->SR &= ~TIM_SR_UIF;
 }
@@ -327,30 +339,32 @@ void md_pwm(uint32_t width)
 	}
 }
 
-void md_set_speed(int32_t w)
+void md_set_speed(int16_t w)
 {
 	uint16_t pwm;
 
+	pwm = ( abs(w) * (TIM2->ARR + 1) / 3100 );
+	//printf("w=%d, pwm=%d\n", w, pwm);
+
 	if(w == 0)		
 	{
-		TIM2->CR1 &= ~TIM_CR1_CEN; // pwm stop
+		TIM2->CR1 &= ~TIM_CR1_CEN; // stop counting/pwm
+		TIM2->CCR2 = 0;
 	}
 	else if(w > 0)
 	{
+		TIM2->CCR2 = pwm;
 		TIM2->CR1 |= TIM_CR1_CEN; // pwm start
 		GPIOC->ODR |=  (1 << 2); // M1-INA = 1
 		GPIOA->ODR &= ~(1 << 4); // M1-INB = 0
 	}
 	else
 	{
+		TIM2->CCR2 = pwm;
 		TIM2->CR1 |= TIM_CR1_CEN; // pwm start
 		GPIOC->ODR &= ~(1 << 2); // M1-INA = 0
 		GPIOA->ODR |=  (1 << 4); // M1-INB = 1
 	}
-	
-	pwm = ( abs(w) * (TIM2->ARR + 1) / 3100 );
-	TIM2->CCR2 = pwm;
-			
 }
 
 void md_enable()
@@ -489,24 +503,17 @@ void init_ledd(void)
 
 int update_conf(void)
 {
-	int r = 0;
+	//int r = 0;
+	md_w_ref = i2c_regs[M1_SET_SPEED_L] | (i2c_regs[M1_SET_SPEED_H] << 8);
+	md_set_speed(md_w_ref);
+	printf("md_w_ref = %d, md_w = %d\n ", md_w_ref, md_w);
 
-	//debug("i2c_regs = [");
+	/*
 	while(r<NUM_REGS)
 	{
-		// check if {motor, tank, led}d enabled!!
-		if( r == M1_DIR )
-			md_dir(i2c_regs[M1_DIR]);
-		else if( r == M1_PWM)
-			md_pwm(i2c_regs[M1_PWM]);
-		else if( r == M2_DIR )
-			td_dir(i2c_regs[M2_DIR]);
-		else if( r == M2_PWM)
-			td_pwm(i2c_regs[M2_PWM]);
-
 		r++;
 	}
-	//debug(" ]\n");
+	*/
 	return 0;
 }
 
@@ -523,8 +530,8 @@ int main(void)
 	while(1)
 	{
 		update_conf();
-		md_w_ref = 4;
-		md_set_speed(-400);
-		_wait(600000);
+		//printf("cpos = %d, speed = %d RPM\n", md_cpos, md_w);
+		i2c_print_regs();
+		_wait(6000000);
 	}
 }
