@@ -37,6 +37,7 @@ int i2c_bytes_received;
 int i2c_reg_idx;
 
 #define M1_MAX_SPEED 3370
+#define PID_MAX_U 1500
 void md_init(void);
 void md_enable(void);
 void md_disable(void);
@@ -61,6 +62,7 @@ int32_t md_enc_upd_ms;
    */
 
 struct PID {
+	int enabled;
 	int32_t Kp;
 	int32_t Kd;
 	int32_t Ki;
@@ -69,9 +71,7 @@ struct PID {
 	int32_t u;
 	int32_t sum_of_e;
 	int32_t last_e;
-};
-
-struct PID pid;
+} pid;
 
 void td_init(void);
 void td_enable(void);
@@ -164,7 +164,6 @@ void I2C1_EV_IRQHandler()
 {
 	uint16_t temp;
 	uint16_t stat1 = 0;
-	//uint16_t stat2 = 0;
 	uint8_t data;
 
 	stat1 = I2C1->SR1;
@@ -259,19 +258,21 @@ void md_init(void)
 	GPIOC->MODER |= GPIO_MODER_MODER7_1; // PC7 -> AF
 	GPIOC->AFR[0] |= (3 << 28); // PC7 -> AF3
 	RCC->APB2ENR |= RCC_APB2ENR_TIM8EN;
-	TIM8->PSC = 2 - 1; // (Prescaler - 1)
 	TIM8->ARR = 0xFFFF;
-	TIM8->CCMR1 |= TIM_CCMR1_CC1S_0 | TIM_CCMR1_CC2S_0; // CC1S = 01, CC2S = 02 (inputs)
+	TIM8->PSC = 2 - 1; // (Prescaler - 1)
+	TIM8->CCMR1 = TIM_CCMR1_CC1S_0 | TIM_CCMR1_CC2S_0; // CC1S = 01, CC2S = 02 (inputs)
 	TIM8->CCER |= TIM_CCER_CC1P | TIM_CCER_CC2P; // CC1P = 1, CC2P = 1 input polarity
 	TIM8->SMCR |= TIM_SMCR_SMS_1 | TIM_SMCR_SMS_0; // Slave Mode, SMS = 011, Encoder Mode 3 p. 615
+	TIM8->EGR |= TIM_EGR_UG; /* Force update */
 	TIM8->CR1 |= TIM_CR1_CEN;
 
-	// TODO Calculate speed using TIM4 interrupt
+	//Calculate speed using TIM4 interrupt
 	RCC->APB1ENR |= RCC_APB1ENR_TIM4EN;
 	TIM4->PSC = 8400 - 1;
 	TIM4->ARR = 200 - 1;
 	TIM4->DIER = TIM_DIER_UIE;
 	NVIC_EnableIRQ(TIM4_IRQn);
+	TIM4->EGR |= TIM_EGR_UG; /* Force update */
 	TIM4->CR1 |= TIM_CR1_CEN;
 	md_enc_upd_ms = ( ((TIM4->PSC+1)*(TIM4->ARR+1)) / 84000 );
 
@@ -282,24 +283,27 @@ void md_init(void)
 	//ADC->CR2 |= ADC_CR2_ADON;
 
 	// TODO: PID controller on TIM5
-	RCC->APB1ENR |= RCC_APB1ENR_TIM5EN;
-	TIM5->PSC = 8400 - 1;
-	TIM5->ARR = 2000 - 1;
-	TIM5->DIER = TIM_DIER_UIE;
-	NVIC_EnableIRQ(TIM5_IRQn);
-	TIM5->CR1 |= TIM_CR1_CEN; // PID start
+	pid.enabled = 1;
+	if (pid.enabled) {
+		RCC->APB1ENR |= RCC_APB1ENR_TIM5EN;
+		TIM5->PSC = 8400 - 1;
+		TIM5->ARR = 2000 - 1;
+		TIM5->DIER = TIM_DIER_UIE;
+		NVIC_EnableIRQ(TIM5_IRQn);
+		TIM5->CR1 |= TIM_CR1_CEN; // PID start
 
-	pid.Kp = 1;
-	pid.Kd = 0;
-	pid.Ki = 7000;
-	pid.Tp = (((TIM5->PSC+1)*(TIM5->ARR+1)) / 84000); // ms
-	pid.last_e = 0;
-	pid.sum_of_e = 0;
+		pid.Kp = 1;
+		pid.Kd = 0;
+		pid.Ki = 10000;
+		pid.Tp = (((TIM5->PSC+1)*(TIM5->ARR+1)) / 84000); // in ms
+		pid.last_e = 0;
+		pid.sum_of_e = 0;
+	}
 
 	debug("md_init OK\n");
 }
 
-void TIM4_IRQHandler(void)  // md: Calculate rotating speedd
+void TIM4_IRQHandler(void)  // md: Calculate rotating speed
 {
 	if(TIM4->SR & TIM_SR_UIF)
 	{
@@ -324,13 +328,13 @@ void TIM5_IRQHandler(void) /* PID IRQ */
 
 		// md_pid_u = md_w_ref + md_pid_u;
 		/* limit u */
-		if (pid.u > M1_MAX_SPEED)
-			pid.u = M1_MAX_SPEED;
-		if (pid.u < -M1_MAX_SPEED)
-			pid.u = -M1_MAX_SPEED;
+		if (pid.u > PID_MAX_U)
+			pid.u = PID_MAX_U;
+		if (pid.u < -PID_MAX_U)
+			pid.u = -PID_MAX_U;
 
 		pid.last_e = pid.e;
-		//md_set_speed(pid.u);
+		md_set_speed(pid.u);
 		// printf("w_ref=%d, w=%d, e=%d, u=%d\n", md_w_ref, md_w, md_pid_e, md_pid_u);
 	}
 	TIM5->SR &= ~TIM_SR_UIF;
@@ -370,13 +374,11 @@ void md_pwm(uint32_t width)
 void md_set_speed(int16_t w)
 {
 	uint16_t pwm;
-	/*
-	   if (w > M1_MAX_SPEED)
-	   w = M1_MAX_SPEED;
+	if (w > M1_MAX_SPEED)
+		w = M1_MAX_SPEED;
 
-	   if (w < -M1_MAX_SPEED)
-	   w = -M1_MAX_SPEED;
-	   */
+	if (w < -M1_MAX_SPEED)
+		w = -M1_MAX_SPEED;
 
 	pwm = (abs(w) * (TIM2->ARR + 1) / M1_MAX_SPEED);
 	//printf("w=%d, pwm=%d\n", w, pwm);
@@ -535,7 +537,7 @@ int update_conf(void)
 {
 	//int r = 0;
 	md_w_ref = i2c_regs[M1_SET_SPEED_L] | (i2c_regs[M1_SET_SPEED_H] << 8);
-	md_set_speed(md_w_ref);
+	//md_set_speed(md_w_ref);
 	// printf("md_w_ref = %d, md_w = %d\n ", md_w_ref, md_w);
 
 	/*
@@ -561,6 +563,7 @@ int main(void)
 	{
 		update_conf();
 		printf("Tp=%d, e=%d, u=%d, w_r=%d, w=%d \n", pid.Tp, pid.e, pid.u, md_w_ref, md_w);
+		//printf("md_cpos=%d, w=%d, CCMR1=0x%04x\n", md_cpos, md_w, TIM8->CCMR1);
 		//i2c_print_regs();
 		_wait(6000000);
 	}
