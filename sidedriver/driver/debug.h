@@ -1,6 +1,8 @@
 #ifndef _debug_h_
 #define _debug_h_
 
+#include <stdio.h>
+
 #define DEBUG
 
 #ifdef DEBUG

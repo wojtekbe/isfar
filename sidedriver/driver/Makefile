@@ -25,7 +25,7 @@ CFLAGS += -Wstrict-prototypes -Wundef -Wshadow
 AFLAGS	= -mcpu=cortex-m4 -mthumb -mlittle-endian -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb-interwork 
 #-mapcs-float use float regs. small increase in code size
 
-SRC = debug.c i2c.c motordriver.c main.c system_stm32f4xx.c
+SRC = debug.c i2c.c pid.c motordriver.c main.c system_stm32f4xx.c
 
 all: $(BIN)
 

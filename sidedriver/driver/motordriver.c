@@ -4,7 +4,7 @@
 #include "debug.h"
 #include "i2c.h"
 #include "motordriver.h"
-#include <math.h>
+//#include <math.h>
 
 void md_init(void)
 {
@@ -18,9 +18,10 @@ void md_init(void)
 	 * ENC1 	PC6 	TIM8_CH1
 	 * ENC2 	PC7 	TIM8_CH2
 	 */
+	
 	//debug("md_init()\n");
 
-	// IOs
+	/* IOs */
 	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN;
 	GPIOA->MODER |= GPIO_MODER_MODER3_0; // M1-ENB
 	GPIOA->MODER |= GPIO_MODER_MODER4_0; // M1-INB
@@ -28,7 +29,7 @@ void md_init(void)
 	GPIOC->MODER |= GPIO_MODER_MODER2_0; // M1-INA
 	GPIOC->MODER |= GPIO_MODER_MODER3_0; // M1-ENA
 
-	// PWM: TIM2_CH2 (PA1/AF1)
+	/* PWM: TIM2_CH2 (PA1/AF1) */
 	GPIOA->MODER |= GPIO_MODER_MODER1_1; // AF
 	GPIOA->AFR[0] |= (1 << 4); // AF1
 	RCC->APB1ENR |= RCC_APB1ENR_TIM2EN;
@@ -37,7 +38,7 @@ void md_init(void)
 	TIM2->CCMR1 = TIM_CCMR1_OC2M_2 | TIM_CCMR1_OC2M_1;
 	TIM2->CCER = TIM_CCER_CC2E;
 
-	// Encoder: counting tics: TIM8_CH1/2 (PC6/7 AF3)
+	/* Encoder: counting tics: TIM8_CH1/2 (PC6/7 AF3) */
 	GPIOC->MODER |= GPIO_MODER_MODER6_1; // PC6 -> AF
 	GPIOC->AFR[0] |= (3 << 24); // PC6 -> AF3
 	GPIOC->MODER |= GPIO_MODER_MODER7_1; // PC7 -> AF
@@ -51,7 +52,7 @@ void md_init(void)
 	TIM8->EGR |= TIM_EGR_UG; /* Force update */
 	TIM8->CR1 |= TIM_CR1_CEN;
 
-	//Calculate speed using TIM4 interrupt
+	/* Calculate speed using TIM4 interrupt */
 	RCC->APB1ENR |= RCC_APB1ENR_TIM4EN;
 	TIM4->PSC = 8400 - 1;
 	TIM4->ARR = 200 - 1;
@@ -64,100 +65,27 @@ void md_init(void)
 	md_lpos = 0;
 	md_w = 0;
 
-	// TODO Current measure: M1-CS
+	/* TODO Current measure: M1-CS */
 	GPIOA->MODER |= GPIO_MODER_MODER2_0 | GPIO_MODER_MODER2_1;
 	RCC->APB2ENR |= RCC_APB2ENR_ADC1EN;
 	//ADC->CR1 |=
 	//ADC->CR2 |= ADC_CR2_ADON;
 
-	// TODO: PID controller on TIM5
-	pid.enabled = 1;
-	if (pid.enabled) {
-		RCC->APB1ENR |= RCC_APB1ENR_TIM5EN;
-		TIM5->PSC = 8400 - 1;
-		TIM5->ARR = 2000 - 1;
-		TIM5->DIER = TIM_DIER_UIE;
-		NVIC_EnableIRQ(TIM5_IRQn);
-		TIM5->CR1 |= TIM_CR1_CEN; // PID start
-
-		pid.Kp = 1;
-		pid.Kd = 0;
-		pid.Ki = 100;
-		pid.Tp = (((TIM5->PSC+1)*(TIM5->ARR+1)) / 84000); // in ms
-		pid.last_e = 0;
-		pid.sum_of_e = 0;
-	}
 
 	debug("md_init OK\n");
 }
 
-void TIM4_IRQHandler(void)  // md: Calculate rotating speed
+void TIM4_IRQHandler(void)  /* Encoder IRQ */
 {
 	if(TIM4->SR & TIM_SR_UIF)
 	{
 		md_cpos = TIM8->CNT;
 		md_w = ((int16_t)md_cpos - (int16_t)md_lpos) * 30 / 4; // [RPM]
-		//md_w = md_w_ref;
 		md_lpos = md_cpos;
 		i2c_regs[M1_SPEED + 1] = (md_w >> 8) & 0x0FF;
 		i2c_regs[M1_SPEED] = md_w & 0x0FF;
 	}
 	TIM4->SR &= ~TIM_SR_UIF;
-}
-
-void TIM5_IRQHandler(void) /* PID IRQ */
-{
-	if(TIM5->SR & TIM_SR_UIF) {
-		pid.e = md_w_ref - md_w;
-		pid.sum_of_e += pid.e;
-		pid.u = pid.Kp * (pid.e + /* prop. */
-				(pid.Tp * pid.sum_of_e / pid.Ki) +  /* integr. */
-				(pid.Kd * (pid.e - pid.last_e) / pid.Tp)); /* diff. */
-
-		// md_pid_u = md_w_ref + md_pid_u;
-		/* limit u */
-		if (pid.u > PID_MAX_U)
-			pid.u = PID_MAX_U;
-		if (pid.u < -PID_MAX_U)
-			pid.u = -PID_MAX_U;
-
-		pid.last_e = pid.e;
-		md_set_speed(pid.u);
-	}
-	TIM5->SR &= ~TIM_SR_UIF;
-
-}
-
-/*
-void md_dir(uint8_t dir)
-{
-	//debug("md_dir(%d)\n", dir);
-
-	if(dir < 0x80)
-	{
-		GPIOC->ODR |=  (1 << 2); // M1-INA = 1
-		GPIOA->ODR &= ~(1 << 4); // M1-INB = 0
-	}
-	else
-	{
-		GPIOC->ODR &= ~(1 << 2); // M1-INA = 0
-		GPIOA->ODR |=  (1 << 4); // M1-INB = 1
-	}
-}
-*/
-
-void md_pwm(uint32_t width)
-{
-	//debug("md_pwm(%d)\n", PWM);
-
-	if (width != TIM2->CCR2) {
-		if (width == 0)
-			TIM2->CR1 &= ~TIM_CR1_CEN;
-		else
-			TIM2->CR1 |= TIM_CR1_CEN;
-
-		TIM2->CCR2 = width;
-	}
 }
 
 void md_set_speed(int16_t w)
@@ -202,4 +130,37 @@ void md_disable()
 	GPIOC->ODR &= ~(1 << 3); // M1-ENA = 0
 	GPIOA->ODR &= ~(1 << 3); // M1-ENB = 0
 }
+
+/*
+void md_dir(uint8_t dir)
+{
+	//debug("md_dir(%d)\n", dir);
+
+	if(dir < 0x80)
+	{
+		GPIOC->ODR |=  (1 << 2); // M1-INA = 1
+		GPIOA->ODR &= ~(1 << 4); // M1-INB = 0
+	}
+	else
+	{
+		GPIOC->ODR &= ~(1 << 2); // M1-INA = 0
+		GPIOA->ODR |=  (1 << 4); // M1-INB = 1
+	}
+}
+*/
+/*
+void md_pwm(uint32_t width)
+{
+	//debug("md_pwm(%d)\n", PWM);
+
+	if (width != TIM2->CCR2) {
+		if (width == 0)
+			TIM2->CR1 &= ~TIM_CR1_CEN;
+		else
+			TIM2->CR1 |= TIM_CR1_CEN;
+
+		TIM2->CCR2 = width;
+	}
+}
+*/
 
