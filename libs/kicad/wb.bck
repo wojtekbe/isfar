@@ -1,0 +1,17 @@
+EESchema-DOCLIB  Version 2.0  Date: śro, 14 maj 2014, 08:50:49
+#
+$CMP 28C256
+D EEROM 32Kx8bits
+K EEROM ROM
+F memory/28c256.pdf
+$ENDCMP
+#
+$CMP ADS1110
+D ADS1110 analog->digital converter
+$ENDCMP
+#
+$CMP DS1307Z
+D DS1307Z Real Time Clock
+$ENDCMP
+#
+#End Doc Library

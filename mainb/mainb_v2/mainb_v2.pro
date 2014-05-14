@@ -86,4 +86,4 @@ LibName29=contrib
 LibName30=valves
 LibName31=/home/wojtekbe/dev/isfar/libs/kicad/Conn-raspberry
 LibName32=con-amp-micromatch
-LibName33=fbr51
+LibName33=wb
