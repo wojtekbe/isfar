@@ -16,13 +16,13 @@ void pid_init(void)
 
 	pid.Kp = 1;
 	pid.Kd = 0;
-	pid.Ki = 1000;
+	pid.Ki = 2000;
 	pid.Tp = (((TIM5->PSC+1)*(TIM5->ARR+1)) / 84000); // in ms
 	pid.last_e = 0;
 	pid.sum_of_e = 0;
 	pid.enabled = 1;
 
-	debug("pid_init OK\n");
+	debug("#pid_init OK Kd = %d, Ki = %d\n", pid.Kd, pid.Ki);
 }
 
 void TIM5_IRQHandler(void) /* PID IRQ */

@@ -51,6 +51,7 @@ void md_init(void)
 	TIM8->SMCR |= TIM_SMCR_SMS_1 | TIM_SMCR_SMS_0; // Slave Mode, SMS = 011, Encoder Mode 3 p. 615
 	TIM8->EGR |= TIM_EGR_UG; /* Force update */
 	TIM8->CR1 |= TIM_CR1_CEN;
+	TIM8->SR &= ~0x1; /* Clear update flag */
 
 	/* Calculate speed using TIM4 interrupt */
 	RCC->APB1ENR |= RCC_APB1ENR_TIM4EN;
@@ -72,7 +73,7 @@ void md_init(void)
 	//ADC->CR2 |= ADC_CR2_ADON;
 
 
-	debug("md_init OK\n");
+	// debug("md_init OK\n");
 }
 
 void TIM4_IRQHandler(void)  /* Encoder IRQ */
@@ -80,7 +81,14 @@ void TIM4_IRQHandler(void)  /* Encoder IRQ */
 	if(TIM4->SR & TIM_SR_UIF)
 	{
 		md_cpos = TIM8->CNT;
-		md_w = ((int16_t)md_cpos - (int16_t)md_lpos) * 30 / 4; // [RPM]
+
+		if (TIM8->SR & 0x01) {
+			md_w = (int16_t)(md_cpos + 0xFFFF - md_lpos) * 30 / 4; /* [RPM] */
+			TIM8->SR &= ~0x01;
+		}
+		else
+			md_w = (int16_t)(md_cpos - md_lpos) * 30 / 4; /* RPM] */
+
 		md_lpos = md_cpos;
 		i2c_regs[M1_SPEED + 1] = (md_w >> 8) & 0x0FF;
 		i2c_regs[M1_SPEED] = md_w & 0x0FF;
@@ -117,7 +125,7 @@ void md_set_speed(int16_t w)
 
 void md_enable()
 {
-	debug("md_enable()\n");
+	// debug("md_enable()\n");
 
 	GPIOC->ODR |= (1 << 3); // M1-ENA = 1
 	GPIOA->ODR |= (1 << 3); // M1-ENB = 1
@@ -125,7 +133,7 @@ void md_enable()
 
 void md_disable()
 {
-	debug("md_disable()\n");
+	//debug("md_disable()\n");
 
 	GPIOC->ODR &= ~(1 << 3); // M1-ENA = 0
 	GPIOA->ODR &= ~(1 << 3); // M1-ENB = 0
