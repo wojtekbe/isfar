@@ -1,4 +1,4 @@
-EESchema-DOCLIB  Version 2.0
+EESchema-DOCLIB  Version 2.0  Date: śro, 14 maj 2014, 20:39:43
 #
 $CMP 28C256
 D EEROM 32Kx8bits
@@ -14,11 +14,7 @@ $CMP DS1307Z
 D DS1307Z Real Time Clock
 $ENDCMP
 #
-$CMP MinIMU-9
-D MiniIMU-9 v3 POLOLU 2468
-$ENDCMP
-#
-$CMP MiniIMU-9
+$CMP MINIIMU-9
 D MiniIMU-9 v3 POLOLU 2468
 $ENDCMP
 #
