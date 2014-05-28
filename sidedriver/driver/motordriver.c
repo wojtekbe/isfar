@@ -2,7 +2,6 @@
 #include "stm32f4xx.h"
 #include "core_cm4.h"
 #include "debug.h"
-#include "i2c.h"
 #include "motordriver.h"
 //#include <math.h>
 
@@ -90,8 +89,6 @@ void TIM4_IRQHandler(void)  /* Encoder IRQ */
 			md_w = (int16_t)(md_cpos - md_lpos) * 30 / 4; /* RPM] */
 
 		md_lpos = md_cpos;
-		i2c_regs[M1_SPEED + 1] = (md_w >> 8) & 0x0FF;
-		i2c_regs[M1_SPEED] = md_w & 0x0FF;
 	}
 	TIM4->SR &= ~TIM_SR_UIF;
 }
