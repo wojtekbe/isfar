@@ -14,9 +14,9 @@ void pid_init(void)
 	NVIC_EnableIRQ(TIM5_IRQn);
 	TIM5->CR1 |= TIM_CR1_CEN; // PID start
 
-	pid.Kp = 1;
-	pid.Kd = 0;
-	pid.Ki = 2000;
+	pid.Kp = 3; /* 1 / Kp */
+	pid.Kd = 1;
+	pid.Ki = 150;
 	pid.Tp = (((TIM5->PSC+1)*(TIM5->ARR+1)) / 84000); // in ms
 	pid.last_e = 0;
 	pid.sum_of_e = 0;
@@ -32,9 +32,11 @@ void TIM5_IRQHandler(void) /* PID IRQ */
 		/*pid.u = *pid_x_ref;*/
 		pid.e = *pid.x_ref - *pid.x;
 		pid.sum_of_e += pid.e;
-		pid.u = pid.Kp * (pid.e + /* prop. */
+		pid.u = 1 * (
+				pid.e +
 				(pid.Tp * pid.sum_of_e / pid.Ki) +  /* integr. */
-				(pid.Kd * (pid.e - pid.last_e) / pid.Tp)); /* diff. */
+				(pid.Kd * (pid.e - pid.last_e) / pid.Tp) /* diff */
+				) / pid.Kp;
 
 		/* limit u */
 		if (pid.u > PID_MAX_U)
