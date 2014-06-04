@@ -61,7 +61,7 @@ void td_init()
 	RCC->APB1ENR |= RCC_APB1ENR_TIM3EN;
 	TIM3->PSC = 0;
 	TIM3->ARR = 0xFFFF - 1;	
-	TIM3->CCMR2 |= TIM_CCMR2_CC3S_0; /* input capture on chann. 3*/
+	TIM3->CCMR2 |= TIM_CCMR2_CC3S_0 | TIM_CCMR2_IC3F_2; /* input capture on chann. 3, filter */
 	TIM3->CCER |= TIM_CCER_CC3E | TIM_CCER_CC3P; /* Enable input chann. 3, detect falling edges */
 	TIM3->DIER |= TIM_DIER_CC3IE; /* Enable interrupt */ 
 	TIM3->CR1 |= TIM_CR1_CEN;
