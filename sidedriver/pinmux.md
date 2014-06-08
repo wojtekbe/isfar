@@ -1,6 +1,7 @@
 Motor driver
 ====
 
+| ------ |
 | M1_ENA |
 | M1_ENB |
 | M1_INA |
@@ -10,18 +11,21 @@ Motor driver
 
 Tank driver
 ====
-| Name    | Pin  |  Func.    | 
+| Name    | Pin  |  Func.    |
 | ------- | ---- | --------- |
-| M2_ENA  |      | |
-| M2_ENB  |      | |
-| M2_INA  |      | |
-| M2_INB  |      | |
+| M2_ENA  |      |           |
+| M2_ENB  |      |           |
+| M2_INA  |      |           |
+| M2_INB  |      |           |
 | M2_PWM  | PB0  | TIM1_CH2N |
-| M2_CS   | PA7  | |
+| M2_CS   | PA7  |           |
 | TRANS	  | PB6  | TIM4_CH1  |
+| MIN     | PB10 |    I      |
+| MAX     | PB11 |    I      |
 
 LED driver
 ====
+| ------- |
 | LED_PWM |
 | SM1_PWM |
 | SM2_PWM |
