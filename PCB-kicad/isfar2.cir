@@ -1,0 +1,158 @@
+* EESchema Netlist Version 1.1 (Spice format) creation date: Sun 08 Jun 2014 15:21:40 CEST
+
+* To exclude a component from the Spice Netlist add [Spice_Netlist_Enabled] user FIELD set to: N
+* To reorder the component spice node sequence add [Spice_Node_Sequence] user FIELD and define sequence: 2,1,0
+
+*Sheet Name:/
+*Sheet Name:/mainboard/
+J1  /mainboard/+3V3 +5V SDA +5V SCL PoE- ? /mainboard/TX PoE- /mainboard/RX REL#1 ? REL#2 PoE- ? /mainboard/LED3 ? /mainboard/LED2 ? PoE- ? /mainboard/LED1 ? ? PoE- ? RPI_GPIO		
+J2  /mainboard/TX+ /mainboard/TX- /mainboard/RX+ PoE+ PoE+ /mainboard/RX- PoE- PoE- ? ETH		
+D3  Net-_D3-Pad1_ /mainboard/LED3 LED		
+D2  Net-_D2-Pad1_ /mainboard/LED2 LED		
+D1  Net-_D1-Pad1_ /mainboard/LED1 LED		
+J11  PoE- /mainboard/RX /mainboard/TX UART		
+R9  Net-_D1-Pad1_ /mainboard/+3V3 500		
+R8  Net-_D2-Pad1_ /mainboard/+3V3 500		
+R7  Net-_D3-Pad1_ /mainboard/+3V3 500		
+ETH->RPI1  /mainboard/TX+ ? /mainboard/TX- /mainboard/RX+ ? /mainboard/RX- ? ? CONN_8		
+REL3  AKU+ AKU+ Net-_D5-Pad2_ ? PoE+ FBR51		
+REL2  Net-_D5-Pad2_ Net-_D5-Pad2_ +12V ? Net-_D5-Pad1_ FBR51		
+REL1  +5V +5V +5V ? Net-_D4-Pad1_ FBR51		
+Q1  Net-_D4-Pad1_ Net-_Q1-Pad2_ PoE- BC337		
+Q2  Net-_D5-Pad1_ Net-_Q2-Pad2_ ? BC337		
+R5  REL#1 Net-_Q2-Pad2_ R		
+R4  REL#2 Net-_Q1-Pad2_ R		
+D4  Net-_D4-Pad1_ +5V 1N4148		
+D5  Net-_D5-Pad1_ Net-_D5-Pad2_ 1N4148		
+XU3  Net-_U3-Pad1_ Net-_U3-Pad2_ Net-_BATT1-Pad1_ SDA SCL PoE- +5V DS1307Z		
+XU2  Net-_R1-Pad2_ PoE- SCL SDA +5V PoE- ADS1110		
+BATT1  Net-_BATT1-Pad1_ PoE- CR2303		
+R1  +12V Net-_R1-Pad2_ ??		
+R2  Net-_R1-Pad2_ PoE- ??		
+C2  +5V PoE- 100n		
+R6  +5V Net-_R6-Pad2_ ??		
+C1  PoE- +5V 100n		
+XU4  SCL SDA PoE- ? ? MiniIMU-9		
+J6  SDA SCL PoE- I2C		
+J5  SDA SCL PoE- I2C		
+J4  SDA SCL PoE- I2C		
+J3  SDA SCL PoE- +5V I2C		
+J9  +5V PoE- +12V PWR		
+J8  +5V PoE- +12V PWR		
+J7  +5V PoE- +12V PWR		
+J10  +5V PoE- +12V PWR		
+X1  Net-_U3-Pad1_ Net-_U3-Pad2_ CRYSTAL		
+D6  ? ? LED		
+D7  ? ? LED		
+P1  ? ? AKU		
+*Sheet Name:/sidedriver#2/
+XU1  ? ? ? ? Net-_C3-Pad1_ Net-_R11-Pad1_ /sidedriver#2/RST /sidedriver#2/G_ADC1 /sidedriver#2/G_ADC2 /sidedriver#2/M1_INA /sidedriver#2/M1_ENA PoE- Net-_FB1-Pad2_ /sidedriver#2/SM1_PWM ? /sidedriver#2/M1_PWM /sidedriver#2/M1_ENB PoE- +3.3V /sidedriver#2/M1_INB /sidedriver#2/M2_INB /sidedriver#2/M1_CS /sidedriver#2/M2_CS ? ? /sidedriver#2/M2_PWM /sidedriver#2/M2_ENA /sidedriver#2/M2_INA /sidedriver#2/MIN /sidedriver#2/MAX Net-_C6-Pad1_ +3.3V ? ? ? ? /sidedriver#2/ENC1 /sidedriver#2/ENC2 ? /sidedriver#2/LED_PWM /sidedriver#2/M2_ENB /sidedriver#2/TxD /sidedriver#2/RxD ? ? /sidedriver#2/JTMS Net-_C7-Pad1_ +3.3V /sidedriver#2/JTCK /sidedriver#2/JTDI ? ? ? ? /sidedriver#2/JTDO /sidedriver#2/JRST Net-_D10-Pad2_ ? ? PoE- /sidedriver#2/SCL /sidedriver#2/SDA PoE- +3.3V STM32F4xx		
+XU5  PoE- +5V +3.3V LT1086CM-3.3		
+P4  /sidedriver#2/JRST +3.3V /sidedriver#2/JTDI /sidedriver#2/JTDO /sidedriver#2/JTMS /sidedriver#2/RST /sidedriver#2/JTCK PoE- JTAG		
+P2  /sidedriver#2/SDA /sidedriver#2/SCL PoE- +5V I2C		
+P8  PoE- /sidedriver#2/RxD /sidedriver#2/TxD UART		
+P7  /sidedriver#2/MAX +3.3V +3.3V /sidedriver#2/MIN TANK_SW		
+P5  Net-_P5-Pad1_ /sidedriver#2/T_opt PoE- PoE- TOPT		
+FB1  +3.3V Net-_FB1-Pad2_ 10uH		
+D10  Net-_D10-Pad1_ Net-_D10-Pad2_ LED		
+C7  Net-_C7-Pad1_ PoE- 2.2u		
+C6  Net-_C6-Pad1_ PoE- 2.2u		
+R11  Net-_R11-Pad1_ Net-_C4-Pad1_ 200		
+C3  Net-_C3-Pad1_ PoE- 16p		
+C4  Net-_C4-Pad1_ PoE- 16p		
+C5  +3.3V PoE- 100n		
+R13  +3.3V /sidedriver#2/JTMS 10k		
+R14  /sidedriver#2/JTCK PoE- 10k		
+P9  +5V +3.3V +12V /sidedriver#2/G_ADC1 /sidedriver#2/G_ADC2 /sidedriver#2/SM1_PWM /sidedriver#2/SM1_PWM PoE- EXT_IO		
+P3  +5V PoE- +12V POWER		
+P6  +5V /sidedriver#2/ENC1 /sidedriver#2/ENC2 PoE- ENC		
+R15  +3.3V Net-_P5-Pad1_ ??		
+R16  +3.3V /sidedriver#2/T_opt ??		
+C10  +3.3V /sidedriver#2/T_opt ??		
+C11  /sidedriver#2/T_opt PoE- ??		
+X2  Net-_C3-Pad1_ Net-_C4-Pad1_ 8MHz		
+C9  +3.3V PoE- 10u		
+C8  +5V PoE- 10u		
+XU6  /sidedriver#2/M1_INA /sidedriver#2/M1_ENA /sidedriver#2/M1_PWM /sidedriver#2/M1_CS /sidedriver#2/M1_ENB /sidedriver#2/M1_INB +3.3V PoE- ? PoE- ? ? +12V PoE- Pololu#1451		
+XU7  /sidedriver#2/M2_INA /sidedriver#2/M2_ENA /sidedriver#2/M2_PWM /sidedriver#2/M2_CS /sidedriver#2/M2_ENB /sidedriver#2/M2_INB +3.3V PoE- ? PoE- ? ? +12V PoE- Pololu#1451		
+R12  Net-_D10-Pad1_ +3.3V 500		
+XU8  +3.3V /sidedriver#2/LED_PWM +12V PoE- ? ? LED_DRV		
+D8  Net-_D8-Pad1_ PoE- LED		
+R10  +5V Net-_D9-Pad1_ ??		
+D9  Net-_D9-Pad1_ PoE- LED		
+R3  +12V Net-_D8-Pad1_ ??		
+*Sheet Name:/sidedriver#3/
+XU9  ? ? ? ? Net-_C12-Pad1_ Net-_R19-Pad1_ /sidedriver#3/RST /sidedriver#3/G_ADC1 /sidedriver#3/G_ADC2 /sidedriver#3/M1_INA /sidedriver#3/M1_ENA PoE- Net-_FB2-Pad2_ /sidedriver#3/SM1_PWM ? /sidedriver#3/M1_PWM /sidedriver#3/M1_ENB PoE- +3.3V /sidedriver#3/M1_INB /sidedriver#3/M2_INB /sidedriver#3/M1_CS /sidedriver#3/M2_CS ? ? /sidedriver#3/M2_PWM /sidedriver#3/M2_ENA /sidedriver#3/M2_INA /sidedriver#3/MIN /sidedriver#3/MAX Net-_C15-Pad1_ +3.3V ? ? ? ? /sidedriver#3/ENC1 /sidedriver#3/ENC2 ? /sidedriver#3/LED_PWM /sidedriver#3/M2_ENB /sidedriver#3/TxD /sidedriver#3/RxD ? ? /sidedriver#3/JTMS Net-_C16-Pad1_ +3.3V /sidedriver#3/JTCK /sidedriver#3/JTDI ? ? ? ? /sidedriver#3/JTDO /sidedriver#3/JRST Net-_D13-Pad2_ ? ? PoE- /sidedriver#3/SCL /sidedriver#3/SDA PoE- +3.3V STM32F4xx		
+XU10  PoE- +5V +3.3V LT1086CM-3.3		
+P12  /sidedriver#3/JRST +3.3V /sidedriver#3/JTDI /sidedriver#3/JTDO /sidedriver#3/JTMS /sidedriver#3/RST /sidedriver#3/JTCK PoE- JTAG		
+P10  /sidedriver#3/SDA /sidedriver#3/SCL PoE- +5V I2C		
+P16  PoE- /sidedriver#3/RxD /sidedriver#3/TxD UART		
+P15  /sidedriver#3/MAX +3.3V +3.3V /sidedriver#3/MIN TANK_SW		
+P13  Net-_P13-Pad1_ /sidedriver#3/T_opt PoE- PoE- TOPT		
+FB2  +3.3V Net-_FB2-Pad2_ 10uH		
+D13  Net-_D13-Pad1_ Net-_D13-Pad2_ LED		
+C16  Net-_C16-Pad1_ PoE- 2.2u		
+C15  Net-_C15-Pad1_ PoE- 2.2u		
+R19  Net-_R19-Pad1_ Net-_C13-Pad1_ 200		
+C12  Net-_C12-Pad1_ PoE- 16p		
+C13  Net-_C13-Pad1_ PoE- 16p		
+C14  +3.3V PoE- 100n		
+R21  +3.3V /sidedriver#3/JTMS 10k		
+R22  /sidedriver#3/JTCK PoE- 10k		
+P17  +5V +3.3V +12V /sidedriver#3/G_ADC1 /sidedriver#3/G_ADC2 /sidedriver#3/SM1_PWM /sidedriver#3/SM1_PWM PoE- EXT_IO		
+P11  +5V PoE- +12V POWER		
+P14  +5V /sidedriver#3/ENC1 /sidedriver#3/ENC2 PoE- ENC		
+R23  +3.3V Net-_P13-Pad1_ ??		
+R24  +3.3V /sidedriver#3/T_opt ??		
+C19  +3.3V /sidedriver#3/T_opt ??		
+C20  /sidedriver#3/T_opt PoE- ??		
+X3  Net-_C12-Pad1_ Net-_C13-Pad1_ 8MHz		
+C18  +3.3V PoE- 10u		
+C17  +5V PoE- 10u		
+XU11  /sidedriver#3/M1_INA /sidedriver#3/M1_ENA /sidedriver#3/M1_PWM /sidedriver#3/M1_CS /sidedriver#3/M1_ENB /sidedriver#3/M1_INB +3.3V PoE- ? PoE- ? ? +12V PoE- Pololu#1451		
+XU12  /sidedriver#3/M2_INA /sidedriver#3/M2_ENA /sidedriver#3/M2_PWM /sidedriver#3/M2_CS /sidedriver#3/M2_ENB /sidedriver#3/M2_INB +3.3V PoE- ? PoE- ? ? +12V PoE- Pololu#1451		
+R20  Net-_D13-Pad1_ +3.3V 500		
+XU13  +3.3V /sidedriver#3/LED_PWM +12V PoE- ? ? LED_DRV		
+D11  Net-_D11-Pad1_ PoE- LED		
+R18  +5V Net-_D12-Pad1_ ??		
+D12  Net-_D12-Pad1_ PoE- LED		
+R17  +12V Net-_D11-Pad1_ ??		
+*Sheet Name:/rpicam/
+*Sheet Name:/sidedriver#1/
+XU14  ? ? ? ? Net-_C21-Pad1_ Net-_R27-Pad1_ /sidedriver#1/RST /sidedriver#1/G_ADC1 /sidedriver#1/G_ADC2 /sidedriver#1/M1_INA /sidedriver#1/M1_ENA PoE- Net-_FB3-Pad2_ /sidedriver#1/SM1_PWM ? /sidedriver#1/M1_PWM /sidedriver#1/M1_ENB PoE- +3.3V /sidedriver#1/M1_INB /sidedriver#1/M2_INB /sidedriver#1/M1_CS /sidedriver#1/M2_CS ? ? /sidedriver#1/M2_PWM /sidedriver#1/M2_ENA /sidedriver#1/M2_INA /sidedriver#1/MIN /sidedriver#1/MAX Net-_C24-Pad1_ +3.3V ? ? ? ? /sidedriver#1/ENC1 /sidedriver#1/ENC2 ? /sidedriver#1/LED_PWM /sidedriver#1/M2_ENB /sidedriver#1/TxD /sidedriver#1/RxD ? ? /sidedriver#1/JTMS Net-_C25-Pad1_ +3.3V /sidedriver#1/JTCK /sidedriver#1/JTDI ? ? ? ? /sidedriver#1/JTDO /sidedriver#1/JRST Net-_D16-Pad2_ ? ? PoE- /sidedriver#1/SCL /sidedriver#1/SDA PoE- +3.3V STM32F4xx		
+XU15  PoE- +5V +3.3V LT1086CM-3.3		
+P20  /sidedriver#1/JRST +3.3V /sidedriver#1/JTDI /sidedriver#1/JTDO /sidedriver#1/JTMS /sidedriver#1/RST /sidedriver#1/JTCK PoE- JTAG		
+P18  /sidedriver#1/SDA /sidedriver#1/SCL PoE- +5V I2C		
+P24  PoE- /sidedriver#1/RxD /sidedriver#1/TxD UART		
+P23  /sidedriver#1/MAX +3.3V +3.3V /sidedriver#1/MIN TANK_SW		
+P21  Net-_P21-Pad1_ /sidedriver#1/T_opt PoE- PoE- TOPT		
+FB3  +3.3V Net-_FB3-Pad2_ 10uH		
+D16  Net-_D16-Pad1_ Net-_D16-Pad2_ LED		
+C25  Net-_C25-Pad1_ PoE- 2.2u		
+C24  Net-_C24-Pad1_ PoE- 2.2u		
+R27  Net-_R27-Pad1_ Net-_C22-Pad1_ 200		
+C21  Net-_C21-Pad1_ PoE- 16p		
+C22  Net-_C22-Pad1_ PoE- 16p		
+C23  +3.3V PoE- 100n		
+R29  +3.3V /sidedriver#1/JTMS 10k		
+R30  /sidedriver#1/JTCK PoE- 10k		
+P25  +5V +3.3V +12V /sidedriver#1/G_ADC1 /sidedriver#1/G_ADC2 /sidedriver#1/SM1_PWM /sidedriver#1/SM1_PWM PoE- EXT_IO		
+P19  +5V PoE- +12V POWER		
+P22  +5V /sidedriver#1/ENC1 /sidedriver#1/ENC2 PoE- ENC		
+R31  +3.3V Net-_P21-Pad1_ ??		
+R32  +3.3V /sidedriver#1/T_opt ??		
+C28  +3.3V /sidedriver#1/T_opt ??		
+C29  /sidedriver#1/T_opt PoE- ??		
+X4  Net-_C21-Pad1_ Net-_C22-Pad1_ 8MHz		
+C27  +3.3V PoE- 10u		
+C26  +5V PoE- 10u		
+XU16  /sidedriver#1/M1_INA /sidedriver#1/M1_ENA /sidedriver#1/M1_PWM /sidedriver#1/M1_CS /sidedriver#1/M1_ENB /sidedriver#1/M1_INB +3.3V PoE- ? PoE- ? ? +12V PoE- Pololu#1451		
+XU17  /sidedriver#1/M2_INA /sidedriver#1/M2_ENA /sidedriver#1/M2_PWM /sidedriver#1/M2_CS /sidedriver#1/M2_ENB /sidedriver#1/M2_INB +3.3V PoE- ? PoE- ? ? +12V PoE- Pololu#1451		
+R28  Net-_D16-Pad1_ +3.3V 500		
+XU18  +3.3V /sidedriver#1/LED_PWM +12V PoE- ? ? LED_DRV		
+D14  Net-_D14-Pad1_ PoE- LED		
+R26  +5V Net-_D15-Pad1_ ??		
+D15  Net-_D15-Pad1_ PoE- LED		
+R25  +12V Net-_D14-Pad1_ ??		
+
+.end

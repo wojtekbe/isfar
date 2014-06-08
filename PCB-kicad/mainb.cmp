@@ -1,0 +1,290 @@
+Cmp-Mod V01 Created by CvPcb (2013-may-18)-stable date = Wed 21 May 2014 18:16:25 CEST
+
+BeginCmp
+TimeStamp = /5373142D;
+Reference = BATT1;
+ValeurCmp = CR2303;
+IdModule  = CR2032H;
+EndCmp
+
+BeginCmp
+TimeStamp = /53733082;
+Reference = C1;
+ValeurCmp = 100n;
+IdModule  = c_0603;
+EndCmp
+
+BeginCmp
+TimeStamp = /537324F6;
+Reference = C2;
+ValeurCmp = 100n;
+IdModule  = c_0603;
+EndCmp
+
+BeginCmp
+TimeStamp = /53721BD4;
+Reference = D1;
+ValeurCmp = LED;
+IdModule  = LED-0603;
+EndCmp
+
+BeginCmp
+TimeStamp = /53721BCE;
+Reference = D2;
+ValeurCmp = LED;
+IdModule  = LED-0603;
+EndCmp
+
+BeginCmp
+TimeStamp = /53721BC1;
+Reference = D3;
+ValeurCmp = LED;
+IdModule  = LED-0603;
+EndCmp
+
+BeginCmp
+TimeStamp = /53723323;
+Reference = D4;
+ValeurCmp = 1N4148;
+IdModule  = LED-0603;
+EndCmp
+
+BeginCmp
+TimeStamp = /537237E6;
+Reference = D5;
+ValeurCmp = 1N4148;
+IdModule  = LED-0603;
+EndCmp
+
+BeginCmp
+TimeStamp = /53792C0B;
+Reference = D6;
+ValeurCmp = LED;
+IdModule  = ;
+EndCmp
+
+BeginCmp
+TimeStamp = /53792C11;
+Reference = D7;
+ValeurCmp = LED;
+IdModule  = ;
+EndCmp
+
+BeginCmp
+TimeStamp = /537225D4;
+Reference = ETH->RPI1;
+ValeurCmp = CONN_8;
+IdModule  = con-amp-micromatch-MICROMATCH-8;
+EndCmp
+
+BeginCmp
+TimeStamp = /537217B1;
+Reference = J1;
+ValeurCmp = RPI_GPIO;
+IdModule  = pin_array_13x2;
+EndCmp
+
+BeginCmp
+TimeStamp = /537218EC;
+Reference = J2;
+ValeurCmp = ETH;
+IdModule  = RJ45_8;
+EndCmp
+
+BeginCmp
+TimeStamp = /5373B53F;
+Reference = J3;
+ValeurCmp = I2C;
+IdModule  = WZ04R;
+EndCmp
+
+BeginCmp
+TimeStamp = /5373B4DF;
+Reference = J4;
+ValeurCmp = I2C;
+IdModule  = WZ03R;
+EndCmp
+
+BeginCmp
+TimeStamp = /5373B4D9;
+Reference = J5;
+ValeurCmp = I2C;
+IdModule  = WZ03R;
+EndCmp
+
+BeginCmp
+TimeStamp = /5373B48C;
+Reference = J6;
+ValeurCmp = I2C;
+IdModule  = WZ03R;
+EndCmp
+
+BeginCmp
+TimeStamp = /5373BE49;
+Reference = J7;
+ValeurCmp = PWR;
+IdModule  = ;
+EndCmp
+
+BeginCmp
+TimeStamp = /5373BE43;
+Reference = J8;
+ValeurCmp = PWR;
+IdModule  = ;
+EndCmp
+
+BeginCmp
+TimeStamp = /5373BE26;
+Reference = J9;
+ValeurCmp = PWR;
+IdModule  = ;
+EndCmp
+
+BeginCmp
+TimeStamp = /5373BE63;
+Reference = J10;
+ValeurCmp = PWR;
+IdModule  = ;
+EndCmp
+
+BeginCmp
+TimeStamp = /53721CC4;
+Reference = J11;
+ValeurCmp = UART;
+IdModule  = WZ03S;
+EndCmp
+
+BeginCmp
+TimeStamp = /53792C19;
+Reference = P1;
+ValeurCmp = AKU;
+IdModule  = ;
+EndCmp
+
+BeginCmp
+TimeStamp = /53723242;
+Reference = Q1;
+ValeurCmp = BC337;
+IdModule  = TO92-CBE;
+EndCmp
+
+BeginCmp
+TimeStamp = /5372325B;
+Reference = Q2;
+ValeurCmp = BC337;
+IdModule  = TO92-CBE;
+EndCmp
+
+BeginCmp
+TimeStamp = /53731AF5;
+Reference = R1;
+ValeurCmp = ??;
+IdModule  = c_0603;
+EndCmp
+
+BeginCmp
+TimeStamp = /53731AFB;
+Reference = R2;
+ValeurCmp = ??;
+IdModule  = c_0603;
+EndCmp
+
+BeginCmp
+TimeStamp = /5372329E;
+Reference = R4;
+ValeurCmp = R;
+IdModule  = c_0603;
+EndCmp
+
+BeginCmp
+TimeStamp = /53723298;
+Reference = R5;
+ValeurCmp = R;
+IdModule  = c_0603;
+EndCmp
+
+BeginCmp
+TimeStamp = /53732A14;
+Reference = R6;
+ValeurCmp = ??;
+IdModule  = c_0603;
+EndCmp
+
+BeginCmp
+TimeStamp = /53721EB2;
+Reference = R7;
+ValeurCmp = 500;
+IdModule  = c_0603;
+EndCmp
+
+BeginCmp
+TimeStamp = /53721EAC;
+Reference = R8;
+ValeurCmp = 500;
+IdModule  = c_0603;
+EndCmp
+
+BeginCmp
+TimeStamp = /53721EA6;
+Reference = R9;
+ValeurCmp = 500;
+IdModule  = c_0603;
+EndCmp
+
+BeginCmp
+TimeStamp = /53722EC8;
+Reference = REL1;
+ValeurCmp = FBR51;
+IdModule  = FBR51;
+EndCmp
+
+BeginCmp
+TimeStamp = /53722EC2;
+Reference = REL2;
+ValeurCmp = FBR51;
+IdModule  = FBR51;
+EndCmp
+
+BeginCmp
+TimeStamp = /53722EB5;
+Reference = REL3;
+ValeurCmp = FBR51;
+IdModule  = FBR51;
+EndCmp
+
+BeginCmp
+TimeStamp = /53721A1B;
+Reference = U1;
+ValeurCmp = POLOLU-2111;
+IdModule  = POLOLU_2111;
+EndCmp
+
+BeginCmp
+TimeStamp = /53731381;
+Reference = U2;
+ValeurCmp = ADS1110;
+IdModule  = SOT23_6;
+EndCmp
+
+BeginCmp
+TimeStamp = /53731133;
+Reference = U3;
+ValeurCmp = DS1307Z;
+IdModule  = ;
+EndCmp
+
+BeginCmp
+TimeStamp = /5373C0E5;
+Reference = U4;
+ValeurCmp = MiniIMU-9;
+IdModule  = ;
+EndCmp
+
+BeginCmp
+TimeStamp = /5373BB22;
+Reference = X1;
+ValeurCmp = CRYSTAL;
+IdModule  = CFPX-217;
+EndCmp
+
+EndListe
