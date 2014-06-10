@@ -7,7 +7,6 @@
 #include "debug.h"
 #include "i2c.h"
 #include "motordriver.h"
-#include "pid.h"
 #include "tankdriver.h"
 
 void _wait(uint32_t);
@@ -28,7 +27,6 @@ void _wait(uint32_t nCount)
 int update_conf(void)
 {
 	md_w_ref = (i2c_regs[M1_SET_SPEED] | (i2c_regs[M1_SET_SPEED + 1] << 8));
-	md_set_speed(pid.u);
 	// TODO store md_w
 	//i2c_regs[M1_SPEED + 1] = (md_w >> 8) & 0x0FF;
 	//i2c_regs[M1_SPEED] = md_w & 0x0FF;
@@ -47,15 +45,10 @@ int main(void)
 	td_init();
 	td_enable();
 
-	//md_init();
-	//md_enable();
+	md_init();
+	md_enable();
 
-	//pid.x = &md_w;
-	//pid.x_ref = &md_w_ref;
-	//pid_init();
-	
-	// debug("Hello\n");
-	//r = 1;
+	r = 1;
 	//i = 0;
 
 	while(1)
@@ -64,11 +57,11 @@ int main(void)
 		update_conf();
 		//debug("PID: x = %d, x_r = %d, u = %d\n", (int)*pid.x, (int)*pid.x_ref, pid.u);
 		
-		//if (r) {
-		//	debug("%d	%d	%d	%d\n", i, (int)*pid.x, (int)*pid.x_ref, pid.u);
+		if (r) {
+			debug("%d\t%d\t%d\t%d\n", i, md_w, md_w_ref, pid.u);
 			// debug("%d	%d	%d	%d\n", i, (int32_t)TIM8->CNT, (int32_t)md_lpos, md_w);
-		//	i++;
-		//}
+			i++;
+		}
 
 		_wait(1000000);
 	}

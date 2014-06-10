@@ -26,7 +26,7 @@ void i2c_init(void)
 	i2c_reg_idx = 0;
 	i2c_bytes_received = 0;
 	
-	debug("i2c_init() OK\n");
+	debug("#i2c_init() OK\n");
 }
 
 void i2c_print_regs(void)

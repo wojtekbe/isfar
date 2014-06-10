@@ -5,26 +5,14 @@
 #include "motordriver.h"
 #include <math.h>
 
-#define PID_MAX_U 1500
+#define PID_MAX_U 3370
 #define M1_MAX_SPEED 3370
+
 void pid_init(void);
 void TIM4_IRQHandler(void); /* Calculate speed isr */
 void TIM5_IRQHandler(void); /* PID isr */
 
-struct PID {
-	int enabled;
-	int16_t u; 
-	int16_t *x;
-	int16_t *x_ref;
-
-	int32_t Kp;
-	int32_t Kd;
-	int32_t Ki;
-	int32_t Tp;
-	int32_t e;
-	int32_t sum_of_e;
-	int32_t last_e;
-} pid;
+int md_enc_upd_ms;
 
 void md_init(void)
 {
@@ -39,7 +27,7 @@ void md_init(void)
 	 * ENC2 	PC7 	TIM8_CH2
 	 */
 	
-	//debug("md_init()\n");
+	debug("#md_init()\n");
 
 	/* IOs */
 	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN;
@@ -86,7 +74,7 @@ void md_init(void)
 	md_cpos = 0;
 	md_lpos = 0;
 	md_w = 0;
-	md_w_ref = 0
+	md_w_ref = 0;
 
 	/* TODO Current measure: M1-CS */
 	GPIOA->MODER |= GPIO_MODER_MODER2_0 | GPIO_MODER_MODER2_1;
@@ -94,6 +82,7 @@ void md_init(void)
 	//ADC->CR1 |=
 	//ADC->CR2 |= ADC_CR2_ADON;
 
+	/* define PID inputs, init PID */
 	pid.x = &md_w;
 	pid.x_ref = &md_w_ref;
 	pid_init();
@@ -155,29 +144,27 @@ void pid_init(void)
 	NVIC_EnableIRQ(TIM5_IRQn);
 	TIM5->CR1 |= TIM_CR1_CEN; // PID start
 
-	pid.Kp = 3; /* 1 / Kp */
+	pid.Kp = 1; /* Kp/10 */
 	pid.Kd = 1;
-	pid.Ki = 150;
+	pid.Ki = 400;
 	pid.Tp = (((TIM5->PSC+1)*(TIM5->ARR+1)) / 84000); // in ms
 	pid.last_e = 0;
 	pid.sum_of_e = 0;
 	pid.enabled = 1;
 
-	debug("#pid_init OK Kd = %d, Ki = %d\n", pid.Kd, pid.Ki);
+	debug("#pid_init OK Kp = %d/10, Kd = %d, Ki = %d\n", pid.Kp, pid.Kd, pid.Ki);
 }
 
 void TIM5_IRQHandler(void) /* PID IRQ */
 {
 	if(TIM5->SR & TIM_SR_UIF) {
-		/* If U don't want PID */
-		/*pid.u = *pid_x_ref;*/
 		pid.e = *pid.x_ref - *pid.x;
 		pid.sum_of_e += pid.e;
-		pid.u = 1 * (
+		pid.u = pid.Kp * (
 				pid.e +
 				(pid.Tp * pid.sum_of_e / pid.Ki) +  /* integr. */
 				(pid.Kd * (pid.e - pid.last_e) / pid.Tp) /* diff */
-				) / pid.Kp;
+				) / 10;
 
 		/* limit u */
 		if (pid.u > PID_MAX_U)
@@ -186,7 +173,9 @@ void TIM5_IRQHandler(void) /* PID IRQ */
 			pid.u = -PID_MAX_U;
 
 		pid.last_e = pid.e;
-		//md_set_speed(pid.u);
+		
+		/* set the speed */
+		md_set_speed(pid.u);
 	}
 	TIM5->SR &= ~TIM_SR_UIF;
 
@@ -207,37 +196,3 @@ void md_disable()
 	GPIOC->ODR &= ~(1 << 3); // M1-ENA = 0
 	GPIOA->ODR &= ~(1 << 3); // M1-ENB = 0
 }
-
-/*
-void md_dir(uint8_t dir)
-{
-	//debug("md_dir(%d)\n", dir);
-
-	if(dir < 0x80)
-	{
-		GPIOC->ODR |=  (1 << 2); // M1-INA = 1
-		GPIOA->ODR &= ~(1 << 4); // M1-INB = 0
-	}
-	else
-	{
-		GPIOC->ODR &= ~(1 << 2); // M1-INA = 0
-		GPIOA->ODR |=  (1 << 4); // M1-INB = 1
-	}
-}
-*/
-/*
-void md_pwm(uint32_t width)
-{
-	//debug("md_pwm(%d)\n", PWM);
-
-	if (width != TIM2->CCR2) {
-		if (width == 0)
-			TIM2->CR1 &= ~TIM_CR1_CEN;
-		else
-			TIM2->CR1 |= TIM_CR1_CEN;
-
-		TIM2->CCR2 = width;
-	}
-}
-*/
-
