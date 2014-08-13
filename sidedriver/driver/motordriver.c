@@ -77,11 +77,8 @@ void md_init(void)
 	md_w_ref = 0;
 
 	/* TODO Current measure: M1-CS */
-	GPIOA->MODER |= GPIO_MODER_MODER2_0 | GPIO_MODER_MODER2_1;
-	RCC->APB2ENR |= RCC_APB2ENR_ADC1EN;
-	//ADC->CR1 |=
-	//ADC->CR2 |= ADC_CR2_ADON;
 
+	
 	/* define PID inputs, init PID */
 	pid.x = &md_w;
 	pid.x_ref = &md_w_ref;

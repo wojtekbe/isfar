@@ -8,6 +8,7 @@
 #include "i2c.h"
 #include "motordriver.h"
 #include "tankdriver.h"
+#include "extio.h"
 
 void _wait(uint32_t);
 int update_conf(void);
@@ -48,7 +49,8 @@ int main(void)
 	md_init();
 	md_enable();
 
-	r = 1;
+	extio_init();
+	//r = 1;
 	//i = 0;
 
 	while(1)
@@ -57,12 +59,13 @@ int main(void)
 		update_conf();
 		//debug("PID: x = %d, x_r = %d, u = %d\n", (int)*pid.x, (int)*pid.x_ref, pid.u);
 		
-		if (r) {
-			debug("%d\t%d\t%d\t%d\n", i, md_w, md_w_ref, pid.u);
-			// debug("%d	%d	%d	%d\n", i, (int32_t)TIM8->CNT, (int32_t)md_lpos, md_w);
-			i++;
-		}
 
+		debug("ADC3 = %d\n", extio_adc1_read());
+
+		//if (r) {
+		//	debug("%d\t%d\t%d\t%d\n", i, md_w, md_w_ref, pid.u);
+		// debug("%d	%d	%d	%d\n", i, (int32_t)TIM8->CNT, (int32_t)md_lpos, md_w);
+		// i++;
 		_wait(1000000);
 	}
 }
