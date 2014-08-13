@@ -53,7 +53,7 @@ void td_init()
 
 	/* TRANSOPT. TIM3_CH3 (PC8/AF2) */ 
 	/* TODO better use ext. interrupt */
-	/* TODO even better: use as timer source */
+	/* TODO even better: use as timer source but change to _CH1 or _CH2 */
 	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOCEN;
 	GPIOC->MODER |= GPIO_MODER_MODER8_1; // AF
 	GPIOC->AFR[1] |= 0x02; // AF2

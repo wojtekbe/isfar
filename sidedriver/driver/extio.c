@@ -13,7 +13,7 @@ void extio_init(void)
 	 *	SRV1	PA8
 	 *	SRV2	PA11
 	 *	G_ADC2	PC1
-	 *	G_ADC1	PC0		ADC123_IN10 (ADC3)
+	 *	G_ADC1	PC0		ADC3_IN10
 	 *
 	 */
 	
