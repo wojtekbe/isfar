@@ -65,12 +65,12 @@ int main(void)
 		update_conf();
 		//debug("PID: x = %d, x_r = %d, u = %d\n", (int)*pid.x, (int)*pid.x_ref, pid.u);
 		
-		debug("%d: ADC3 = %d\n", time_ms, extio_adc1_read());
+		debug("%d: ADC3 = %d g\n", time_ms, extio_adc1_read()/4);
 
 		//if (r) {
 		//	debug("%d\t%d\t%d\t%d\n", i, md_w, md_w_ref, pid.u);
 		// debug("%d	%d	%d	%d\n", i, (int32_t)TIM8->CNT, (int32_t)md_lpos, md_w);
 		// i++;
-		//_wait(1000000);
+		_wait(10000000);
 	}
 }
