@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <math.h>
 #include "debug.h"
+#include "time.h"
 #include "i2c.h"
 #include "motordriver.h"
 #include "tankdriver.h"
@@ -40,7 +41,12 @@ int update_conf(void)
 
 int main(void)
 {
+
 	debug_init(); /* on USART1 */
+	debug("hello %d\n", SystemCoreClock);
+	
+	time_init();
+
 	i2c_init(); /* I2C1 */
 	
 	td_init();
@@ -59,13 +65,12 @@ int main(void)
 		update_conf();
 		//debug("PID: x = %d, x_r = %d, u = %d\n", (int)*pid.x, (int)*pid.x_ref, pid.u);
 		
-
-		debug("ADC3 = %d\n", extio_adc1_read());
+		debug("%d: ADC3 = %d\n", time_ms, extio_adc1_read());
 
 		//if (r) {
 		//	debug("%d\t%d\t%d\t%d\n", i, md_w, md_w_ref, pid.u);
 		// debug("%d	%d	%d	%d\n", i, (int32_t)TIM8->CNT, (int32_t)md_lpos, md_w);
 		// i++;
-		_wait(1000000);
+		//_wait(1000000);
 	}
 }
