@@ -1,7 +1,3 @@
-1 C3 and C10 packages
 2 LEDs
-3 3v3 output on extio
-4 kwarc?
-5 reset btn
 6 PWMs (topt -> CH1 or CH2, powerled's PWM connect to other timer than TIM3)
 7 captions on schematics
