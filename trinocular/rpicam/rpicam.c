@@ -18,9 +18,10 @@
 #define LED_ON PORTC &= ~0x01
 #define LED_OFF PORTC |= 0x01
 #define LEDT PORC ^= 0x01
+#define ADDR 0x0A
 
-uint8_t pwm = 6; 
-uint8_t buff[3] = {0xFF, 0xFF, 0xFF};
+uint8_t pwm = 20; 
+uint8_t buf[3] = {0xFF, 0xFF, 0xFF};
 uint8_t idx = 0;
 
 void init_IO(void) {	
@@ -32,7 +33,8 @@ void init_IO(void) {
 }
 
 
-void init_PWM(void) {
+void init_PWM(void)
+{
 	TCCR2 |= (1 << WGM20) | (1 << WGM21) |  //Fast PWM
 		(1 << CS22) | // clk/64
 		(1 << COM21); // Clear OC2 on Compare Match
@@ -46,7 +48,8 @@ void init_UART(void) { // Baudrate = 2400
 	UCSRB = (1<<TXEN) | (1<<RXEN);
 }
 
-unsigned char us_read() {
+unsigned char us_read()
+{
 	while ( !(UCSRA & (1<<RXC)) );
 	return UDR;
 }
@@ -56,11 +59,17 @@ void us_write(char c) {
 	UDR = c;
 }
 
-void init_TWI(void) {
-	TWAR = (0x0a << 1);
+void init_TWI(void)
+{
+	/* Receiving 2 bytes
+	 * 1st byte - command:
+	 *  0x01 - servo
+	 *  ...
+	 * 2nd byte - value
+	*/
+	TWAR = (ADDR << 1);
 	TWCR |= _BV(TWINT) | _BV(TWEA) | _BV(TWEN) | _BV(TWIE);
 }
-
 
 ISR(TIMER2_OVF_vect)
 {
@@ -73,30 +82,26 @@ ISR(TWI_vect)
 	int i;
 
 	// Slave receiver
-	if(TWSR == 0x60) // SLA+W
-	{
+	if(TWSR == 0x60) { // SLA+W
 		TWCR |= (1 << TWEA);
 		idx = 0;
 		for(i=0; i<3; i++)
-			buff[i] = 0xFF;
+			buf[i] = 0xFF;
 	}
-	else if(TWSR == 0x80) // Got data 
-	{
-		buff[idx] = TWDR;
+	else if(TWSR == 0x80) { // Got data 
+		buf[idx] = TWDR;
 		idx++;
 		TWCR |= (1 << TWEA);
 	}
-	else if(TWSR == 0xA0) // Got STOP
-	{
-		for(i=0; i<3; i++)
-			us_write(buff[i]);
-		pwm = buff[1];
+	else if(TWSR == 0xA0) { // Got STOP
+		//for(i=0; i<3; i++)
+		//	us_write(buf[i]);
+		if (buf[0] == 0x01) /* if command => set servo angle (0x01) */
+			pwm = buf[1];
 	}
-	else
-	
+	else 
 	// Slave transmitter
-	if(TWSR == 0xA8) // SLA+R
-	{
+	if(TWSR == 0xA8) { // SLA+R
 		TWDR = 0x88;
 		TWCR |= (1 << TWEA);
 	}
@@ -104,13 +109,11 @@ ISR(TWI_vect)
 	{
 
 	}
-	else if(TWSR == 0xC0) // Sent TWDR got NACK
-	{
-		us_write(0xFF);
+	else if(TWSR == 0xC0) { // Sent TWDR got NACK
+		//us_write(0xFF);
 	}
-	else if(TWSR == 0xC8) // Last byte sent, got ACK
-	{
-		us_write(0xEE);
+	else if(TWSR == 0xC8) { // Last byte sent, got ACK
+		//us_write(0xEE);
 	}
 
 	TWCR |= (1 << TWINT);
