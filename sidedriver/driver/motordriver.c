@@ -19,19 +19,24 @@ void md_init(void)
 	/*
 	 * M1-PWM 	PA1 	TIM2_CH2
 	 * M1-CS 	PA2 	ADC123_IN2
-	 * M1-ENB 	PA3 	out
+	 * M1-ENB 	PA0 	out
 	 * M1-INB 	PA4 	out
 	 * M1-INA 	PC2 	out
 	 * M1-ENA 	PC3 	out
 	 * ENC1 	PC6 	TIM8_CH1
 	 * ENC2 	PC7 	TIM8_CH2
+	 *
+	 * TIM2     PWM
+	 * TIM4     calculate speed isr
+	 * TIM5     PID isr
+	 * TIM8     encoder
 	 */
 	
 	debug("#md_init()\n");
 
 	/* IOs */
 	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN;
-	GPIOA->MODER |= GPIO_MODER_MODER3_0; // M1-ENB
+	GPIOA->MODER |= GPIO_MODER_MODER0_0; // M1-ENB
 	GPIOA->MODER |= GPIO_MODER_MODER4_0; // M1-INB
 	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOCEN;
 	GPIOC->MODER |= GPIO_MODER_MODER2_0; // M1-INA
@@ -93,12 +98,12 @@ void TIM4_IRQHandler(void)  /* Encoder IRQ */
 	{
 		md_cpos = TIM8->CNT;
 
-		if (TIM8->SR & 0x01) {
+		if (TIM8->SR & 0x01) { // counter overflow/underflow
 			md_w = (int16_t)(md_cpos + 0xFFFF - md_lpos) * 30 / 4; /* [RPM] */
 			TIM8->SR &= ~0x01;
 		}
 		else
-			md_w = (int16_t)(md_cpos - md_lpos) * 30 / 4; /* RPM] */
+			md_w = (int16_t)(md_cpos - md_lpos) * 30 / 4; /* [RPM] */
 
 		md_lpos = md_cpos;
 	}
@@ -183,7 +188,7 @@ void md_enable()
 	// debug("md_enable()\n");
 
 	GPIOC->ODR |= (1 << 3); // M1-ENA = 1
-	GPIOA->ODR |= (1 << 3); // M1-ENB = 1
+	GPIOA->ODR |= (1 << 0); // M1-ENB = 1
 }
 
 void md_disable()
@@ -191,5 +196,5 @@ void md_disable()
 	//debug("md_disable()\n");
 
 	GPIOC->ODR &= ~(1 << 3); // M1-ENA = 0
-	GPIOA->ODR &= ~(1 << 3); // M1-ENB = 0
+	GPIOA->ODR &= ~(1 << 0); // M1-ENB = 0
 }
