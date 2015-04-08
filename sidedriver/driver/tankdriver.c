@@ -59,7 +59,7 @@ void td_init()
 	GPIOA->MODER |= GPIO_MODER_MODER3_1; // AF
 	//GPIOA->AFR[1] |= 0x03; // AF3
 	//NVIC_EnableIRQ(TIM3_IRQn);
-	RCC->APB1ENR |= RCC_APB1ENR_TIM9EN;
+	RCC->APB1ENR |= RCC_APB2ENR_TIM9EN;
 	//TIM3->PSC = 0;
 	//TIM3->ARR = 0xFFFF - 1;	
 	//TIM3->CCMR2 |= TIM_CCMR2_CC3S_0 | TIM_CCMR2_IC3F_2; /* input capture on chann. 3, filter */
