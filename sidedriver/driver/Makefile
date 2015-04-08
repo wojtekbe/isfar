@@ -36,7 +36,7 @@ $(BIN): $(ELF)
 	$(CP) -O binary $^ $@
 
 r: $(BIN)
-	st-flash --reset write $^ 0x8000000
+	st-flash write $^ 0x8000000
 	
 
 clean:
