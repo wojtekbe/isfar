@@ -3,7 +3,7 @@
 #include "core_cm4.h"
 #include "debug.h"
 #include "motordriver.h"
-#include <math.h>
+#include <stdlib.h>
 
 #define PID_MAX_U 3370
 #define M1_MAX_SPEED 3370
@@ -31,7 +31,7 @@ void md_init(void)
 	 * TIM5     PID isr
 	 * TIM8     encoder
 	 */
-	
+
 	debug("#md_init()\n");
 
 	/* IOs */
@@ -75,7 +75,7 @@ void md_init(void)
 	TIM4->EGR |= TIM_EGR_UG; /* Force update */
 	TIM4->CR1 |= TIM_CR1_CEN;
 	md_enc_upd_ms = ( ((TIM4->PSC+1)*(TIM4->ARR+1)) / 84000 );
-	
+
 	md_cpos = 0;
 	md_lpos = 0;
 	md_w = 0;
@@ -83,13 +83,12 @@ void md_init(void)
 
 	/* TODO Current measure: M1-CS */
 
-	
 	/* define PID inputs, init PID */
 	pid.x = &md_w;
 	pid.x_ref = &md_w_ref;
 	pid_init();
 
-	// debug("md_init OK\n");
+	debug("md_init OK\n");
 }
 
 void TIM4_IRQHandler(void)  /* Encoder IRQ */
@@ -113,6 +112,9 @@ void TIM4_IRQHandler(void)  /* Encoder IRQ */
 void md_set_speed(int16_t w)
 {
 	uint16_t pwm;
+
+	//debug("%s(%d)\n", __func__, w);
+
 	if (w > M1_MAX_SPEED)
 		w = M1_MAX_SPEED;
 
@@ -154,7 +156,7 @@ void pid_init(void)
 	pid.sum_of_e = 0;
 	pid.enabled = 1;
 
-	debug("#pid_init OK Kp = %d/10, Kd = %d, Ki = %d\n", pid.Kp, pid.Kd, pid.Ki);
+	debug("#pid_init OK Kp = %d/10, Kd = %d, Ki = %d\n", (int)pid.Kp, (int)pid.Kd, (int)pid.Ki);
 }
 
 void TIM5_IRQHandler(void) /* PID IRQ */
@@ -175,7 +177,7 @@ void TIM5_IRQHandler(void) /* PID IRQ */
 			pid.u = -PID_MAX_U;
 
 		pid.last_e = pid.e;
-		
+
 		/* set the speed */
 		md_set_speed(pid.u);
 	}

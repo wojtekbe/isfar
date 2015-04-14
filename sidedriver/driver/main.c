@@ -33,8 +33,10 @@ int update_conf(void)
 	i2c_regs[M1_SPEED + 1] = (md_w >> 8) & 0x0FF;
 	i2c_regs[M1_SPEED] = md_w & 0x0FF;
 
+	i2c_print_regs();
+
 	//md_set_speed(md_w_ref); // with PID disabled
-	td_set_pos((i2c_regs[TANK_SET_POS] | (i2c_regs[TANK_SET_POS + 1] << 8)));
+	//td_set_pos((i2c_regs[TANK_SET_POS] | (i2c_regs[TANK_SET_POS + 1] << 8)));
 	// TODO store td_cpos
 	return 0;
 }
@@ -43,12 +45,12 @@ int main(void)
 {
 
 	debug_init(); /* on USART1 */
-	debug("hello %d\n", SystemCoreClock);
-	
+	debug("hello %d\n", (int)SystemCoreClock);
+
 	//time_init();
 
 	i2c_init(); /* I2C1 */
-	
+
 	//td_init();
 	//td_enable();
 
@@ -64,7 +66,7 @@ int main(void)
 		//i2c_print_regs();
 		update_conf();
 		//debug("PID: x = %d, x_r = %d, u = %d\n", (int)*pid.x, (int)*pid.x_ref, pid.u);
-		
+
 		//debug("%d: ADC3 = %d g\n", time_ms, extio_adc1_read()/4);
 
 		//if (r) {

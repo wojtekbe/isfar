@@ -25,24 +25,24 @@ void i2c_init(void)
 
 	i2c_reg_idx = 0;
 	i2c_bytes_received = 0;
-	
+
 	debug("#i2c_init() OK\n");
 }
 
 void i2c_print_regs(void)
 {
-	int i;
+	uint16_t i;
 	debug("[ ");
-	for(i=0; i < (NUM_REGS * sizeof(uint16_t)); i++)
+	for(i = 0; i < (NUM_REGS * sizeof(uint16_t)); i++)
 		debug("0x%02x ", i2c_regs[i]);
 	debug("]\n");
 }
 
 void I2C1_EV_IRQHandler()
 {
-	uint16_t temp;
 	uint16_t stat1 = 0;
 	uint8_t data;
+	uint16_t temp;
 
 	stat1 = I2C1->SR1;
 	//stat2 = I2C1->SR2;

@@ -54,17 +54,17 @@ void td_init()
 
 	td_reset();
 
-	/* TRANSOPT. TIM9_CH2 (PA3/AF3) */ 
+	/* TRANSOPT. TIM9_CH2 (PA3/AF3) */
 	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN;
 	GPIOA->MODER |= GPIO_MODER_MODER3_1; // AF
 	//GPIOA->AFR[1] |= 0x03; // AF3
 	//NVIC_EnableIRQ(TIM3_IRQn);
 	RCC->APB1ENR |= RCC_APB2ENR_TIM9EN;
 	//TIM3->PSC = 0;
-	//TIM3->ARR = 0xFFFF - 1;	
+	//TIM3->ARR = 0xFFFF - 1;
 	//TIM3->CCMR2 |= TIM_CCMR2_CC3S_0 | TIM_CCMR2_IC3F_2; /* input capture on chann. 3, filter */
 	//TIM3->CCER |= TIM_CCER_CC3E | TIM_CCER_CC3P; /* Enable input chann. 3, detect falling edges */
-	//TIM3->DIER |= TIM_DIER_CC3IE; /* Enable interrupt */ 
+	//TIM3->DIER |= TIM_DIER_CC3IE; /* Enable interrupt */
 	//TIM3->CR1 |= TIM_CR1_CEN;
 	//TIM3->EGR |= TIM_EGR_UG; /* Force update */
 	td_pos = 0;
@@ -78,7 +78,7 @@ void TIM3_IRQHandler(void)  /* Transoptor IRQ */
 {
 	if(TIM3->SR & TIM_SR_CC3IF) {
 		td_cpos += td_dir;
-		debug("%d %d %d %x\n", td_pos, td_cpos, td_dir, ((GPIOB->IDR & (1 << 10)) ? 1 : 0));
+		debug("%d %d %d %x\n", (int)td_pos, (int)td_cpos, (int)td_dir, ((GPIOB->IDR & (1 << 10)) ? 1 : 0));
 		if (MIN == 0)
 			td_cpos = 0;
 		//if ((GPIOB->IDR & (1 << 11))) {
@@ -106,10 +106,10 @@ void td_reset()
 	td_enable();
 	td_set_dir(WATER_OUT);
 	td_set_pwm(15);
-	
+
 	while((GPIOB->IDR & (1 << 10)) != 0)
 		debug("resetting ... \n");
-	
+
 	td_set_pwm(0);
 	td_set_dir(0);
 	td_disable();

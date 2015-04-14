@@ -9,6 +9,8 @@ void td_init(void);
 void td_enable(void);
 void td_disable(void);
 void td_set_dir(int32_t);
+void td_reset(void);
+void td_set_pos(int);
 
 int32_t td_cpos;
 int32_t td_pos;

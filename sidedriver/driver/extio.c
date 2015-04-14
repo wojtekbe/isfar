@@ -16,10 +16,10 @@ void extio_init(void)
 	 *	G_ADC1	PC0		ADC3_IN10
 	 *
 	 */
-	
+
 	/* init PWMs */
 	//TODO
-	
+
 	/* init G_ADC1 */
 	//TODO
 
