@@ -6,7 +6,7 @@
 
 
 /* private */
-void TIM3_IRQHandler(void);
+void TIM9_IRQHandler(void);
 void td_set_pwm(uint32_t);
 
 void td_init()
@@ -19,7 +19,7 @@ void td_init()
 	 * MAX		PB11	in
 	 * M2-ENB 	PA6 	out
 	 * M2-INB 	PA5 	out
-	 * TRANS 	PA3 	TIM3_CH3
+	 * TRANS 	PA3 	TIM9_CH2
 	 *
 	 * TIM1     PWM
 	 * TIM9     TRANSOPT.
@@ -55,18 +55,19 @@ void td_init()
 	td_reset();
 
 	/* TRANSOPT. TIM9_CH2 (PA3/AF3) */
+	/* generate interrupt on falling edge on PA3 */
 	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN;
 	GPIOA->MODER |= GPIO_MODER_MODER3_1; // AF
-	//GPIOA->AFR[1] |= 0x03; // AF3
-	//NVIC_EnableIRQ(TIM3_IRQn);
+	GPIOA->AFR[0] |= (0x03 << (4 * 3)); // AF3
+	NVIC_EnableIRQ(TIM9_IRQn);
 	RCC->APB1ENR |= RCC_APB2ENR_TIM9EN;
-	//TIM3->PSC = 0;
-	//TIM3->ARR = 0xFFFF - 1;
-	//TIM3->CCMR2 |= TIM_CCMR2_CC3S_0 | TIM_CCMR2_IC3F_2; /* input capture on chann. 3, filter */
-	//TIM3->CCER |= TIM_CCER_CC3E | TIM_CCER_CC3P; /* Enable input chann. 3, detect falling edges */
-	//TIM3->DIER |= TIM_DIER_CC3IE; /* Enable interrupt */
-	//TIM3->CR1 |= TIM_CR1_CEN;
-	//TIM3->EGR |= TIM_EGR_UG; /* Force update */
+	TIM9->PSC = 0;
+	TIM9->ARR = 0xFFFF - 1;
+	TIM9->CCMR1 |= TIM_CCMR1_CC2S_0 | TIM_CCMR2_IC2F_2; /* input capture on chann. 3, filter */
+	TIM9->CCER |= TIM_CCER_CC2E | TIM_CCER_CC2P; /* Enable input chann. 3, detect falling edges */
+	TIM9->DIER |= TIM_DIER_CC2IE; /* Enable interrupt */
+	TIM9->CR1 |= TIM_CR1_CEN;
+	TIM9->EGR |= TIM_EGR_UG; /* Force update */
 	td_pos = 0;
 	td_cpos = 0;
 	td_set_dir(0);
@@ -74,9 +75,9 @@ void td_init()
 	debug("td_init exit\n");
 }
 
-void TIM3_IRQHandler(void)  /* Transoptor IRQ */
+void TIM9_IRQHandler(void)  /* Transoptor IRQ */
 {
-	if(TIM3->SR & TIM_SR_CC3IF) {
+	if(TIM9->SR & TIM_SR_CC3IF) {
 		td_cpos += td_dir;
 		debug("%d %d %d %x\n", (int)td_pos, (int)td_cpos, (int)td_dir, ((GPIOB->IDR & (1 << 10)) ? 1 : 0));
 		if (MIN == 0)
@@ -86,7 +87,7 @@ void TIM3_IRQHandler(void)  /* Transoptor IRQ */
 		//}
 		if (td_cpos == td_pos)
 			td_set_dir(0);
-		TIM3->SR &= ~TIM_SR_CC3IF;
+		TIM9->SR &= ~TIM_SR_CC3IF;
 	}
 }
 
