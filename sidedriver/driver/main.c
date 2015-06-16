@@ -45,14 +45,14 @@ int main(void)
 {
 
 	debug_init(); /* on USART1 */
-	debug("hello %d\n", (int)SystemCoreClock);
+	//debug("hello %d\n", (int)SystemCoreClock);
 
 	//time_init();
 
 	i2c_init(); /* I2C1 */
 
-	//td_init();
-	//td_enable();
+	td_init();
+	td_enable();
 
 	md_init();
 	md_enable();

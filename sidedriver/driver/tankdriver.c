@@ -6,7 +6,7 @@
 
 
 /* private */
-void TIM9_IRQHandler(void);
+void TIM1_BRK_TIM9_IRQHandler(void);
 void td_set_pwm(uint32_t);
 
 void td_init()
@@ -52,18 +52,18 @@ void td_init()
 	TIM1->CCMR1 = TIM_CCMR1_OC2M_2 | TIM_CCMR1_OC2M_1; // PWM mode for CH2
 	TIM1->CCER = TIM_CCER_CC2NE;
 
-	td_reset();
+	//td_reset();
 
 	/* TRANSOPT. TIM9_CH2 (PA3/AF3) */
 	/* generate interrupt on falling edge on PA3 */
 	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN;
 	GPIOA->MODER |= GPIO_MODER_MODER3_1; // AF
 	GPIOA->AFR[0] |= (0x03 << (4 * 3)); // AF3
-	NVIC_EnableIRQ(TIM9_IRQn);
-	RCC->APB1ENR |= RCC_APB2ENR_TIM9EN;
+	NVIC_EnableIRQ(TIM1_BRK_TIM9_IRQn);
+	RCC->APB2ENR |= RCC_APB2ENR_TIM9EN;
 	TIM9->PSC = 0;
 	TIM9->ARR = 0xFFFF - 1;
-	TIM9->CCMR1 |= TIM_CCMR1_CC2S_0 | TIM_CCMR2_IC2F_2; /* input capture on chann. 3, filter */
+	TIM9->CCMR1 |= TIM_CCMR1_CC2S_0 | TIM_CCMR1_IC2F_2; /* input capture on chann. 3, filter */
 	TIM9->CCER |= TIM_CCER_CC2E | TIM_CCER_CC2P; /* Enable input chann. 3, detect falling edges */
 	TIM9->DIER |= TIM_DIER_CC2IE; /* Enable interrupt */
 	TIM9->CR1 |= TIM_CR1_CEN;
@@ -72,14 +72,16 @@ void td_init()
 	td_cpos = 0;
 	td_set_dir(0);
 
+	while((TIM9->SR & TIM_SR_CC2IF) == 0);
 	debug("td_init exit\n");
 }
 
-void TIM9_IRQHandler(void)  /* Transoptor IRQ */
+void TIM1_BRK_TIM9_IRQHandler(void)  /* Transoptor IRQ */
 {
-	if(TIM9->SR & TIM_SR_CC3IF) {
+	debug("irq\n");
+	if(TIM9->SR & TIM_SR_CC2IF) {
 		td_cpos += td_dir;
-		debug("%d %d %d %x\n", (int)td_pos, (int)td_cpos, (int)td_dir, ((GPIOB->IDR & (1 << 10)) ? 1 : 0));
+		//debug("%d %d %d %x\n", (int)td_pos, (int)td_cpos, (int)td_dir, ((GPIOB->IDR & (1 << 10)) ? 1 : 0));
 		if (MIN == 0)
 			td_cpos = 0;
 		//if ((GPIOB->IDR & (1 << 11))) {
