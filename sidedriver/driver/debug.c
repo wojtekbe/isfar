@@ -25,6 +25,7 @@ void debug_init(void)
 	/*
 	 * TX 	PA9 	USART1_TX
 	 * RX 	PA10 	USART1_RX
+	 * LED  PA12	output
 	 */
 	RCC->APB2ENR |= RCC_APB2ENR_USART1EN;
 	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN;
@@ -34,6 +35,9 @@ void debug_init(void)
 	USART1->BRR = 0x2D9; // 115200
 	USART1->CR3 |= USART_CR3_ONEBIT; // Doesn't work without that...
 	USART1->CR1 |= USART_CR1_TE | USART_CR1_UE;
+
+	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN;
+	GPIOA->MODER |= GPIO_MODER_MODER12_0;
 }
 
 void usart_send(uint8_t d)

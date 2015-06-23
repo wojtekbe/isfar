@@ -4,6 +4,7 @@
 #include <stdio.h>
 
 #define DEBUG
+#define LED(x) ((x) ? (GPIOA->ODR &= ~(1 << 12)) : (GPIOA->ODR |= (1 << 12)))
 
 #ifdef DEBUG
 #define debug(...) printf(__VA_ARGS__);
