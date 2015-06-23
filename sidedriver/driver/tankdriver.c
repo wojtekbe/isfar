@@ -30,7 +30,13 @@ void td_init()
 	GPIOB->MODER |= GPIO_MODER_MODER1_0; /* M2-ENA */
 	GPIOB->MODER |= GPIO_MODER_MODER2_0; /* M2-INA */
 
-	/* TODO MIN MAX */
+	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN;
+	GPIOA->MODER |= GPIO_MODER_MODER6_0; /* M2-ENB */
+	GPIOA->MODER |= GPIO_MODER_MODER5_0; /* M2-INB */
+
+	/* MIN MAX */
+	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOBEN;
+
 	//RCC->APB2ENR |= RCC_APB2ENR_SYSCFGEN;
 	//SYSCFG->EXTICR[2] |= (1 << 12);  /* MAX */
 	//SYSCFG->EXTICR[2] |= (1 << 8); // PB10
@@ -38,9 +44,7 @@ void td_init()
 	//EXTI->FTSR |= (1 << 11); // MAX Falling Trigger
 	//NVIC_EnableIRQ(EXTI15_10_IRQn);
 
-	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN;
-	GPIOA->MODER |= GPIO_MODER_MODER6_0; /* M2-ENB */
-	GPIOA->MODER |= GPIO_MODER_MODER5_0; /* M2-INB */
+
 
 	/* PWM: TIM1_CH2N (PB0/AF1) */
 	GPIOB->MODER |= GPIO_MODER_MODER0_1; // AF
@@ -72,13 +76,11 @@ void td_init()
 	td_cpos = 0;
 	td_set_dir(0);
 
-	while((TIM9->SR & TIM_SR_CC2IF) == 0);
 	debug("td_init exit\n");
 }
 
 void TIM1_BRK_TIM9_IRQHandler(void)  /* Transoptor IRQ */
 {
-	debug("irq\n");
 	if(TIM9->SR & TIM_SR_CC2IF) {
 		td_cpos += td_dir;
 		//debug("%d %d %d %x\n", (int)td_pos, (int)td_cpos, (int)td_dir, ((GPIOB->IDR & (1 << 10)) ? 1 : 0));
@@ -89,7 +91,7 @@ void TIM1_BRK_TIM9_IRQHandler(void)  /* Transoptor IRQ */
 		//}
 		if (td_cpos == td_pos)
 			td_set_dir(0);
-		TIM9->SR &= ~TIM_SR_CC3IF;
+		TIM9->SR &= ~TIM_SR_CC2IF;
 	}
 }
 
