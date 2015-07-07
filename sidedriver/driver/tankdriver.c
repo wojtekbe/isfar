@@ -36,6 +36,7 @@ void td_init()
 
 	/* MIN MAX */
 	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOBEN;
+	GPIOB->PUPDR |= (1 << 21) | (1 << 23);
 
 	//RCC->APB2ENR |= RCC_APB2ENR_SYSCFGEN;
 	//SYSCFG->EXTICR[2] |= (1 << 12);  /* MAX */
@@ -56,7 +57,7 @@ void td_init()
 	TIM1->CCMR1 = TIM_CCMR1_OC2M_2 | TIM_CCMR1_OC2M_1; // PWM mode for CH2
 	TIM1->CCER = TIM_CCER_CC2NE;
 
-	//td_reset();
+	td_reset();
 
 	/* TRANSOPT. TIM9_CH2 (PA3/AF3) */
 	/* generate interrupt on falling edge on PA3 */
@@ -81,6 +82,7 @@ void td_init()
 
 void TIM1_BRK_TIM9_IRQHandler(void)  /* Transoptor IRQ */
 {
+	LEDT();
 	if(TIM9->SR & TIM_SR_CC2IF) {
 		td_cpos += td_dir;
 		//debug("%d %d %d %x\n", (int)td_pos, (int)td_cpos, (int)td_dir, ((GPIOB->IDR & (1 << 10)) ? 1 : 0));
@@ -112,8 +114,8 @@ void td_reset()
 	td_set_dir(WATER_OUT);
 	td_set_pwm(15);
 
-	while((GPIOB->IDR & (1 << 10)) != 0)
-		debug("resetting ... \n");
+	while((GPIOB->IDR & (1 << 10)) != 0);
+		//debug("resetting ... \n");
 
 	td_set_pwm(0);
 	td_set_dir(0);
