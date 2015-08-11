@@ -32,7 +32,7 @@ void md_init(void)
 	 * TIM8     encoder
 	 */
 
-	debug("#md_init()\n");
+	//debug("#md_init()\n");
 
 	/* IOs */
 	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN;
@@ -156,7 +156,7 @@ void pid_init(void)
 	pid.sum_of_e = 0;
 	pid.enabled = 1;
 
-	debug("#pid_init OK Kp = %d/10, Kd = %d, Ki = %d\n", (int)pid.Kp, (int)pid.Kd, (int)pid.Ki);
+	//debug("#pid_init OK Kp = %d/10, Kd = %d, Ki = %d\n", (int)pid.Kp, (int)pid.Kd, (int)pid.Ki);
 }
 
 void TIM5_IRQHandler(void) /* PID IRQ */
