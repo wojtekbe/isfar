@@ -1,0 +1,11 @@
+#!/bin/sh
+
+val=$3
+
+if [ $val -lt 0 ]; then
+	val=$((0xFFFF+$val+1))
+fi
+
+echo "$1: $2 -> $val"
+
+i2cset -y 1 $1 $2 $val w

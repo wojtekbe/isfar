@@ -1,0 +1,5 @@
+#!/bin/sh
+
+RET=`i2cget -y 1 $1 $2 w`
+
+printf "%d 0x%04X\n" $RET $RET

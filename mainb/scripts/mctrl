@@ -1,6 +1,18 @@
 #!/bin/sh
-# isfar motor control script
-echo "M1->$1, M2->$2, M3->$3"
-i2cset -y 1 0x09 0x02 $1
-i2cset -y 1 0x0a 0x02 $2
-i2cset -y 1 0x0b 0x02 $3
+# isfar motors control script
+if [ "$#" -ne 3 ]; then
+	    echo "Give 3 arguments..."
+		exit -1
+fi
+
+if [ "$1" != "-" ]; then
+	s 0x09 0x02 $1
+fi
+
+if [ "$2" != "-" ]; then
+	s 0x0a 0x02 $2
+fi
+
+if [ "$3" != "-" ]; then
+	s 0x0b 0x02 $3
+fi
