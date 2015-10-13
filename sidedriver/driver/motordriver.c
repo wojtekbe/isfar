@@ -88,7 +88,7 @@ void md_init(void)
 	pid.x_ref = &md_w_ref;
 	pid_init();
 
-	debug("md_init OK\n");
+	//debug("md_init OK\n");
 }
 
 void TIM4_IRQHandler(void)  /* Encoder IRQ */
