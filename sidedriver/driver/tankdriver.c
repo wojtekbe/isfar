@@ -8,6 +8,7 @@
 /* private */
 void TIM1_BRK_TIM9_IRQHandler(void);
 void td_set_pwm(uint32_t);
+extern void _wait(uint32_t nCount);
 
 void td_init()
 {
@@ -103,7 +104,7 @@ void td_set_pos(int p)
 	int dpos = p - td_cpos;
 	td_pos = p;
 	if (dpos) {
-		td_set_pwm(20);
+		td_set_pwm(50);
 		td_set_dir(dpos);
 	}
 }
@@ -112,10 +113,11 @@ void td_reset()
 {
 	td_enable();
 	td_set_dir(WATER_OUT);
-	td_set_pwm(15);
+	td_set_pwm(50);
 
-	while((GPIOB->IDR & (1 << 10)) != 0);
-		//debug("resetting ... \n");
+	while((GPIOB->IDR & (1 << 10)) != 0) {
+		_wait(10000);
+	}
 
 	td_set_pwm(0);
 	td_set_dir(0);
