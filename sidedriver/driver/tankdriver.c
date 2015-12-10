@@ -104,20 +104,42 @@ void td_set_pos(int p)
 	int dpos = p - td_cpos;
 	td_pos = p;
 	if (dpos) {
-		td_set_pwm(50);
+		td_set_pwm(30);
 		td_set_dir(dpos);
 	}
+}
+
+int td_tank_is_ready()
+{
+	int i;
+	int ret = 0;
+	int max_tries = 50;
+
+	for(i = 0; i < max_tries; i++) {
+		if((GPIOB->IDR & (1 << 10)) == 0) {
+			ret++;
+		}
+		_wait(100);
+	}
+
+	if(ret == max_tries) {
+		ret = 1;
+	}
+	else {
+		ret = 0;
+	}
+
+	return ret;
+
 }
 
 void td_reset()
 {
 	td_enable();
 	td_set_dir(WATER_OUT);
-	td_set_pwm(50);
+	td_set_pwm(30);
 
-	while((GPIOB->IDR & (1 << 10)) != 0) {
-		_wait(10000);
-	}
+	while(td_tank_is_ready() == 0);
 
 	td_set_pwm(0);
 	td_set_dir(0);
