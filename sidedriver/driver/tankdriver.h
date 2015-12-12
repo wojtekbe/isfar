@@ -14,6 +14,7 @@ void td_set_pos(int);
 
 int32_t td_cpos;
 int32_t td_pos;
+int32_t td_is_at_max;
 
 int8_t td_dir;
 #endif

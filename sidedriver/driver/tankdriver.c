@@ -74,6 +74,8 @@ void td_init()
 	TIM9->DIER |= TIM_DIER_CC2IE; /* Enable interrupt */
 	TIM9->CR1 |= TIM_CR1_CEN;
 	TIM9->EGR |= TIM_EGR_UG; /* Force update */
+
+	td_is_at_max = 0;
 	td_pos = 0;
 	td_cpos = 0;
 	td_set_dir(0);
@@ -89,11 +91,19 @@ void TIM1_BRK_TIM9_IRQHandler(void)  /* Transoptor IRQ */
 		//debug("%d %d %d %x\n", (int)td_pos, (int)td_cpos, (int)td_dir, ((GPIOB->IDR & (1 << 10)) ? 1 : 0));
 		if (MIN == 0)
 			td_cpos = 0;
-		//if ((GPIOB->IDR & (1 << 11))) {
-		//	td_set_dir(0);
-		//}
+
 		if (td_cpos == td_pos)
 			td_set_dir(0);
+
+		// check if we reached MAX while going "up"
+		if (((GPIOB->IDR & (1 << 11)) == 0) && (td_dir == WATER_IN)) {
+			td_is_at_max = 1;
+			td_set_dir(0);
+		}
+		else {
+			td_is_at_max = 0;
+		}
+
 		TIM9->SR &= ~TIM_SR_CC2IF;
 	}
 }
@@ -103,7 +113,12 @@ void td_set_pos(int p)
 	//debug("td_set_pos()\n");
 	int dpos = p - td_cpos;
 	td_pos = p;
-	if (dpos) {
+	if (dpos < 0) {
+		td_set_pwm(30);
+		td_set_dir(dpos);
+	}
+	// stop if we try to go further than MAX
+	if (dpos > 0 && (td_is_at_max == 0)) {
 		td_set_pwm(30);
 		td_set_dir(dpos);
 	}
