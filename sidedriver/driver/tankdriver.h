@@ -4,6 +4,7 @@
 #define WATER_IN 1
 #define WATER_OUT -1
 #define MIN ((GPIOB->IDR & (1 << 10)) ? 1 : 0)
+#define TANK_SPEED 75
 
 void td_init(void);
 void td_enable(void);

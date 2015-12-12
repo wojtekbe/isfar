@@ -114,12 +114,12 @@ void td_set_pos(int p)
 	int dpos = p - td_cpos;
 	td_pos = p;
 	if (dpos < 0) {
-		td_set_pwm(30);
+		td_set_pwm(TANK_SPEED);
 		td_set_dir(dpos);
 	}
 	// stop if we try to go further than MAX
 	if (dpos > 0 && (td_is_at_max == 0)) {
-		td_set_pwm(30);
+		td_set_pwm(TANK_SPEED);
 		td_set_dir(dpos);
 	}
 }
@@ -152,7 +152,7 @@ void td_reset()
 {
 	td_enable();
 	td_set_dir(WATER_OUT);
-	td_set_pwm(30);
+	td_set_pwm(TANK_SPEED);
 
 	while(td_tank_is_ready() == 0);
 
