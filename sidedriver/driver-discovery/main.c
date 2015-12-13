@@ -1,7 +1,7 @@
 #include "stm32f4xx.h"
 #include "stm32f4xx_usart.h"
 #include "core_cm4.h"
-#include <stdio.h>
+#include "tinyprintf.h"
 #include <unistd.h>
 
 #define GREEN 12
@@ -14,7 +14,7 @@
 int _write(int, char*, int);
 void init_leds(void);
 void init_usart(void);
-void usart_send(uint8_t);
+void putc(void*, char);
 void init_timer4(void);
 void init_timer3(void);
 void init_i2c(void);
@@ -24,21 +24,11 @@ uint16_t i2c_regs[4] = {0, 0, 0, 0};
 int i2c_bytes_received;
 int i2c_reg_idx;
 
-int _write(int file, char *ptr, int len)
+void putc(void* p, char c)
 {
-	int i;
-	
-	if (file == STDOUT_FILENO || file == STDERR_FILENO) {
-		for (i = 0; i < len; i++) {
-			if (ptr[i] == '\n') {
-				usart_send('\r');
-			}
-		usart_send(ptr[i]);
-		}
-		return i;
-	}
-	//errno = EIO;
-	return -1;
+	(void)p; /* suppress warning */
+	while ((USART2->SR & USART_SR_TXE) == 0);
+	USART2->DR = c;
 }
 
 void init_leds(void)
@@ -71,12 +61,6 @@ void init_usart(void)
 	USART_InitStructure.USART_Mode = USART_Mode_Tx;
 	USART_Init(USART2, &USART_InitStructure);
 	USART_Cmd(USART2, ENABLE); // enable USART2
-}
-
-void usart_send(uint8_t d)
-{
-	while ((USART2->SR & USART_SR_TXE) == 0);
-	USART2->DR = d;
 }
 
 void init_timer4(void)
@@ -205,23 +189,16 @@ void wait(uint32_t nCount)
 
 int main(void)
 {
-	int i;
+	int i = 100;
 
 	init_leds();
 	init_usart();
+	init_printf(NULL, putc);
 	//init_timer3();
-	init_i2c();
-	printf("Hello\n");
-	while(1)
-	{	
-		printf("[");
-		for(i = 0; i <= 4; i++)
-		{
-			if(i2c_reg_idx == i)
-				printf("*");
-			printf("%d ", i2c_regs[i] );
-		}
-		printf("]\n");
+	//init_i2c();
+	printf("Hello %d \n", i);
+	printf("ala ma kota\n");
+	while(1) {
 		wait(6000000);
 	}
 }
