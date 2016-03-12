@@ -1,7 +1,6 @@
 /* wojtekbe@gmaill.com */
 #include "stm32f4xx.h"
 #include "core_cm4.h"
-#include <stdio.h>
 #include <unistd.h>
 #include <math.h>
 #include "debug.h"

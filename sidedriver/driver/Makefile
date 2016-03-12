@@ -21,11 +21,14 @@ CFLAGS += -Wextra -Wimplicit-function-declaration -Wredundant-decls -Wmissing-pr
 CFLAGS += -Wstrict-prototypes -Wundef -Wshadow
 #CFLAGS += -I$(LIB)/STM32F4xx_StdPeriph_Driver/inc/
 #CFLAGS += -DUSE_STDPERIPH_DRIVER
+CFLAGS += -DTINYPRINTF_DEFINE_TFP_PRINTF=1 \
+		  -DTINYPRINTF_DEFINE_TFP_SPRINTF=1 \
+		  -DTINYPRINTF_OVERRIDE_LIBC=0 \
 
 AFLAGS	= -mcpu=cortex-m4 -mthumb -mlittle-endian -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb-interwork 
 #-mapcs-float use float regs. small increase in code size
 
-SRC = debug.c time.c i2c.c motordriver.c tankdriver.c extio.c main.c system_stm32f4xx.c
+SRC = debug.c time.c i2c.c motordriver.c tankdriver.c extio.c main.c system_stm32f4xx.c tinyprintf.c
 
 all: $(BIN)
 

@@ -1,9 +1,9 @@
 /* wojtekbe@gmaill.com */
+#include <stdlib.h>
 #include "stm32f4xx.h"
 #include "core_cm4.h"
 #include "debug.h"
 #include "motordriver.h"
-#include <stdlib.h>
 
 #define PID_MAX_U 3370
 #define M1_MAX_SPEED 3370

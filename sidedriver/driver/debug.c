@@ -1,24 +1,9 @@
 /* wojtekbe@gmaill.com */
 #include "stm32f4xx.h"
 #include "core_cm4.h"
-#include <stdio.h>
+#include "tinyprintf.h"
 #include <unistd.h>
 #include "debug.h"
-
-int _write(int file, char *ptr, int len)
-{
-	int i;
-	if (file == STDOUT_FILENO || file == STDERR_FILENO) {
-		for (i = 0; i < len; i++) {
-			if (ptr[i] == '\n') {
-				usart_send('\r');
-			}
-			usart_send(ptr[i]);
-		}
-		return i;
-	}
-	return -1;
-}
 
 void debug_init(void)
 {
@@ -38,10 +23,13 @@ void debug_init(void)
 
 	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN;
 	GPIOA->MODER |= GPIO_MODER_MODER12_0;
+
+	init_printf(NULL, usart_send);
 }
 
-void usart_send(uint8_t d)
+void usart_send(void* p, char c)
 {
+	(void)p; /* suppress warning */
 	while ((USART1->SR & USART_SR_TXE) == 0);
-	USART1->DR = d;
+	USART1->DR = c;
 }
