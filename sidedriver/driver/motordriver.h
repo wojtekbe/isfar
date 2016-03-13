@@ -8,13 +8,13 @@ void md_set_speed(int16_t);
 
 struct PID {
 	int enabled;
-	int16_t u; 
+	int16_t u;
 	int16_t *x;
 	int16_t *x_ref;
 
-	int32_t Kp;
-	int32_t Kd;
-	int32_t Ki;
+	int16_t *Kp;
+	int16_t *Kd;
+	int16_t *Ki;
 	int32_t Tp;
 	int32_t e;
 	int32_t sum_of_e;

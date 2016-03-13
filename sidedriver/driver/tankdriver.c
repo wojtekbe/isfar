@@ -80,7 +80,7 @@ void td_init()
 	td_cpos = 0;
 	td_set_dir(0);
 
-	//debug("td_init exit\n");
+	debug("#td_init OK\n");
 }
 
 void TIM1_BRK_TIM9_IRQHandler(void)  /* Transoptor IRQ */
