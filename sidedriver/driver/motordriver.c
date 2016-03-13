@@ -4,6 +4,7 @@
 #include "core_cm4.h"
 #include "debug.h"
 #include "motordriver.h"
+#include "regs.h"
 
 #define PID_MAX_U 3370
 #define M1_MAX_SPEED 3370

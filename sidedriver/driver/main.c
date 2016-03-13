@@ -5,10 +5,10 @@
 #include <math.h>
 #include "debug.h"
 #include "time.h"
-#include "i2c.h"
 #include "motordriver.h"
 #include "tankdriver.h"
 #include "extio.h"
+#include "regs.h"
 
 void _wait(uint32_t);
 int update_conf(void);
@@ -27,15 +27,16 @@ void _wait(uint32_t nCount)
 
 int update_conf(void)
 {
-	md_w_ref = (i2c_regs[M1_SET_SPEED] | (i2c_regs[M1_SET_SPEED + 1] << 8));
+	md_w_ref = (regs[M_SET_SPEED] | (regs[M_SET_SPEED + 1] << 8));
 	// TODO store md_w
-	i2c_regs[M1_SPEED + 1] = (md_w >> 8) & 0x0FF;
-	i2c_regs[M1_SPEED] = md_w & 0x0FF;
+	regs[M_SPEED + 1] = (md_w >> 8) & 0x0FF;
+	regs[M_SPEED] = md_w & 0x0FF;
 
-	//i2c_print_regs();
+	regs_print();
 
 	//md_set_speed(md_w_ref); // with PID disabled
-	td_set_pos((i2c_regs[TANK_SET_POS] | (i2c_regs[TANK_SET_POS + 1] << 8)));
+	td_set_pos((regs[TANK_SET_POS] | (regs[TANK_SET_POS + 1] << 8)));
+
 	// TODO store td_cpos
 	return 0;
 }

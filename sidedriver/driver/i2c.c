@@ -3,6 +3,10 @@
 #include "core_cm4.h"
 #include "debug.h"
 #include "i2c.h"
+#include "regs.h"
+
+int i2c_reg_idx;
+int i2c_bytes_received;
 
 void i2c_init(void)
 {
@@ -29,14 +33,6 @@ void i2c_init(void)
 	debug("#i2c_init() OK\n");
 }
 
-void i2c_print_regs(void)
-{
-	uint16_t i;
-	debug("[ ");
-	for(i = 0; i < (NUM_REGS * sizeof(uint16_t)); i++)
-		debug("0x%02x ", i2c_regs[i]);
-	debug("]\n");
-}
 
 void I2C1_EV_IRQHandler()
 {
@@ -61,13 +57,13 @@ void I2C1_EV_IRQHandler()
 			i2c_reg_idx = data;
 		else
 		{
-			i2c_regs[i2c_reg_idx] = data;
+			regs[i2c_reg_idx] = data;
 			i2c_reg_idx++;
 		}
 	}
 	if(stat1 & I2C_SR1_TXE) // Transm. reg. empty
 	{
-		I2C1->DR = i2c_regs[i2c_reg_idx];
+		I2C1->DR = regs[i2c_reg_idx];
 		i2c_reg_idx++;
 	}
 	if(stat1 & I2C_SR1_BTF) // Byte Transfer Finished
