@@ -7,6 +7,7 @@
 #include "regs.h"
 
 #define PID_MAX_U 3370
+#define PID_DEADZONE_WIDTH 350
 #define M1_MAX_SPEED 3370
 
 void pid_init(void);
@@ -161,7 +162,7 @@ void pid_init(void)
 	pid.sum_of_e = 0;
 	pid.enabled = 1;
 
-	debug("#pid_init OK\n");
+	debug("#motord: pid_init OK\n");
 }
 
 void TIM5_IRQHandler(void) /* PID IRQ */
@@ -180,6 +181,12 @@ void TIM5_IRQHandler(void) /* PID IRQ */
 			pid.u = PID_MAX_U;
 		if (pid.u < -PID_MAX_U)
 			pid.u = -PID_MAX_U;
+
+		/* deadzone */
+		if ((pid.u > 0) && (pid.u < PID_DEADZONE_WIDTH))
+			pid.u = 0;
+		if ((pid.u < 0) && (pid.u > -PID_DEADZONE_WIDTH))
+			pid.u = 0;
 
 		pid.last_e = pid.e;
 
