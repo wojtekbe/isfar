@@ -153,7 +153,7 @@ void pid_init(void)
 	NVIC_EnableIRQ(TIM5_IRQn);
 	TIM5->CR1 |= TIM_CR1_CEN; // PID start
 
-	*(pid.Kp) = 1; /* Kp/10 */
+	*(pid.Kp) = 2; /* Kp/10 */
 	*(pid.Ki) = 400;
 	*(pid.Kd) = 1;
 
@@ -170,6 +170,7 @@ void TIM5_IRQHandler(void) /* PID IRQ */
 	if(TIM5->SR & TIM_SR_UIF) {
 		pid.e = *pid.x_ref - *pid.x;
 		pid.sum_of_e += pid.e;
+
 		pid.u = *(pid.Kp) * (
 				pid.e +
 				(pid.Tp * pid.sum_of_e / *(pid.Ki)) +  /* integr. */
